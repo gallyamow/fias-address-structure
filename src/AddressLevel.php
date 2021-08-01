@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace CoreExtensions\AddressRepository;
+namespace Addresser\AddressRepository;
 
-use CoreExtensions\AddressRepository\Fias\FiasLevel;
+use Addresser\AddressRepository\Fias\FiasLevel;
 
 /**
  * Более привычные в быту упрощенные уровни.

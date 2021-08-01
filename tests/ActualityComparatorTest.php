@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace CoreExtensions\AddressRepository\Tests;
+namespace Addresser\AddressRepository\Tests;
 
-use CoreExtensions\AddressRepository\ActualityComparator;
+use Addresser\AddressRepository\ActualityComparator;
 use PHPUnit\Framework\TestCase;
 
 class ActualityComparatorTest extends TestCase

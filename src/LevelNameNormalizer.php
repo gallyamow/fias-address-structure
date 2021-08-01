@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace CoreExtensions\AddressRepository;
+namespace Addresser\AddressRepository;
 
 /**
  * Этот класс НОРМАЛИЗУЕТ LevelName, а НЕ РАСПОЗНАЕТ их. Поэтому требуется чтобы оба поля (name и shortname)

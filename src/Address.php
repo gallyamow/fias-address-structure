@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace CoreExtensions\AddressRepository;
+namespace Addresser\AddressRepository;
 
 /**
  * Плоская структура для хранения адреса.

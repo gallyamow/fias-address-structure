@@ -1,6 +1,6 @@
 <?php
 
-namespace CoreExtensions\AddressRepository;
+namespace Addresser\AddressRepository;
 
 interface AddressBuilderInterface
 {

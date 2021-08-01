@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace CoreExtensions\AddressRepository\Tests;
+namespace Addresser\AddressRepository\Tests;
 
-use CoreExtensions\AddressRepository\AddressLevel;
-use CoreExtensions\AddressRepository\Fias\FiasLevel;
+use Addresser\AddressRepository\AddressLevel;
+use Addresser\AddressRepository\Fias\FiasLevel;
 use PHPUnit\Framework\TestCase;
 
 class AddressLevelTest extends TestCase

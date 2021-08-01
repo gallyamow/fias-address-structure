@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace CoreExtensions\AddressRepository\Fias\LevelNameResolvers;
+namespace Addresser\AddressRepository\Fias\LevelNameResolvers;
 
 interface FiasLevelNameSource
 {

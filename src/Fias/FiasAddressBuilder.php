@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace CoreExtensions\AddressRepository\Fias;
+namespace Addresser\AddressRepository\Fias;
 
-use CoreExtensions\AddressRepository\ActualityComparator;
-use CoreExtensions\AddressRepository\Address;
-use CoreExtensions\AddressRepository\AddressBuilderInterface;
-use CoreExtensions\AddressRepository\AddressLevel;
-use CoreExtensions\AddressRepository\AddressSynonymizer;
-use CoreExtensions\AddressRepository\Exceptions\AddressBuildFailedException;
-use CoreExtensions\AddressRepository\Fias\LevelNameResolvers\FiasObjectLevelNameResolver;
-use CoreExtensions\AddressRepository\LevelName;
-use CoreExtensions\AddressRepository\LevelNameNormalizer;
+use Addresser\AddressRepository\ActualityComparator;
+use Addresser\AddressRepository\Address;
+use Addresser\AddressRepository\AddressBuilderInterface;
+use Addresser\AddressRepository\AddressLevel;
+use Addresser\AddressRepository\AddressSynonymizer;
+use Addresser\AddressRepository\Exceptions\AddressBuildFailedException;
+use Addresser\AddressRepository\Fias\LevelNameResolvers\FiasObjectLevelNameResolver;
+use Addresser\AddressRepository\LevelName;
+use Addresser\AddressRepository\LevelNameNormalizer;
 
 /**
  * Формирует адрес на основе данных из ФИАС.

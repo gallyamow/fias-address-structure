@@ -11,12 +11,12 @@
   },
   "autoload": {
     "psr-4": {
-      "CoreExtensions\\AddressRepository\\": "src/"
+      "Addresser\\AddressRepository\\": "src/"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "CoreExtensions\\AddressRepository\\Tests\\": "tests/"
+      "Addresser\\AddressRepository\\Tests\\": "tests/"
     }
   },
   "require-dev": {

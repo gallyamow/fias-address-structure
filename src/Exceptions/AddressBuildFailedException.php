@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace CoreExtensions\AddressRepository\Exceptions;
+namespace Addresser\AddressRepository\Exceptions;
 
 class AddressBuildFailedException extends RuntimeException
 {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace CoreExtensions\AddressRepository\Fias;
+namespace Addresser\AddressRepository\Fias;
 
 class FiasParamType
 {

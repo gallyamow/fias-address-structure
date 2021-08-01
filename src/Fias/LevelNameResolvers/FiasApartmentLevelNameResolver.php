@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace CoreExtensions\AddressRepository\Fias\LevelNameResolvers;
+namespace Addresser\AddressRepository\Fias\LevelNameResolvers;
 
-use CoreExtensions\AddressRepository\Exceptions\LevelNameNotFoundException;
-use CoreExtensions\AddressRepository\Fias\FiasLevelNameResolverInterface;
-use CoreExtensions\AddressRepository\LevelName;
+use Addresser\AddressRepository\Exceptions\LevelNameNotFoundException;
+use Addresser\AddressRepository\Fias\FiasLevelNameResolverInterface;
+use Addresser\AddressRepository\LevelName;
 
 /**
  * @see gar.apartment_types

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace CoreExtensions\AddressRepository\Tests;
+namespace Addresser\AddressRepository\Tests;
 
-use CoreExtensions\AddressRepository\LevelName;
-use CoreExtensions\AddressRepository\LevelNameNormalizer;
+use Addresser\AddressRepository\LevelName;
+use Addresser\AddressRepository\LevelNameNormalizer;
 use PHPUnit\Framework\TestCase;
 
 class LevelNameNormalizerTest extends TestCase

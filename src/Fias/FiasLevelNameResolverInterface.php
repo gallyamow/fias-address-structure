@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace CoreExtensions\AddressRepository\Fias;
+namespace Addresser\AddressRepository\Fias;
 
-use CoreExtensions\AddressRepository\LevelName;
+use Addresser\AddressRepository\LevelName;
 
 interface FiasLevelNameResolverInterface
 {

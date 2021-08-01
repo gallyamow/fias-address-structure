@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace CoreExtensions\AddressRepository\Tests\Fias\LevelNameResolvers;
+namespace Addresser\AddressRepository\Tests\Fias\LevelNameResolvers;
 
-use CoreExtensions\AddressRepository\Exceptions\LevelNameNotFoundException;
-use CoreExtensions\AddressRepository\Fias\FiasLevelNameResolverInterface;
-use CoreExtensions\AddressRepository\Fias\LevelNameResolvers\FiasAddHouseLevelNameResolver;
-use CoreExtensions\AddressRepository\LevelName;
+use Addresser\AddressRepository\Exceptions\LevelNameNotFoundException;
+use Addresser\AddressRepository\Fias\FiasLevelNameResolverInterface;
+use Addresser\AddressRepository\Fias\LevelNameResolvers\FiasAddHouseLevelNameResolver;
+use Addresser\AddressRepository\LevelName;
 use PHPUnit\Framework\TestCase;
 
 class FiasAddHouseLevelNameResolverTest extends TestCase

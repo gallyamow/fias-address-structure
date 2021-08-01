@@ -2,21 +2,21 @@
 
 declare(strict_types=1);
 
-namespace CoreExtensions\AddressRepository\Tests\Fias;
+namespace Addresser\AddressRepository\Tests\Fias;
 
-use CoreExtensions\AddressRepository\ActualityComparator;
-use CoreExtensions\AddressRepository\AddressBuilderInterface;
-use CoreExtensions\AddressRepository\AddressLevel;
-use CoreExtensions\AddressRepository\AddressSynonymizer;
-use CoreExtensions\AddressRepository\Fias\FiasAddressBuilder;
-use CoreExtensions\AddressRepository\Fias\FiasLevel;
-use CoreExtensions\AddressRepository\Fias\LevelNameResolvers\FiasAddHouseLevelNameResolver;
-use CoreExtensions\AddressRepository\Fias\LevelNameResolvers\FiasApartmentLevelNameResolver;
-use CoreExtensions\AddressRepository\Fias\LevelNameResolvers\FiasHouseLevelNameResolver;
-use CoreExtensions\AddressRepository\Fias\LevelNameResolvers\FiasLevelNameSource;
-use CoreExtensions\AddressRepository\Fias\LevelNameResolvers\FiasObjectLevelNameResolver;
-use CoreExtensions\AddressRepository\Fias\LevelNameResolvers\FiasRoomLevelNameResolver;
-use CoreExtensions\AddressRepository\LevelNameNormalizer;
+use Addresser\AddressRepository\ActualityComparator;
+use Addresser\AddressRepository\AddressBuilderInterface;
+use Addresser\AddressRepository\AddressLevel;
+use Addresser\AddressRepository\AddressSynonymizer;
+use Addresser\AddressRepository\Fias\FiasAddressBuilder;
+use Addresser\AddressRepository\Fias\FiasLevel;
+use Addresser\AddressRepository\Fias\LevelNameResolvers\FiasAddHouseLevelNameResolver;
+use Addresser\AddressRepository\Fias\LevelNameResolvers\FiasApartmentLevelNameResolver;
+use Addresser\AddressRepository\Fias\LevelNameResolvers\FiasHouseLevelNameResolver;
+use Addresser\AddressRepository\Fias\LevelNameResolvers\FiasLevelNameSource;
+use Addresser\AddressRepository\Fias\LevelNameResolvers\FiasObjectLevelNameResolver;
+use Addresser\AddressRepository\Fias\LevelNameResolvers\FiasRoomLevelNameResolver;
+use Addresser\AddressRepository\LevelNameNormalizer;
 use PHPUnit\Framework\TestCase;
 
 /**
