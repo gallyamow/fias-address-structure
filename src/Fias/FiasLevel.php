@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Addresser\AddressRepository\Fias;
 
+use Addresser\AddressRepository\AddressLevel;
+
 class FiasLevel
 {
     /**
@@ -100,4 +102,42 @@ class FiasLevel
      * Машино-место
      */
     public const CAR_PLACE = 17;
+
+    /**
+     * @param int $fiasLevel
+     * @return int
+     */
+    public static function mapToAddressLevel(int $fiasLevel): ?int
+    {
+        // обратный mapping нельзя сделать, так как теряется некоторая информация
+        switch ($fiasLevel) {
+            case self::REGION:
+                return AddressLevel::REGION;
+            case self::ADMINISTRATIVE_REGION: // р-н Янаульский
+            case self::MUNICIPAL_DISTRICT: // м.р-н Янаульский
+                return AddressLevel::AREA;
+            case self::RURAL_URBAN_SETTLEMENT: // с.п. Старотимошкинское
+            case self::CITY: // г. Нефтегорск, г. Болгар, с/п Асановское, с/с Юматовский
+                return AddressLevel::CITY;
+            case self::SETTLEMENT: // п Краный Яр, тер Мечта, ж/д_ст Ардаши, высел Ахмасиха
+            case self::ELEMENT_OF_THE_PLANNING_STRUCTURE: // снт Импульс/Станкозавод, тер гк т-14
+            case self::INTRACITY_LEVEL: // р-н ЖБИ, р-н Советский
+            case self::ADDITIONAL_TERRITORIES_LEVEL: // гск Колесо, гск Восход
+                return AddressLevel::SETTLEMENT;
+            case self::ROAD_NETWORK_ELEMENT: // ул Привокзальная, пер Центральный
+            case self::OBJECT_LEVEL_IN_ADDITIONAL_TERRITORIES: // ул 11 Линия, а/я Рябиновая
+            case self::COUNTY_LEVEL: // нет
+                return AddressLevel::STREET;
+            case self::STEAD: // нет
+                return AddressLevel::STEAD;
+            case self::CAR_PLACE: // нет
+                return AddressLevel::CAR_PLACE;
+            case self::BUILDING: // записей в addr_obj нет, FiasAddressBuilder делает вывод на основе relation_type
+                return AddressLevel::HOUSE;
+            case self::PREMISES: // записей в addr_obj нет, FiasAddressBuilder делает вывод на основе relation_type
+                return AddressLevel::FLAT;
+            case self::PREMISES_WITHIN_THE_PREMISES: // нет
+                return AddressLevel::ROOM;
+        }
+    }
 }

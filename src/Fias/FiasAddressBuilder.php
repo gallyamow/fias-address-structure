@@ -304,7 +304,7 @@ class FiasAddressBuilder implements AddressBuilderInterface
         switch ($relationType) {
             case FiasRelationType::ADDR_OBJ:
                 $fiasLevel = (int)$item['relation_data']['level'];
-                $addressLevel = AddressLevel::mapFromFiasLevel($fiasLevel);
+                $addressLevel = FiasLevel::mapToAddressLevel($fiasLevel);
                 break;
             case FiasRelationType::HOUSE:
                 $addressLevel = AddressLevel::HOUSE;
