@@ -5,20 +5,20 @@ declare(strict_types=1);
 namespace Addresser\AddressRepository\Fias\LevelNameResolvers;
 
 use Addresser\AddressRepository\Exceptions\LevelNameNotFoundException;
-use Addresser\AddressRepository\LevelName;
+use Addresser\AddressRepository\AddressLevelSpec;
 
 class FiasObjectLevelNameResolver
 {
-    private FiasLevelNameSource $source;
+    private FiasTypeSource $source;
 
     private static ?array $cachedItems = null;
 
-    public function __construct(FiasLevelNameSource $typeSource)
+    public function __construct(FiasTypeSource $typeSource)
     {
         $this->source = $typeSource;
     }
 
-    public function resolve(int $fiasLevel, string $shortName): LevelName
+    public function resolve(int $fiasLevel, string $shortName): AddressLevelSpec
     {
         if (null === static::$cachedItems) {
             $this->buildCache();
@@ -43,7 +43,7 @@ class FiasObjectLevelNameResolver
             $fiasLevel = (int)$row['level'];
             $shortName = trim($row['shortname']);
 
-            self::$cachedItems[$this->makeKey($fiasLevel, $shortName)] = new LevelName(
+            self::$cachedItems[$this->makeKey($fiasLevel, $shortName)] = new AddressLevelSpec(
                 $this->prepareString($row['name']),
                 $this->prepareString($row['shortname'])
             );

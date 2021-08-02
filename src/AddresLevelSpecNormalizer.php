@@ -14,7 +14,7 @@ namespace Addresser\AddressRepository;
  * Нормализует сегменты адреса (ул, аллея, респ, аул, аал, арбар и тд).
  * Правила: 1) сокращения слов оканчиваются точкой, аббревиатуры без точек 2) lowercase для всего кроме аббревиатур.
  */
-class LevelNameNormalizer
+class AddresLevelSpecNormalizer
 {
     // здесь только повторы
     // + те у которых сокращение требует модификации
@@ -376,7 +376,7 @@ class LevelNameNormalizer
     private const NAME_WEIGHT = 1;
     private const VARIANT_WEIGHT = 0.8;
 
-    public function normalize(LevelName $levelName): LevelName
+    public function normalize(AddressLevelSpec $levelName): AddressLevelSpec
     {
         $shortName = $levelName->getShortName();
         $name = $levelName->getName();
@@ -412,7 +412,7 @@ class LevelNameNormalizer
 
         $repl = self::REPLACES[$repl[0]['key']];
 
-        return new LevelName($repl['name'], $repl['shortName']);
+        return new AddressLevelSpec($repl['name'], $repl['shortName']);
     }
 
     private function equality(string $s, array $item): float

@@ -11,8 +11,8 @@ use Addresser\AddressRepository\AddressLevel;
 use Addresser\AddressRepository\AddressSynonymizer;
 use Addresser\AddressRepository\Exceptions\AddressBuildFailedException;
 use Addresser\AddressRepository\Fias\LevelNameResolvers\FiasObjectLevelNameResolver;
-use Addresser\AddressRepository\LevelName;
-use Addresser\AddressRepository\LevelNameNormalizer;
+use Addresser\AddressRepository\AddressLevelSpec;
+use Addresser\AddressRepository\AddresLevelSpecNormalizer;
 
 /**
  * Формирует адрес на основе данных из ФИАС.
@@ -21,21 +21,21 @@ use Addresser\AddressRepository\LevelNameNormalizer;
 class FiasAddressBuilder implements AddressBuilderInterface
 {
     private FiasObjectLevelNameResolver $addrObjectTypeNameResolver;
-    private FiasLevelNameResolverInterface $houseTypeNameResolver;
-    private FiasLevelNameResolverInterface $addHouseTypeNameResolver;
-    private FiasLevelNameResolverInterface $apartmentTypeNameResolver;
-    private FiasLevelNameResolverInterface $roomTypeNameResolver;
-    private LevelNameNormalizer $levelNameNormalizer;
+    private FiasAddressLevelSpecResolverInterface $houseTypeNameResolver;
+    private FiasAddressLevelSpecResolverInterface $addHouseTypeNameResolver;
+    private FiasAddressLevelSpecResolverInterface $apartmentTypeNameResolver;
+    private FiasAddressLevelSpecResolverInterface $roomTypeNameResolver;
+    private AddresLevelSpecNormalizer $levelNameNormalizer;
     private ActualityComparator $actualityPeriodComparator;
     private AddressSynonymizer $addressSynonymizer;
 
     public function __construct(
         FiasObjectLevelNameResolver $addrObjectTypeNameResolver,
-        FiasLevelNameResolverInterface $houseTypeNameResolver,
-        FiasLevelNameResolverInterface $addHouseTypeNameResolver,
-        FiasLevelNameResolverInterface $apartmentTypeNameResolver,
-        FiasLevelNameResolverInterface $roomTypeNameResolver,
-        LevelNameNormalizer $levelNameNormalizer,
+        FiasAddressLevelSpecResolverInterface $houseTypeNameResolver,
+        FiasAddressLevelSpecResolverInterface $addHouseTypeNameResolver,
+        FiasAddressLevelSpecResolverInterface $apartmentTypeNameResolver,
+        FiasAddressLevelSpecResolverInterface $roomTypeNameResolver,
+        AddresLevelSpecNormalizer $levelNameNormalizer,
         ActualityComparator $actualityPeriodComparator,
         AddressSynonymizer $addressSynonymizer
     )
@@ -256,7 +256,7 @@ class FiasAddressBuilder implements AddressBuilderInterface
         );
     }
 
-    private function getNormalizedLevelName(int $addressLevel, int $fiasLevel, array $relationData): LevelName
+    private function getNormalizedLevelName(int $addressLevel, int $fiasLevel, array $relationData): AddressLevelSpec
     {
         $typeName = null;
 
@@ -289,7 +289,7 @@ class FiasAddressBuilder implements AddressBuilderInterface
         return $this->levelNameNormalizer->normalize($typeName);
     }
 
-    private function getNormalizedHouseBlockTypeName(int $addType): LevelName
+    private function getNormalizedHouseBlockTypeName(int $addType): AddressLevelSpec
     {
         return $this->levelNameNormalizer->normalize($this->addHouseTypeNameResolver->resolve($addType));
     }

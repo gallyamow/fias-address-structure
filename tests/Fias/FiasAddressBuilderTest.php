@@ -10,13 +10,13 @@ use Addresser\AddressRepository\AddressLevel;
 use Addresser\AddressRepository\AddressSynonymizer;
 use Addresser\AddressRepository\Fias\FiasAddressBuilder;
 use Addresser\AddressRepository\Fias\FiasLevel;
-use Addresser\AddressRepository\Fias\LevelNameResolvers\FiasAddHouseLevelNameResolver;
-use Addresser\AddressRepository\Fias\LevelNameResolvers\FiasApartmentLevelNameResolver;
-use Addresser\AddressRepository\Fias\LevelNameResolvers\FiasHouseLevelNameResolver;
-use Addresser\AddressRepository\Fias\LevelNameResolvers\FiasLevelNameSource;
+use Addresser\AddressRepository\Fias\LevelNameResolvers\FiasAddHouseAddressLevelSpecResolver;
+use Addresser\AddressRepository\Fias\LevelNameResolvers\FiasApartmentAddressLevelSpecResolver;
+use Addresser\AddressRepository\Fias\LevelNameResolvers\FiasHouseAddressLevelSpecResolver;
+use Addresser\AddressRepository\Fias\LevelNameResolvers\FiasTypeSource;
 use Addresser\AddressRepository\Fias\LevelNameResolvers\FiasObjectLevelNameResolver;
-use Addresser\AddressRepository\Fias\LevelNameResolvers\FiasRoomLevelNameResolver;
-use Addresser\AddressRepository\LevelNameNormalizer;
+use Addresser\AddressRepository\Fias\LevelNameResolvers\FiasRoomAddressLevelSpecResolver;
+use Addresser\AddressRepository\AddresLevelSpecNormalizer;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -28,7 +28,7 @@ class FiasAddressBuilderTest extends TestCase
 
     protected function setUp(): void
     {
-        $objectTypeSourceMock = $this->createMock(FiasLevelNameSource::class);
+        $objectTypeSourceMock = $this->createMock(FiasTypeSource::class);
         $objectTypeSourceMock->method('getItems')
             ->willReturn(
                 [
@@ -50,11 +50,11 @@ class FiasAddressBuilderTest extends TestCase
 
         $this->builder = new FiasAddressBuilder(
             new FiasObjectLevelNameResolver($objectTypeSourceMock),
-            new FiasHouseLevelNameResolver(),
-            new FiasAddHouseLevelNameResolver(),
-            new FiasApartmentLevelNameResolver(),
-            new FiasRoomLevelNameResolver(),
-            new LevelNameNormalizer(),
+            new FiasHouseAddressLevelSpecResolver(),
+            new FiasAddHouseAddressLevelSpecResolver(),
+            new FiasApartmentAddressLevelSpecResolver(),
+            new FiasRoomAddressLevelSpecResolver(),
+            new AddresLevelSpecNormalizer(),
             new ActualityComparator(),
             new AddressSynonymizer()
         );

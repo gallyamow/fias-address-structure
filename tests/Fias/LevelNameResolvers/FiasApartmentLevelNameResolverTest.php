@@ -5,18 +5,18 @@ declare(strict_types=1);
 namespace Addresser\AddressRepository\Tests\Fias\LevelNameResolvers;
 
 use Addresser\AddressRepository\Exceptions\LevelNameNotFoundException;
-use Addresser\AddressRepository\Fias\FiasLevelNameResolverInterface;
-use Addresser\AddressRepository\Fias\LevelNameResolvers\FiasApartmentLevelNameResolver;
-use Addresser\AddressRepository\LevelName;
+use Addresser\AddressRepository\Fias\FiasAddressLevelSpecResolverInterface;
+use Addresser\AddressRepository\Fias\LevelNameResolvers\FiasApartmentAddressLevelSpecResolver;
+use Addresser\AddressRepository\AddressLevelSpec;
 use PHPUnit\Framework\TestCase;
 
 class FiasApartmentLevelNameResolverTest extends TestCase
 {
-    private FiasLevelNameResolverInterface $resolver;
+    private FiasAddressLevelSpecResolverInterface $resolver;
 
     protected function setUp(): void
     {
-        $this->resolver = new FiasApartmentLevelNameResolver();
+        $this->resolver = new FiasApartmentAddressLevelSpecResolver();
     }
 
     /**
@@ -26,7 +26,7 @@ class FiasApartmentLevelNameResolverTest extends TestCase
     {
         $this->expectException(LevelNameNotFoundException::class);
         $this->assertEquals(
-            new LevelName('комната', 'комн.'),
+            new AddressLevelSpec('комната', 'комн.'),
             $this->resolver->resolve(50000)
         );
     }
@@ -37,19 +37,19 @@ class FiasApartmentLevelNameResolverTest extends TestCase
     public function itCorrectlyResolvesNormalizedTypes(): void
     {
         $this->assertEquals(
-            new LevelName('помещение', 'пом.'),
+            new AddressLevelSpec('помещение', 'пом.'),
             $this->resolver->resolve(1)
         );
         $this->assertEquals(
-            new LevelName('комната', 'комн.'),
+            new AddressLevelSpec('комната', 'комн.'),
             $this->resolver->resolve(4)
         );
         $this->assertEquals(
-            new LevelName('погреб', 'погр.'),
+            new AddressLevelSpec('погреб', 'погр.'),
             $this->resolver->resolve(12)
         );
         $this->assertEquals(
-            new LevelName('гараж', 'гар.'),
+            new AddressLevelSpec('гараж', 'гар.'),
             $this->resolver->resolve(13)
         );
     }

@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace Addresser\AddressRepository\Tests;
 
-use Addresser\AddressRepository\LevelName;
-use Addresser\AddressRepository\LevelNameNormalizer;
+use Addresser\AddressRepository\AddressLevelSpec;
+use Addresser\AddressRepository\AddresLevelSpecNormalizer;
 use PHPUnit\Framework\TestCase;
 
 class LevelNameNormalizerTest extends TestCase
 {
-    private LevelNameNormalizer $normalizer;
+    private AddresLevelSpecNormalizer $normalizer;
 
     protected function setUp(): void
     {
-        $this->normalizer = new LevelNameNormalizer();
+        $this->normalizer = new AddresLevelSpecNormalizer();
     }
 
     /**
@@ -23,8 +23,8 @@ class LevelNameNormalizerTest extends TestCase
     public function itDoesNotRecognize(): void
     {
         $this->assertEquals(
-            new LevelName('UNDEFINED', 'UNDEFINED'),
-            $this->normalizer->normalize(new LevelName('UNDEFINED', 'UNDEFINED'))
+            new AddressLevelSpec('UNDEFINED', 'UNDEFINED'),
+            $this->normalizer->normalize(new AddressLevelSpec('UNDEFINED', 'UNDEFINED'))
         );
     }
 
@@ -34,12 +34,12 @@ class LevelNameNormalizerTest extends TestCase
     public function itIsNotCaseSensitive(): void
     {
         $this->assertEquals(
-            new LevelName('республика', 'респ.'),
-            $this->normalizer->normalize(new LevelName('РеСпУблиКа', 'реСП'))
+            new AddressLevelSpec('республика', 'респ.'),
+            $this->normalizer->normalize(new AddressLevelSpec('РеСпУблиКа', 'реСП'))
         );
         $this->assertEquals(
-            new LevelName('улица', 'ул.'),
-            $this->normalizer->normalize(new LevelName('улица', 'УЛ'))
+            new AddressLevelSpec('улица', 'ул.'),
+            $this->normalizer->normalize(new AddressLevelSpec('улица', 'УЛ'))
         );
     }
 
@@ -49,12 +49,12 @@ class LevelNameNormalizerTest extends TestCase
     public function itCorrectlyNormalizesApartByName(): void
     {
         $this->assertEquals(
-            new LevelName('республика', 'респ.'),
-            $this->normalizer->normalize(new LevelName('респУБлика', 'UNDEFINED'))
+            new AddressLevelSpec('республика', 'респ.'),
+            $this->normalizer->normalize(new AddressLevelSpec('респУБлика', 'UNDEFINED'))
         );
         $this->assertEquals(
-            new LevelName('улица', 'ул.'),
-            $this->normalizer->normalize(new LevelName('УлицА', 'UNDEFINED'))
+            new AddressLevelSpec('улица', 'ул.'),
+            $this->normalizer->normalize(new AddressLevelSpec('УлицА', 'UNDEFINED'))
         );
     }
 
@@ -64,12 +64,12 @@ class LevelNameNormalizerTest extends TestCase
     public function itCorrectlyNormalizesApartByShortName(): void
     {
         $this->assertEquals(
-            new LevelName('республика', 'респ.'),
-            $this->normalizer->normalize(new LevelName('UNDEFINED', 'респ.'))
+            new AddressLevelSpec('республика', 'респ.'),
+            $this->normalizer->normalize(new AddressLevelSpec('UNDEFINED', 'респ.'))
         );
         $this->assertEquals(
-            new LevelName('улица', 'ул.'),
-            $this->normalizer->normalize(new LevelName('UNDEFINED', 'ул.'))
+            new AddressLevelSpec('улица', 'ул.'),
+            $this->normalizer->normalize(new AddressLevelSpec('UNDEFINED', 'ул.'))
         );
     }
 
@@ -80,84 +80,84 @@ class LevelNameNormalizerTest extends TestCase
     public function itCorrectlyNormalizesFiasLevels(): void
     {
         $this->assertEquals(
-            new LevelName('республика', 'респ.'),
-            $this->normalizer->normalize(new LevelName('UNDEFINED', 'респ.'))
+            new AddressLevelSpec('республика', 'респ.'),
+            $this->normalizer->normalize(new AddressLevelSpec('UNDEFINED', 'респ.'))
         );
         $this->assertEquals(
-            new LevelName('республика', 'респ.'),
-            $this->normalizer->normalize(new LevelName('UNDEFINED', 'респ'))
-        );
-
-        $this->assertEquals(
-            new LevelName('район', 'р-н'),
-            $this->normalizer->normalize(new LevelName('район', 'р-н'))
-        );
-        $this->assertEquals(
-            new LevelName('район', 'р-н'),
-            $this->normalizer->normalize(new LevelName('район', 'район'))
+            new AddressLevelSpec('республика', 'респ.'),
+            $this->normalizer->normalize(new AddressLevelSpec('UNDEFINED', 'респ'))
         );
 
         $this->assertEquals(
-            new LevelName('город', 'г.'),
-            $this->normalizer->normalize(new LevelName('UNDEFINED', 'г'))
+            new AddressLevelSpec('район', 'р-н'),
+            $this->normalizer->normalize(new AddressLevelSpec('район', 'р-н'))
         );
         $this->assertEquals(
-            new LevelName('город', 'г.'),
-            $this->normalizer->normalize(new LevelName('UNDEFINED', 'г.'))
-        );
-
-        $this->assertEquals(
-            new LevelName('поселок', 'п.'),
-            $this->normalizer->normalize(new LevelName('поселок', 'п.'))
-        );
-        $this->assertEquals(
-            new LevelName('поселок', 'п.'),
-            $this->normalizer->normalize(new LevelName('поселок', 'п'))
+            new AddressLevelSpec('район', 'р-н'),
+            $this->normalizer->normalize(new AddressLevelSpec('район', 'район'))
         );
 
         $this->assertEquals(
-            new LevelName('деревня', 'дер.'),
-            $this->normalizer->normalize(new LevelName('деревня', 'д.'))
+            new AddressLevelSpec('город', 'г.'),
+            $this->normalizer->normalize(new AddressLevelSpec('UNDEFINED', 'г'))
         );
         $this->assertEquals(
-            new LevelName('деревня', 'дер.'),
-            $this->normalizer->normalize(new LevelName('деревня', 'д'))
-        );
-
-        $this->assertEquals(
-            new LevelName('улица', 'ул.'),
-            $this->normalizer->normalize(new LevelName('UNDEFINED', 'ул.'))
-        );
-        $this->assertEquals(
-            new LevelName('улица', 'ул.'),
-            $this->normalizer->normalize(new LevelName('UNDEFINED', 'ул'))
+            new AddressLevelSpec('город', 'г.'),
+            $this->normalizer->normalize(new AddressLevelSpec('UNDEFINED', 'г.'))
         );
 
         $this->assertEquals(
-            new LevelName('аллея', 'ал.'),
-            $this->normalizer->normalize(new LevelName('UNDEFINED', 'ал'))
+            new AddressLevelSpec('поселок', 'п.'),
+            $this->normalizer->normalize(new AddressLevelSpec('поселок', 'п.'))
         );
         $this->assertEquals(
-            new LevelName('аллея', 'ал.'),
-            $this->normalizer->normalize(new LevelName('UNDEFINED', 'аллея'))
-        );
-
-        $this->assertEquals(
-            new LevelName('дом', 'д.'),
-            $this->normalizer->normalize(new LevelName('дом', 'д.'))
-        );
-        $this->assertEquals(
-            new LevelName('дом', 'д.'),
-            $this->normalizer->normalize(new LevelName('дом', 'д'))
+            new AddressLevelSpec('поселок', 'п.'),
+            $this->normalizer->normalize(new AddressLevelSpec('поселок', 'п'))
         );
 
         $this->assertEquals(
-            new LevelName('квартира', 'кв.'),
-            $this->normalizer->normalize(new LevelName('UNDEFINED', 'кв.'))
+            new AddressLevelSpec('деревня', 'дер.'),
+            $this->normalizer->normalize(new AddressLevelSpec('деревня', 'д.'))
         );
         $this->assertEquals(
-            new LevelName('квартира', 'кв.'),
-            $this->normalizer->normalize(new LevelName('UNDEFINED', 'кв'))
+            new AddressLevelSpec('деревня', 'дер.'),
+            $this->normalizer->normalize(new AddressLevelSpec('деревня', 'д'))
+        );
+
+        $this->assertEquals(
+            new AddressLevelSpec('улица', 'ул.'),
+            $this->normalizer->normalize(new AddressLevelSpec('UNDEFINED', 'ул.'))
+        );
+        $this->assertEquals(
+            new AddressLevelSpec('улица', 'ул.'),
+            $this->normalizer->normalize(new AddressLevelSpec('UNDEFINED', 'ул'))
+        );
+
+        $this->assertEquals(
+            new AddressLevelSpec('аллея', 'ал.'),
+            $this->normalizer->normalize(new AddressLevelSpec('UNDEFINED', 'ал'))
+        );
+        $this->assertEquals(
+            new AddressLevelSpec('аллея', 'ал.'),
+            $this->normalizer->normalize(new AddressLevelSpec('UNDEFINED', 'аллея'))
+        );
+
+        $this->assertEquals(
+            new AddressLevelSpec('дом', 'д.'),
+            $this->normalizer->normalize(new AddressLevelSpec('дом', 'д.'))
+        );
+        $this->assertEquals(
+            new AddressLevelSpec('дом', 'д.'),
+            $this->normalizer->normalize(new AddressLevelSpec('дом', 'д'))
+        );
+
+        $this->assertEquals(
+            new AddressLevelSpec('квартира', 'кв.'),
+            $this->normalizer->normalize(new AddressLevelSpec('UNDEFINED', 'кв.'))
+        );
+        $this->assertEquals(
+            new AddressLevelSpec('квартира', 'кв.'),
+            $this->normalizer->normalize(new AddressLevelSpec('UNDEFINED', 'кв'))
         );
     }
 
@@ -167,16 +167,16 @@ class LevelNameNormalizerTest extends TestCase
     public function itCorrectlyNormalizesChuvashia(): void
     {
         $this->assertEquals(
-            new LevelName('республика', 'респ.'),
-            $this->normalizer->normalize(new LevelName('Чувашия', 'Чувашия'))
+            new AddressLevelSpec('республика', 'респ.'),
+            $this->normalizer->normalize(new AddressLevelSpec('Чувашия', 'Чувашия'))
         );
         $this->assertEquals(
-            new LevelName('республика', 'респ.'),
-            $this->normalizer->normalize(new LevelName('ЧувАшия', 'чувашия'))
+            new AddressLevelSpec('республика', 'респ.'),
+            $this->normalizer->normalize(new AddressLevelSpec('ЧувАшия', 'чувашия'))
         );
         $this->assertEquals(
-            new LevelName('республика', 'респ.'),
-            $this->normalizer->normalize(new LevelName('респ', 'Чувашия'))
+            new AddressLevelSpec('республика', 'респ.'),
+            $this->normalizer->normalize(new AddressLevelSpec('респ', 'Чувашия'))
         );
     }
 }
