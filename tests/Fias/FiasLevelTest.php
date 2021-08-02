@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace Addresser\AddressRepository\Tests;
+namespace Addresser\AddressRepository\Tests\Fias;
 
 use Addresser\AddressRepository\AddressLevel;
 use Addresser\AddressRepository\Fias\FiasLevel;
 use PHPUnit\Framework\TestCase;
 
-class AddressLevelTest extends TestCase
+class FiasLevelTest extends TestCase
 {
     /**
      * @test
@@ -16,79 +16,79 @@ class AddressLevelTest extends TestCase
     {
         $this->assertEquals(
             AddressLevel::REGION,
-            AddressLevel::mapFromFiasLevel(FiasLevel::REGION)
+            FiasLevel::mapToAddressLevel(FiasLevel::REGION)
         );
 
         $this->assertEquals(
             AddressLevel::AREA,
-            AddressLevel::mapFromFiasLevel(FiasLevel::ADMINISTRATIVE_REGION)
+            FiasLevel::mapToAddressLevel(FiasLevel::ADMINISTRATIVE_REGION)
         );
         $this->assertEquals(
             AddressLevel::AREA,
-            AddressLevel::mapFromFiasLevel(FiasLevel::MUNICIPAL_DISTRICT)
+            FiasLevel::mapToAddressLevel(FiasLevel::MUNICIPAL_DISTRICT)
         );
 
         $this->assertEquals(
             AddressLevel::CITY,
-            AddressLevel::mapFromFiasLevel(FiasLevel::RURAL_URBAN_SETTLEMENT)
+            FiasLevel::mapToAddressLevel(FiasLevel::RURAL_URBAN_SETTLEMENT)
         );
         $this->assertEquals(
             AddressLevel::CITY,
-            AddressLevel::mapFromFiasLevel(FiasLevel::CITY)
+            FiasLevel::mapToAddressLevel(FiasLevel::CITY)
         );
         $this->assertEquals(
             AddressLevel::SETTLEMENT,
-            AddressLevel::mapFromFiasLevel(FiasLevel::SETTLEMENT)
+            FiasLevel::mapToAddressLevel(FiasLevel::SETTLEMENT)
         );
 
         $this->assertEquals(
             AddressLevel::SETTLEMENT,
-            AddressLevel::mapFromFiasLevel(FiasLevel::ELEMENT_OF_THE_PLANNING_STRUCTURE)
+            FiasLevel::mapToAddressLevel(FiasLevel::ELEMENT_OF_THE_PLANNING_STRUCTURE)
         );
         $this->assertEquals(
             AddressLevel::SETTLEMENT,
-            AddressLevel::mapFromFiasLevel(FiasLevel::INTRACITY_LEVEL)
+            FiasLevel::mapToAddressLevel(FiasLevel::INTRACITY_LEVEL)
         );
 
         $this->assertEquals(
             AddressLevel::STREET,
-            AddressLevel::mapFromFiasLevel(FiasLevel::ROAD_NETWORK_ELEMENT)
+            FiasLevel::mapToAddressLevel(FiasLevel::ROAD_NETWORK_ELEMENT)
         );
         $this->assertEquals(
             AddressLevel::STREET,
-            AddressLevel::mapFromFiasLevel(FiasLevel::OBJECT_LEVEL_IN_ADDITIONAL_TERRITORIES)
+            FiasLevel::mapToAddressLevel(FiasLevel::OBJECT_LEVEL_IN_ADDITIONAL_TERRITORIES)
         );
 
         $this->assertEquals(
             AddressLevel::STEAD,
-            AddressLevel::mapFromFiasLevel(FiasLevel::STEAD)
+            FiasLevel::mapToAddressLevel(FiasLevel::STEAD)
         );
 
         $this->assertEquals(
             AddressLevel::CAR_PLACE,
-            AddressLevel::mapFromFiasLevel(FiasLevel::CAR_PLACE)
+            FiasLevel::mapToAddressLevel(FiasLevel::CAR_PLACE)
         );
 
         // пока nulls
         $this->assertEquals(
             AddressLevel::HOUSE,
-            AddressLevel::mapFromFiasLevel(FiasLevel::BUILDING)
+            FiasLevel::mapToAddressLevel(FiasLevel::BUILDING)
         );
 
         $this->assertEquals(
             AddressLevel::FLAT,
-            AddressLevel::mapFromFiasLevel(FiasLevel::PREMISES)
+            FiasLevel::mapToAddressLevel(FiasLevel::PREMISES)
         );
 
         $this->assertEquals(
             AddressLevel::ROOM,
-            AddressLevel::mapFromFiasLevel(FiasLevel::PREMISES_WITHIN_THE_PREMISES)
+            FiasLevel::mapToAddressLevel(FiasLevel::PREMISES_WITHIN_THE_PREMISES)
         );
 
         // не понятный уровень
         $this->assertEquals(
-            null,
-            AddressLevel::mapFromFiasLevel(FiasLevel::COUNTY_LEVEL)
+            AddressLevel::STREET,
+            FiasLevel::mapToAddressLevel(FiasLevel::COUNTY_LEVEL)
         );
     }
 }
