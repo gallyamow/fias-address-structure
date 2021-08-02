@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace Addresser\AddressRepository\Fias\LevelNameResolvers;
+namespace Addresser\AddressRepository\Fias\AddressLevelSpecResolvers;
 
-use Addresser\AddressRepository\AddressLevel;
-use Addresser\AddressRepository\Exceptions\LevelNameNotFoundException;
-use Addresser\AddressRepository\Fias\FiasAddressLevelSpecResolverInterface;
 use Addresser\AddressRepository\AddressLevelSpec;
+use Addresser\AddressRepository\Exceptions\LevelNameSpecNotFoundException;
+use Addresser\AddressRepository\Fias\AddressLevelSpecResolverInterface;
 
-class FiasHouseAddressLevelSpecResolver implements FiasAddressLevelSpecResolverInterface
+class HouseAddressLevelSpecResolver implements AddressLevelSpecResolverInterface
 {
-    public function resolve(int $typeId): AddressLevelSpec
+    public function resolve(int $addressLevel, $identifier): AddressLevelSpec
     {
-        $currAddressLevel = AddressLevel::HOUSE;
+        $typeId = (int)$identifier;
+        $currAddressLevel = $addressLevel;
 
         switch ($typeId) {
             case 1:
@@ -27,7 +27,7 @@ class FiasHouseAddressLevelSpecResolver implements FiasAddressLevelSpecResolverI
                 return new AddressLevelSpec($currAddressLevel, 'дом', 'д.', AddressLevelSpec::NAME_POSITION_BEFORE);
             case 3:
                 return new AddressLevelSpec(
-                    $currAddressLevel,
+                    $addressLevel,
                     'домовладение',
                     'двлд.',
                     AddressLevelSpec::NAME_POSITION_BEFORE
@@ -38,18 +38,18 @@ class FiasHouseAddressLevelSpecResolver implements FiasAddressLevelSpecResolverI
                 return new AddressLevelSpec($currAddressLevel, 'здание', 'зд.', AddressLevelSpec::NAME_POSITION_BEFORE);
             case 6:
                 return new AddressLevelSpec(
-                    $currAddressLevel, 'шахта', 'шахта', AddressLevelSpec::NAME_POSITION_BEFORE
+                    $addressLevel, 'шахта', 'шахта', AddressLevelSpec::NAME_POSITION_BEFORE
                 );
             case 7:
                 return new AddressLevelSpec(
-                    $currAddressLevel,
+                    $addressLevel,
                     'строение',
                     'стр.',
                     AddressLevelSpec::NAME_POSITION_BEFORE
                 );
             case 8:
                 return new AddressLevelSpec(
-                    $currAddressLevel,
+                    $addressLevel,
                     'сооружение',
                     'соор.',
                     AddressLevelSpec::NAME_POSITION_BEFORE
@@ -57,37 +57,37 @@ class FiasHouseAddressLevelSpecResolver implements FiasAddressLevelSpecResolverI
             case 9:
                 // было литера
                 return new AddressLevelSpec(
-                    $currAddressLevel, 'литера', 'лит.', AddressLevelSpec::NAME_POSITION_BEFORE
+                    $addressLevel, 'литера', 'лит.', AddressLevelSpec::NAME_POSITION_BEFORE
                 );
             case 10:
                 // было к.
                 return new AddressLevelSpec(
-                    $currAddressLevel, 'корпус', 'корп.', AddressLevelSpec::NAME_POSITION_BEFORE
+                    $addressLevel, 'корпус', 'корп.', AddressLevelSpec::NAME_POSITION_BEFORE
                 );
             case 11:
                 return new AddressLevelSpec(
-                    $currAddressLevel, 'подвал', 'подв.', AddressLevelSpec::NAME_POSITION_BEFORE
+                    $addressLevel, 'подвал', 'подв.', AddressLevelSpec::NAME_POSITION_BEFORE
                 );
             case 12:
                 return new AddressLevelSpec(
-                    $currAddressLevel,
+                    $addressLevel,
                     'котельная',
                     'кот.',
                     AddressLevelSpec::NAME_POSITION_BEFORE
                 );
             case 13:
                 return new AddressLevelSpec(
-                    $currAddressLevel, 'погреб', 'погр.', AddressLevelSpec::NAME_POSITION_BEFORE
+                    $addressLevel, 'погреб', 'погр.', AddressLevelSpec::NAME_POSITION_BEFORE
                 );
             case 14:
                 return new AddressLevelSpec(
-                    $currAddressLevel,
+                    $addressLevel,
                     'объект незавершенного строительства,ОНС',
                     'ОНС',
                     AddressLevelSpec::NAME_POSITION_BEFORE
                 );
             default:
-                throw LevelNameNotFoundException::withFiasRelationTypeAndTypeId('house_types', $typeId);
+                throw LevelNameSpecNotFoundException::withFiasRelationTypeAndTypeId('house_types', $typeId);
         }
     }
 }

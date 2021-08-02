@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Addresser\AddressRepository;
 
-use Addresser\AddressRepository\Fias\FiasLevel;
-
 /**
  * Более привычные в быту упрощенные уровни.
  */

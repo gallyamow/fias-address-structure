@@ -8,53 +8,27 @@ use Addresser\AddressRepository\ActualityComparator;
 use Addresser\AddressRepository\AddressBuilderInterface;
 use Addresser\AddressRepository\AddressLevel;
 use Addresser\AddressRepository\AddressSynonymizer;
+use Addresser\AddressRepository\Fias\AddressLevelSpecResolvers\AddHouseAddressLevelSpecResolver;
+use Addresser\AddressRepository\Fias\AddressLevelSpecResolvers\ApartmentAddressLevelSpecResolver;
+use Addresser\AddressRepository\Fias\AddressLevelSpecResolvers\HouseAddressLevelSpecResolver;
+use Addresser\AddressRepository\Fias\AddressLevelSpecResolvers\ObjectAddressLevelSpecResolver;
+use Addresser\AddressRepository\Fias\AddressLevelSpecResolvers\RoomAddressLevelSpecResolver;
 use Addresser\AddressRepository\Fias\FiasAddressBuilder;
 use Addresser\AddressRepository\Fias\FiasLevel;
-use Addresser\AddressRepository\Fias\LevelNameResolvers\FiasAddHouseAddressLevelSpecResolver;
-use Addresser\AddressRepository\Fias\LevelNameResolvers\FiasApartmentAddressLevelSpecResolver;
-use Addresser\AddressRepository\Fias\LevelNameResolvers\FiasHouseAddressLevelSpecResolver;
-use Addresser\AddressRepository\Fias\LevelNameResolvers\FiasTypeSource;
-use Addresser\AddressRepository\Fias\LevelNameResolvers\FiasObjectLevelNameResolver;
-use Addresser\AddressRepository\Fias\LevelNameResolvers\FiasRoomAddressLevelSpecResolver;
-use Addresser\AddressRepository\AddresLevelSpecNormalizer;
 use PHPUnit\Framework\TestCase;
 
-/**
- * окато, октмо, кладр - есть не у всех, и после обновлений - могут появится.
- */
 class FiasAddressBuilderTest extends TestCase
 {
     private AddressBuilderInterface $builder;
 
     protected function setUp(): void
     {
-        $objectTypeSourceMock = $this->createMock(FiasTypeSource::class);
-        $objectTypeSourceMock->method('getItems')
-            ->willReturn(
-                [
-                    // здесь ненормализованные данные
-                    ['level' => 1, 'shortname' => 'а.обл', 'name' => 'Автономная область'],
-                    ['level' => 1, 'shortname' => 'обл', 'name' => 'Область'],
-                    ['level' => 1, 'shortname' => 'Респ', 'name' => 'Республика'],
-                    ['level' => 1, 'shortname' => 'респ', 'name' => 'Республика'],
-                    ['level' => 1, 'shortname' => 'Чувашия', 'name' => 'Чувашия'],
-                    ['level' => 2, 'shortname' => 'р-н', 'name' => 'Район'],
-                    ['level' => 5, 'shortname' => 'г', 'name' => 'Город'],
-                    ['level' => 6, 'shortname' => 'с', 'name' => 'Село'],
-                    ['level' => 6, 'shortname' => 'д', 'name' => 'Деревня'],
-                    ['level' => 8, 'shortname' => 'пр-кт', 'name' => 'проспект'],
-                    ['level' => 8, 'shortname' => 'ул', 'name' => 'улица'],
-                    ['level' => 8, 'shortname' => 'ш', 'name' => 'шоссе'],
-                ]
-            );
-
         $this->builder = new FiasAddressBuilder(
-            new FiasObjectLevelNameResolver($objectTypeSourceMock),
-            new FiasHouseAddressLevelSpecResolver(),
-            new FiasAddHouseAddressLevelSpecResolver(),
-            new FiasApartmentAddressLevelSpecResolver(),
-            new FiasRoomAddressLevelSpecResolver(),
-            new AddresLevelSpecNormalizer(),
+            new ObjectAddressLevelSpecResolver(),
+            new HouseAddressLevelSpecResolver(),
+            new AddHouseAddressLevelSpecResolver(),
+            new ApartmentAddressLevelSpecResolver(),
+            new RoomAddressLevelSpecResolver(),
             new ActualityComparator(),
             new AddressSynonymizer()
         );
@@ -428,7 +402,10 @@ class FiasAddressBuilderTest extends TestCase
             ]
         );
 
-        $this->assertEquals('респ. Башкортостан, г. Нефтекамск, дер. Крым-Сараево, (бывш. Крымсараево)', $address->getCompleteShortAddress());
+        $this->assertEquals(
+            'респ. Башкортостан, г. Нефтекамск, дер. Крым-Сараево, (бывш. Крымсараево)',
+            $address->getCompleteShortAddress()
+        );
 
         // предыдущие уровни заполнены
         $this->assertEquals('6f2cbfd8-692a-4ee4-9b16-067210bde3fc', $address->getRegionFiasId());
@@ -514,7 +491,10 @@ class FiasAddressBuilderTest extends TestCase
             ]
         );
 
-        $this->assertEquals('респ. Башкортостан, г. Нефтекамск, ул. Социалистическая, д. 18, кв. 1', $address->getCompleteShortAddress());
+        $this->assertEquals(
+            'респ. Башкортостан, г. Нефтекамск, ул. Социалистическая, д. 18, кв. 1',
+            $address->getCompleteShortAddress()
+        );
 
         // предыдущие уровни заполнены
         $this->assertEquals('6f2cbfd8-692a-4ee4-9b16-067210bde3fc', $address->getRegionFiasId());
@@ -681,7 +661,10 @@ class FiasAddressBuilderTest extends TestCase
             ]
         );
 
-        $this->assertEquals('респ. Башкортостан, Краснокамский р-н, с. Куяново, пр-кт Комсомольский', $address->getCompleteShortAddress());
+        $this->assertEquals(
+            'респ. Башкортостан, Краснокамский р-н, с. Куяново, пр-кт Комсомольский',
+            $address->getCompleteShortAddress()
+        );
 
         // город пуст
         $this->assertNull($address->getCityFiasId());
@@ -768,7 +751,10 @@ class FiasAddressBuilderTest extends TestCase
             ]
         );
 
-        $this->assertEquals('респ. Башкортостан, Краснокамский р-н, с. Куяново, пр-кт Комсомольский, д. 33', $address->getCompleteShortAddress());
+        $this->assertEquals(
+            'респ. Башкортостан, Краснокамский р-н, с. Куяново, пр-кт Комсомольский, д. 33',
+            $address->getCompleteShortAddress()
+        );
 
         // город пуст
         $this->assertNull($address->getCityFiasId());
@@ -854,7 +840,10 @@ class FiasAddressBuilderTest extends TestCase
             ]
         );
 
-        $this->assertEquals('респ. Башкортостан, Краснокамский р-н, с. Куяново, пр-кт Комсомольский, д. 33, кв. 2', $address->getCompleteShortAddress());
+        $this->assertEquals(
+            'респ. Башкортостан, Краснокамский р-н, с. Куяново, пр-кт Комсомольский, д. 33, кв. 2',
+            $address->getCompleteShortAddress()
+        );
 
         // город пуст
         $this->assertNull($address->getCityFiasId());
@@ -940,7 +929,10 @@ class FiasAddressBuilderTest extends TestCase
             ]
         );
 
-        $this->assertEquals('респ. Башкортостан, г. Нефтекамск, ул. Социалистическая, зд. 10А, стр. 4', $address->getCompleteShortAddress());
+        $this->assertEquals(
+            'респ. Башкортостан, г. Нефтекамск, ул. Социалистическая, зд. 10А, стр. 4',
+            $address->getCompleteShortAddress()
+        );
 
         // соответствующий уровень заполнен
         $this->assertEquals('b9433c6d-574a-4224-8197-0f01a5671f68', $address->getHouseFiasId());
@@ -967,7 +959,10 @@ class FiasAddressBuilderTest extends TestCase
             ]
         );
 
-        $this->assertEquals('респ. Башкортостан, г. Кумертау, ул. Брикетная, влд. 5, корп. А, стр. 1/6', $address->getCompleteShortAddress());
+        $this->assertEquals(
+            'респ. Башкортостан, г. Кумертау, ул. Брикетная, влд. 5, корп. А, стр. 1/6',
+            $address->getCompleteShortAddress()
+        );
 
         // соответствующий уровень заполнен
         $this->assertEquals('f581b200-3843-4cc6-baba-c35efe08f5a5', $address->getHouseFiasId());
@@ -985,7 +980,6 @@ class FiasAddressBuilderTest extends TestCase
         $this->assertEquals('строение', $address->getBlockTypeFull2());
         $this->assertEquals('1/6', $address->getBlock2());
 
-        /** @noinspection PhpUnhandledExceptionInspection */
         $address = $this->builder->build(
             [
                 'hierarchy_id' => 73109373,
@@ -996,7 +990,10 @@ class FiasAddressBuilderTest extends TestCase
         );
 
         // todo: обл. в конце
-        $this->assertEquals('обл. Ульяновская, г. Ульяновск, ш Московское, д. 9-А, корп. 2, лит. Б,б,б1,Л', $address->getCompleteShortAddress());
+        $this->assertEquals(
+            'обл. Ульяновская, г. Ульяновск, ш. Московское, д. 9-А, корп. 2, лит. Б,б,б1,Л',
+            $address->getCompleteShortAddress()
+        );
 
         // соответствующий уровень заполнен
         $this->assertEquals('fd7c161b-0765-4e54-9517-1c49f50e03ce', $address->getHouseFiasId());

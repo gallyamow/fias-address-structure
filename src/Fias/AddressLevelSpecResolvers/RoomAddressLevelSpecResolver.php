@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace Addresser\AddressRepository\Fias\LevelNameResolvers;
+namespace Addresser\AddressRepository\Fias\AddressLevelSpecResolvers;
 
-use Addresser\AddressRepository\AddressLevel;
-use Addresser\AddressRepository\Exceptions\LevelNameNotFoundException;
-use Addresser\AddressRepository\Fias\FiasAddressLevelSpecResolverInterface;
 use Addresser\AddressRepository\AddressLevelSpec;
+use Addresser\AddressRepository\Exceptions\LevelNameSpecNotFoundException;
+use Addresser\AddressRepository\Fias\AddressLevelSpecResolverInterface;
 
-class FiasRoomAddressLevelSpecResolver implements FiasAddressLevelSpecResolverInterface
+class RoomAddressLevelSpecResolver implements AddressLevelSpecResolverInterface
 {
-    public function resolve(int $typeId): AddressLevelSpec
+    public function resolve(int $addressLevel, $identifier): AddressLevelSpec
     {
-        $currAddressLevel = AddressLevel::ROOM;
+        $typeId = (int)$identifier;
+        $currAddressLevel = $addressLevel;
 
         switch ($typeId) {
             case 0:
@@ -41,7 +41,7 @@ class FiasRoomAddressLevelSpecResolver implements FiasAddressLevelSpecResolverIn
                     AddressLevelSpec::NAME_POSITION_BEFORE
                 );
             default:
-                throw LevelNameNotFoundException::withFiasRelationTypeAndTypeId('room_types', $typeId);
+                throw LevelNameSpecNotFoundException::withFiasRelationTypeAndTypeId('room_types', $typeId);
         }
     }
 }

@@ -10,9 +10,7 @@ use Addresser\AddressRepository\AddressBuilderInterface;
 use Addresser\AddressRepository\AddressLevel;
 use Addresser\AddressRepository\AddressSynonymizer;
 use Addresser\AddressRepository\Exceptions\AddressBuildFailedException;
-use Addresser\AddressRepository\Fias\LevelNameResolvers\FiasObjectLevelNameResolver;
 use Addresser\AddressRepository\AddressLevelSpec;
-use Addresser\AddressRepository\AddresLevelSpecNormalizer;
 
 /**
  * Формирует адрес на основе данных из ФИАС.
@@ -20,32 +18,28 @@ use Addresser\AddressRepository\AddresLevelSpecNormalizer;
  */
 class FiasAddressBuilder implements AddressBuilderInterface
 {
-    private FiasObjectLevelNameResolver $addrObjectTypeNameResolver;
-    private FiasAddressLevelSpecResolverInterface $houseTypeNameResolver;
-    private FiasAddressLevelSpecResolverInterface $addHouseTypeNameResolver;
-    private FiasAddressLevelSpecResolverInterface $apartmentTypeNameResolver;
-    private FiasAddressLevelSpecResolverInterface $roomTypeNameResolver;
-    private AddresLevelSpecNormalizer $levelNameNormalizer;
+    private AddressLevelSpecResolverInterface $addrObjectTypeNameResolver;
+    private AddressLevelSpecResolverInterface $houseTypeNameResolver;
+    private AddressLevelSpecResolverInterface $addHouseTypeNameResolver;
+    private AddressLevelSpecResolverInterface $apartmentTypeNameResolver;
+    private AddressLevelSpecResolverInterface $roomTypeNameResolver;
     private ActualityComparator $actualityPeriodComparator;
     private AddressSynonymizer $addressSynonymizer;
 
     public function __construct(
-        FiasObjectLevelNameResolver $addrObjectTypeNameResolver,
-        FiasAddressLevelSpecResolverInterface $houseTypeNameResolver,
-        FiasAddressLevelSpecResolverInterface $addHouseTypeNameResolver,
-        FiasAddressLevelSpecResolverInterface $apartmentTypeNameResolver,
-        FiasAddressLevelSpecResolverInterface $roomTypeNameResolver,
-        AddresLevelSpecNormalizer $levelNameNormalizer,
+        AddressLevelSpecResolverInterface $addrObjectTypeNameResolver,
+        AddressLevelSpecResolverInterface $houseTypeNameResolver,
+        AddressLevelSpecResolverInterface $addHouseTypeNameResolver,
+        AddressLevelSpecResolverInterface $apartmentTypeNameResolver,
+        AddressLevelSpecResolverInterface $roomTypeNameResolver,
         ActualityComparator $actualityPeriodComparator,
         AddressSynonymizer $addressSynonymizer
-    )
-    {
+    ) {
         $this->addrObjectTypeNameResolver = $addrObjectTypeNameResolver;
         $this->houseTypeNameResolver = $houseTypeNameResolver;
         $this->addHouseTypeNameResolver = $addHouseTypeNameResolver;
         $this->apartmentTypeNameResolver = $apartmentTypeNameResolver;
         $this->roomTypeNameResolver = $roomTypeNameResolver;
-        $this->levelNameNormalizer = $levelNameNormalizer;
         $this->actualityPeriodComparator = $actualityPeriodComparator;
         $this->addressSynonymizer = $addressSynonymizer;
     }
@@ -99,7 +93,7 @@ class FiasAddressBuilder implements AddressBuilderInterface
             $oktmo = $actualParams[FiasParamType::OKTMO]['value'] ?? null;
             $postalCode = $actualParams[FiasParamType::POSTAL_CODE]['value'] ?? null;
 
-            $typeName = $this->getNormalizedLevelName($addressLevel, $fiasLevel, $relationData);
+            $typeName = $this->resolveLevelSpec($addressLevel, $relationData);
 
             $fiasId = null;
             switch ($addressLevel) {
@@ -115,7 +109,7 @@ class FiasAddressBuilder implements AddressBuilderInterface
                     $address->setRegionKladrId($kladrId);
                     $address->setRegionType($typeName->getShortName());
                     $address->setRegionTypeFull($typeName->getName());
-                    $address->setRegion($this->notEmptyString($name));
+                    $address->setRegion($this->prepareString($name));
                     // учитываем переименование регионов
                     $address->setRenaming($this->resolveLevelRenaming($levelItems, $name));
                     break;
@@ -127,7 +121,7 @@ class FiasAddressBuilder implements AddressBuilderInterface
                     $address->setAreaKladrId($kladrId);
                     $address->setAreaType($typeName->getShortName());
                     $address->setAreaTypeFull($typeName->getName());
-                    $address->setArea($this->notEmptyString($name));
+                    $address->setArea($this->prepareString($name));
                     // учитываем переименование районов
                     $address->setRenaming($this->resolveLevelRenaming($levelItems, $name));
                     break;
@@ -139,7 +133,7 @@ class FiasAddressBuilder implements AddressBuilderInterface
                     $address->setCityKladrId($kladrId);
                     $address->setCityType($typeName->getShortName());
                     $address->setCityTypeFull($typeName->getName());
-                    $address->setCity($this->notEmptyString($name));
+                    $address->setCity($this->prepareString($name));
                     // учитываем переименование городов
                     $address->setRenaming($this->resolveLevelRenaming($levelItems, $name));
                     break;
@@ -151,7 +145,7 @@ class FiasAddressBuilder implements AddressBuilderInterface
                     $address->setSettlementKladrId($kladrId);
                     $address->setSettlementType($typeName->getShortName());
                     $address->setSettlementTypeFull($typeName->getName());
-                    $address->setSettlement($this->notEmptyString($name));
+                    $address->setSettlement($this->prepareString($name));
                     // учитываем переименование поселений
                     $address->setRenaming($this->resolveLevelRenaming($levelItems, $name));
                     break;
@@ -163,7 +157,7 @@ class FiasAddressBuilder implements AddressBuilderInterface
                     $address->setStreetKladrId($kladrId);
                     $address->setStreetType($typeName->getShortName());
                     $address->setStreetTypeFull($typeName->getName());
-                    $address->setStreet($this->notEmptyString($name));
+                    $address->setStreet($this->prepareString($name));
                     // учитываем переименование улиц
                     $address->setRenaming($this->resolveLevelRenaming($levelItems, $name));
                     break;
@@ -173,11 +167,11 @@ class FiasAddressBuilder implements AddressBuilderInterface
                     $address->setHouseKladrId($kladrId);
                     $address->setHouseType($typeName->getShortName());
                     $address->setHouseTypeFull($typeName->getName());
-                    $address->setHouse($this->notEmptyString($relationData['housenum']));
+                    $address->setHouse($this->prepareString($relationData['housenum']));
 
                     $address->setBlock1($relationData['addnum1'] ?? null);
                     if ($relationData['addtype1']) {
-                        $blockTypeName = $this->getNormalizedHouseBlockTypeName((int)$relationData['addtype1']);
+                        $blockTypeName = $this->resolveHouseBlockSpec((int)$relationData['addtype1']);
 
                         $address->setBlockType1($blockTypeName->getShortName());
                         $address->setBlockTypeFull1($blockTypeName->getName());
@@ -185,7 +179,7 @@ class FiasAddressBuilder implements AddressBuilderInterface
 
                     $address->setBlock2($relationData['addnum2'] ?? null);
                     if ($relationData['addtype2']) {
-                        $blockTypeName = $this->getNormalizedHouseBlockTypeName((int)$relationData['addtype2']);
+                        $blockTypeName = $this->resolveHouseBlockSpec((int)$relationData['addtype2']);
 
                         $address->setBlockType2($blockTypeName->getShortName());
                         $address->setBlockTypeFull2($blockTypeName->getName());
@@ -196,19 +190,19 @@ class FiasAddressBuilder implements AddressBuilderInterface
                     $address->setFlatFiasId($fiasId);
                     $address->setFlatType($typeName->getShortName());
                     $address->setFlatTypeFull($typeName->getName());
-                    $address->setFlat($this->notEmptyString($relationData['number']));
+                    $address->setFlat($this->prepareString($relationData['number']));
                     break;
                 case AddressLevel::ROOM:
                     $fiasId = $relationData['objectguid'];
                     $address->setRoomFiasId($fiasId);
                     $address->setRoomType($typeName->getShortName());
                     $address->setRoomTypeFull($typeName->getName());
-                    $address->setRoom($this->notEmptyString($relationData['number']));
+                    $address->setRoom($this->prepareString($relationData['number']));
                     break;
             }
 
             // данные последнего уровня
-            if ($addressLevel === array_key_last($parentsByLevels)) {
+            if ($addressLevel === \array_key_last($parentsByLevels)) {
                 if (null === $fiasId) {
                     throw new AddressBuildFailedException('Null value for fiasId');
                 }
@@ -256,7 +250,7 @@ class FiasAddressBuilder implements AddressBuilderInterface
         );
     }
 
-    private function getNormalizedLevelName(int $addressLevel, int $fiasLevel, array $relationData): AddressLevelSpec
+    private function resolveLevelSpec(int $addressLevel, array $relationData): AddressLevelSpec
     {
         $typeName = null;
 
@@ -266,17 +260,20 @@ class FiasAddressBuilder implements AddressBuilderInterface
             case AddressLevel::CITY:
             case AddressLevel::SETTLEMENT:
             case AddressLevel::STREET:
-                $typeName = $this->addrObjectTypeNameResolver->resolve($fiasLevel, $relationData['typename']);
+                $typeName = $this->addrObjectTypeNameResolver->resolve($addressLevel, $relationData['typename']);
                 break;
             case AddressLevel::HOUSE:
                 // Респ Башкортостан, г Кумертау, ул Брикетная, влд 5 к А стр 1/6
-                $typeName = $this->houseTypeNameResolver->resolve((int)$relationData['housetype']);
+                $typeName = $this->houseTypeNameResolver->resolve(AddressLevel::HOUSE, (int)$relationData['housetype']);
                 break;
             case AddressLevel::FLAT:
-                $typeName = $this->apartmentTypeNameResolver->resolve((int)$relationData['aparttype']);
+                $typeName = $this->apartmentTypeNameResolver->resolve(
+                    AddressLevel::FLAT,
+                    (int)$relationData['aparttype']
+                );
                 break;
             case AddressLevel::ROOM:
-                $typeName = $this->roomTypeNameResolver->resolve((int)$relationData['roomtype']);
+                $typeName = $this->roomTypeNameResolver->resolve(AddressLevel::ROOM, (int)$relationData['roomtype']);
                 break;
         }
 
@@ -286,12 +283,12 @@ class FiasAddressBuilder implements AddressBuilderInterface
             );
         }
 
-        return $this->levelNameNormalizer->normalize($typeName);
+        return $typeName;
     }
 
-    private function getNormalizedHouseBlockTypeName(int $addType): AddressLevelSpec
+    private function resolveHouseBlockSpec(int $addType): AddressLevelSpec
     {
-        return $this->levelNameNormalizer->normalize($this->addHouseTypeNameResolver->resolve($addType));
+        return $this->addHouseTypeNameResolver->resolve(AddressLevel::HOUSE, $addType);
     }
 
     private function resolveLevels(array $item): array
@@ -366,7 +363,7 @@ class FiasAddressBuilder implements AddressBuilderInterface
         return $res;
     }
 
-    private function notEmptyString(?string $s): ?string
+    private function prepareString(?string $s): ?string
     {
         if (null === $s) {
             return null;

@@ -2,21 +2,21 @@
 
 declare(strict_types=1);
 
-namespace Addresser\AddressRepository\Fias\LevelNameResolvers;
+namespace Addresser\AddressRepository\Fias\AddressLevelSpecResolvers;
 
-use Addresser\AddressRepository\AddressLevel;
-use Addresser\AddressRepository\Exceptions\LevelNameNotFoundException;
-use Addresser\AddressRepository\Fias\FiasAddressLevelSpecResolverInterface;
 use Addresser\AddressRepository\AddressLevelSpec;
+use Addresser\AddressRepository\Exceptions\LevelNameSpecNotFoundException;
+use Addresser\AddressRepository\Fias\AddressLevelSpecResolverInterface;
 
 /**
  * @see gar.apartment_types
  */
-class FiasApartmentAddressLevelSpecResolver implements FiasAddressLevelSpecResolverInterface
+class ApartmentAddressLevelSpecResolver implements AddressLevelSpecResolverInterface
 {
-    public function resolve(int $typeId): AddressLevelSpec
+    public function resolve(int $addressLevel, $identifier): AddressLevelSpec
     {
-        $currAddressLevel = AddressLevel::FLAT;
+        $typeId = (int)$identifier;
+        $currAddressLevel = $addressLevel;
 
         switch ($typeId) {
             case 1:
@@ -86,7 +86,7 @@ class FiasApartmentAddressLevelSpecResolver implements FiasAddressLevelSpecResol
                 // было г-ж
                 return new AddressLevelSpec($currAddressLevel, 'гараж', 'гар.', AddressLevelSpec::NAME_POSITION_BEFORE);
             default:
-                throw LevelNameNotFoundException::withFiasRelationTypeAndTypeId('apartment_types', $typeId);
+                throw LevelNameSpecNotFoundException::withFiasRelationTypeAndTypeId('apartment_types', $typeId);
         }
     }
 }
