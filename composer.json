@@ -1,5 +1,5 @@
 {
-  "name": "core-extensions/address-repository",
+  "name": "addresser/address-repository",
   "version": "1.0.0",
   "description": "Russian address from FIAS",
   "type": "library",
