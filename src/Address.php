@@ -20,6 +20,7 @@ class Address implements \JsonSerializable
 
     /**
      * Это поле не относится к адресу и нужно для возобновления индексации.
+     * TODO: подумать нужно ли оно
      * @var int
      */
     private int $fiasHierarchyId;
@@ -34,17 +35,17 @@ class Address implements \JsonSerializable
      */
     private int $addressLevel;
 
+    private ?string $kladrId = null;
+    private ?string $okato = null;
+    private ?string $oktmo = null;
+    private ?string $postalCode = null;
+
     // регион
     private string $regionFiasId;
     private ?string $regionKladrId;
     private string $regionType;
     private string $regionTypeFull;
     private string $region;
-
-    private ?string $kladrId = null;
-    private ?string $okato = null;
-    private ?string $oktmo = null;
-    private ?string $postalCode = null;
 
     // район
     private ?string $areaFiasId = null;
@@ -97,7 +98,7 @@ class Address implements \JsonSerializable
     private ?string $flatTypeFull = null;
     private ?string $flat = null;
 
-    // квартира
+    // помещение
     private ?string $roomFiasId = null;
     private ?string $roomType = null;
     private ?string $roomTypeFull = null;
@@ -111,7 +112,7 @@ class Address implements \JsonSerializable
 
     /**
      * Старые названия - переименования регионов, городов, улиц.
-     * Запоняться будет только на необходимом уровне. Для дочерних - не будет.
+     * Заполняться будет только на необходимом уровне. Для дочерних - не будет.
      * @var array
      */
     private array $renaming = [];
