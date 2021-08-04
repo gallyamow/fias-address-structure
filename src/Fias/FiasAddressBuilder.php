@@ -84,7 +84,7 @@ class FiasAddressBuilder implements AddressBuilderInterface
             $relationData = $relation['relation_data'];
 
             $actualParams = $this->resolveActualParams(
-                $actualItem['params'],
+                $actualItem['params'] ?? [],
                 [FiasParamType::KLADR, FiasParamType::OKATO, FiasParamType::OKTMO, FiasParamType::POSTAL_CODE]
             );
 
@@ -220,6 +220,18 @@ class FiasAddressBuilder implements AddressBuilderInterface
                     $address->setRoomTypeFull($typeName->getName());
 
                     $address->setRoom($this->prepareString($relationData['number']));
+                    break;
+                case AddressLevel::STEAD:
+                    $fiasId = $relationData['objectguid'];
+                    // TODO: Пока не решили хранить ли
+                    // $address->setSteadFiasId($fiasId);
+                    // $address->setStead($this->prepareString($relationData['number']));
+                    break;
+                case AddressLevel::CAR_PLACE:
+                    $fiasId = $relationData['objectguid'];
+                    // TODO: Пока не решили хранить ли
+                    // $address->setCarPlaceFiasId($fiasId);
+                    // $address->setCarPlace($this->prepareString($relationData['number']));
                     break;
             }
 
