@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace Addresser\AddressRepository\Fias\AddressLevelSpecResolvers;
 
+use Addresser\AddressRepository\AddressLevel;
 use Addresser\AddressRepository\AddressLevelSpec;
 use Addresser\AddressRepository\Exceptions\AddressLevelSpecNotFoundException;
-use Addresser\AddressRepository\Fias\AddressLevelSpecResolverInterface;
+use Addresser\AddressRepository\Fias\TypeAddressLevelSpecResolverInterface;
 
-class HouseAddressLevelSpecResolver implements AddressLevelSpecResolverInterface
+class HouseAddressLevelSpecResolver implements TypeAddressLevelSpecResolverInterface
 {
-    public function resolve(int $addressLevel, $identifier): AddressLevelSpec
+    public function resolve(int $typeId): AddressLevelSpec
     {
-        $typeId = (int)$identifier;
-        $currAddressLevel = $addressLevel;
+        $currAddressLevel = AddressLevel::HOUSE;
 
         switch ($typeId) {
             case 1:
@@ -27,7 +27,7 @@ class HouseAddressLevelSpecResolver implements AddressLevelSpecResolverInterface
                 return new AddressLevelSpec($currAddressLevel, 'дом', 'д.', AddressLevelSpec::NAME_POSITION_BEFORE);
             case 3:
                 return new AddressLevelSpec(
-                    $addressLevel,
+                    $currAddressLevel,
                     'домовладение',
                     'двлд.',
                     AddressLevelSpec::NAME_POSITION_BEFORE
@@ -38,18 +38,18 @@ class HouseAddressLevelSpecResolver implements AddressLevelSpecResolverInterface
                 return new AddressLevelSpec($currAddressLevel, 'здание', 'зд.', AddressLevelSpec::NAME_POSITION_BEFORE);
             case 6:
                 return new AddressLevelSpec(
-                    $addressLevel, 'шахта', 'шахта', AddressLevelSpec::NAME_POSITION_BEFORE
+                    $currAddressLevel, 'шахта', 'шахта', AddressLevelSpec::NAME_POSITION_BEFORE
                 );
             case 7:
                 return new AddressLevelSpec(
-                    $addressLevel,
+                    $currAddressLevel,
                     'строение',
                     'стр.',
                     AddressLevelSpec::NAME_POSITION_BEFORE
                 );
             case 8:
                 return new AddressLevelSpec(
-                    $addressLevel,
+                    $currAddressLevel,
                     'сооружение',
                     'соор.',
                     AddressLevelSpec::NAME_POSITION_BEFORE
@@ -57,37 +57,37 @@ class HouseAddressLevelSpecResolver implements AddressLevelSpecResolverInterface
             case 9:
                 // было литера
                 return new AddressLevelSpec(
-                    $addressLevel, 'литера', 'лит.', AddressLevelSpec::NAME_POSITION_BEFORE
+                    $currAddressLevel, 'литера', 'лит.', AddressLevelSpec::NAME_POSITION_BEFORE
                 );
             case 10:
                 // было к.
                 return new AddressLevelSpec(
-                    $addressLevel, 'корпус', 'корп.', AddressLevelSpec::NAME_POSITION_BEFORE
+                    $currAddressLevel, 'корпус', 'корп.', AddressLevelSpec::NAME_POSITION_BEFORE
                 );
             case 11:
                 return new AddressLevelSpec(
-                    $addressLevel, 'подвал', 'подв.', AddressLevelSpec::NAME_POSITION_BEFORE
+                    $currAddressLevel, 'подвал', 'подв.', AddressLevelSpec::NAME_POSITION_BEFORE
                 );
             case 12:
                 return new AddressLevelSpec(
-                    $addressLevel,
+                    $currAddressLevel,
                     'котельная',
                     'кот.',
                     AddressLevelSpec::NAME_POSITION_BEFORE
                 );
             case 13:
                 return new AddressLevelSpec(
-                    $addressLevel, 'погреб', 'погр.', AddressLevelSpec::NAME_POSITION_BEFORE
+                    $currAddressLevel, 'погреб', 'погр.', AddressLevelSpec::NAME_POSITION_BEFORE
                 );
             case 14:
                 return new AddressLevelSpec(
-                    $addressLevel,
+                    $currAddressLevel,
                     'объект незавершенного строительства,ОНС',
                     'ОНС',
                     AddressLevelSpec::NAME_POSITION_BEFORE
                 );
             default:
-                throw AddressLevelSpecNotFoundException::withIdentifier($addressLevel, $identifier, 'house_types');
+                throw AddressLevelSpecNotFoundException::withIdentifier($currAddressLevel, $typeId, 'house_types');
         }
     }
 }

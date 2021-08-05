@@ -4,19 +4,20 @@ declare(strict_types=1);
 
 namespace Addresser\AddressRepository\Fias\AddressLevelSpecResolvers;
 
+use Addresser\AddressRepository\AddressLevel;
 use Addresser\AddressRepository\AddressLevelSpec;
 use Addresser\AddressRepository\Exceptions\AddressLevelSpecNotFoundException;
-use Addresser\AddressRepository\Fias\AddressLevelSpecResolverInterface;
+use Addresser\AddressRepository\Fias\TypeAddressLevelSpecResolverInterface;
 
 /**
+ * TODO: комната и помещение - пересекаются с ROOM
  * @see gar.apartment_types
  */
-class ApartmentAddressLevelSpecResolver implements AddressLevelSpecResolverInterface
+class ApartmentAddressLevelSpecResolver implements TypeAddressLevelSpecResolverInterface
 {
-    public function resolve(int $addressLevel, $identifier): AddressLevelSpec
+    public function resolve(int $typeId): AddressLevelSpec
     {
-        $typeId = (int)$identifier;
-        $currAddressLevel = $addressLevel;
+        $currAddressLevel = AddressLevel::FLAT;
 
         switch ($typeId) {
             case 1:
@@ -86,7 +87,7 @@ class ApartmentAddressLevelSpecResolver implements AddressLevelSpecResolverInter
                 // было г-ж
                 return new AddressLevelSpec($currAddressLevel, 'гараж', 'гар.', AddressLevelSpec::NAME_POSITION_BEFORE);
             default:
-                throw AddressLevelSpecNotFoundException::withIdentifier($addressLevel, $identifier, 'apartment_types');
+                throw AddressLevelSpecNotFoundException::withIdentifier($currAddressLevel, $typeId, 'apartment_types');
         }
     }
 }

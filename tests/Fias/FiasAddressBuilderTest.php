@@ -9,7 +9,6 @@ use Addresser\AddressRepository\AddressBuilderInterface;
 use Addresser\AddressRepository\AddressLevel;
 use Addresser\AddressRepository\AddressSynonymizer;
 use Addresser\AddressRepository\Exceptions\InvalidAddressLevelException;
-use Addresser\AddressRepository\Exceptions\RuntimeException;
 use Addresser\AddressRepository\Fias\AddressLevelSpecResolvers\AddHouseAddressLevelSpecResolver;
 use Addresser\AddressRepository\Fias\AddressLevelSpecResolvers\ApartmentAddressLevelSpecResolver;
 use Addresser\AddressRepository\Fias\AddressLevelSpecResolvers\HouseAddressLevelSpecResolver;
@@ -42,8 +41,8 @@ class FiasAddressBuilderTest extends TestCase
      */
     public function itShouldThrowExceptionWhenBuildsCarPlace(): void
     {
-        $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('Unsupported address level.');
+        $this->expectException(InvalidAddressLevelException::class);
+        $this->expectExceptionMessage(sprintf('Unsupported address level "%d".', AddressLevel::CAR_PLACE));
 
         $this->builder->build(
             [
@@ -61,8 +60,8 @@ class FiasAddressBuilderTest extends TestCase
      */
     public function itShouldThrowExceptionWhenBuildsStead(): void
     {
-        $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('Unsupported address level.');
+        $this->expectException(InvalidAddressLevelException::class);
+        $this->expectExceptionMessage(sprintf('Unsupported address level "%d".', AddressLevel::STEAD));
 
         $this->builder->build(
             [

@@ -154,8 +154,7 @@ class FiasLevel
 
             case self::ROAD_NETWORK_ELEMENT: // ул Привокзальная, пер Центральный
             case self::OBJECT_LEVEL_IN_ADDITIONAL_TERRITORIES: // ул 11 Линия, а/я Рябиновая
-                // TODO: бросать исключение (так как в addr_obj их нет)?
-            case self::COUNTY_LEVEL: // нет
+            case self::COUNTY_LEVEL: // нет // TODO: бросать исключение (так как в addr_obj их нет)?
                 return AddressLevel::STREET;
         }
     }

@@ -4,20 +4,19 @@ declare(strict_types=1);
 
 namespace Addresser\AddressRepository\Fias\AddressLevelSpecResolvers;
 
-use Addresser\AddressRepository\AddressLevel;
 use Addresser\AddressRepository\AddressLevelSpec;
 use Addresser\AddressRepository\Exceptions\AddressLevelSpecNotFoundException;
 use Addresser\AddressRepository\Exceptions\InvalidAddressLevelException;
-use Addresser\AddressRepository\Fias\AddressLevelSpecResolverInterface;
 use Addresser\AddressRepository\Fias\FiasLevel;
+use Addresser\AddressRepository\Fias\ObjectAddressLevelSpecResolverInterface;
 
 /**
  * Так как нужна нормализация - решил все сделать hardcoded чтобы обойтись без все равно огромного normalizer.
  * Правила: 1) сокращения слов оканчиваются точкой, аббревиатуры без точек 2) lowercase для всего кроме аббревиатур.
  */
-class ObjectAddressLevelSpecResolver implements AddressLevelSpecResolverInterface
+class ObjectAddressLevelSpecResolver implements ObjectAddressLevelSpecResolverInterface
 {
-    // sql-запрос для построения этих вариантов:
+    // sql-запрос для построения php-code этих вариантов:
     // select '[''name'' => '''||name||''', ''shortName'' => ['||shortnames||'],''namePosition'' => AddressLevelSpec::NAME_POSITION_BEFORE,''variants'' => [[''names'' => ['||shortnames||'], ''levels'' => ['||levels||']]]],'
     //from (
     //         select name, '''' || array_to_string(shortnames, ''',''') || '''' as shortnames, array_to_string(levels, ',') as levels
@@ -1000,33 +999,32 @@ class ObjectAddressLevelSpecResolver implements AddressLevelSpecResolverInterfac
 
     ];
 
-    public function resolve(int $addressLevel, $identifier): AddressLevelSpec
+    public function resolve(int $fiasLevel, $shortName): AddressLevelSpec
     {
-        if (!in_array(
-            $addressLevel,
+        // этот resolver не предназначен для следующих уровней
+        if (in_array(
+            $fiasLevel,
             [
-                AddressLevel::REGION,
-                AddressLevel::AREA,
-                AddressLevel::CITY,
-                AddressLevel::SETTLEMENT,
-                AddressLevel::STREET,
-                AddressLevel::CAR_PLACE,
-                AddressLevel::STEAD,
+                FiasLevel::BUILDING,
+                FiasLevel::PREMISES,
+                FiasLevel::PREMISES_WITHIN_THE_PREMISES,
             ],
             true
         )) {
             throw new InvalidAddressLevelException(
-                sprintf('Address level "%d" does not support spec resolving.', $addressLevel)
+                sprintf(
+                    'FiasLevel "%d" cannot be resolved by object resolver.',
+                    $fiasLevel
+                )
             );
         }
 
-
-        $s = $this->prepareString($identifier);
+        $s = $this->prepareString($shortName);
 
         $variants = array_values(
             array_filter(
                 self::VARIANTS,
-                function ($variant) use ($s, $addressLevel) {
+                function ($variant) use ($s, $fiasLevel) {
                     // совпадает по полному и краткому названию
                     if ($this->prepareString($variant['shortName']) === $s
                         || $this->prepareString($variant['name']) === $s
@@ -1047,17 +1045,7 @@ class ObjectAddressLevelSpecResolver implements AddressLevelSpecResolverInterfac
                             true
                         );
 
-                        $levelMatched = in_array(
-                            $addressLevel,
-                            array_map(
-                                static function ($fiasLevel) {
-                                    return FiasLevel::mapAdmHierarchyToAddressLevel($fiasLevel);
-                                },
-                                $group['levels']
-                            ),
-                            true
-                        );
-
+                        $levelMatched = in_array($fiasLevel, $group['levels'], true);
                         if ($nameMatched && $levelMatched) {
                             return true;
                         }
@@ -1069,10 +1057,11 @@ class ObjectAddressLevelSpecResolver implements AddressLevelSpecResolverInterfac
         );
 
         if (empty($variants)) {
-            throw AddressLevelSpecNotFoundException::withIdentifier($addressLevel, $identifier, 'addr_obj_types');
+            throw AddressLevelSpecNotFoundException::withIdentifier($fiasLevel, $shortName, 'addr_obj_types');
         }
 
         $variant = $variants[0];
+        $addressLevel = FiasLevel::mapAdmHierarchyToAddressLevel($fiasLevel);
 
         return new AddressLevelSpec(
             $addressLevel,

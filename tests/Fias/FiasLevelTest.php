@@ -4,11 +4,44 @@ declare(strict_types=1);
 namespace Addresser\AddressRepository\Tests\Fias;
 
 use Addresser\AddressRepository\AddressLevel;
+use Addresser\AddressRepository\Exceptions\InvalidAddressLevelException;
 use Addresser\AddressRepository\Fias\FiasLevel;
 use PHPUnit\Framework\TestCase;
 
 class FiasLevelTest extends TestCase
 {
+    /**
+     * @test
+     */
+    public function itShouldThrowExceptionWhenFiasLevelIsMunicipalDistrict(): void
+    {
+        $this->expectException(InvalidAddressLevelException::class);
+        $this->expectExceptionMessage(
+            sprintf('Wrong fiasLevel "%d" used in administrative hierarchy.', FiasLevel::MUNICIPAL_DISTRICT)
+        );
+
+        $this->assertEquals(
+            AddressLevel::CITY,
+            FiasLevel::mapAdmHierarchyToAddressLevel(FiasLevel::MUNICIPAL_DISTRICT)
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function itShouldThrowExceptionWhenFiasLevelIsRURAL_URBAN_SETTLEMENT(): void
+    {
+        $this->expectException(InvalidAddressLevelException::class);
+        $this->expectExceptionMessage(
+            sprintf('Wrong fiasLevel "%d" used in administrative hierarchy.', FiasLevel::RURAL_URBAN_SETTLEMENT)
+        );
+
+        $this->assertEquals(
+            AddressLevel::CITY,
+            FiasLevel::mapAdmHierarchyToAddressLevel(FiasLevel::RURAL_URBAN_SETTLEMENT)
+        );
+    }
+
     /**
      * @test
      */
@@ -25,13 +58,9 @@ class FiasLevelTest extends TestCase
         );
         $this->assertEquals(
             AddressLevel::AREA,
-            FiasLevel::mapAdmHierarchyToAddressLevel(FiasLevel::MUNICIPAL_DISTRICT)
+            FiasLevel::mapAdmHierarchyToAddressLevel(FiasLevel::ADMINISTRATIVE_REGION)
         );
 
-        $this->assertEquals(
-            AddressLevel::CITY,
-            FiasLevel::mapAdmHierarchyToAddressLevel(FiasLevel::RURAL_URBAN_SETTLEMENT)
-        );
         $this->assertEquals(
             AddressLevel::CITY,
             FiasLevel::mapAdmHierarchyToAddressLevel(FiasLevel::CITY)

@@ -10,7 +10,7 @@ use Addresser\AddressRepository\AddressBuilderInterface;
 use Addresser\AddressRepository\AddressLevel;
 use Addresser\AddressRepository\AddressSynonymizer;
 use Addresser\AddressRepository\Exceptions\AddressBuildFailedException;
-use Addresser\AddressRepository\AddressLevelSpec;
+use Addresser\AddressRepository\Exceptions\InvalidAddressLevelException;
 use Addresser\AddressRepository\Exceptions\RuntimeException;
 
 /**
@@ -19,33 +19,33 @@ use Addresser\AddressRepository\Exceptions\RuntimeException;
  */
 class FiasAddressBuilder implements AddressBuilderInterface
 {
-    private AddressLevelSpecResolverInterface $addrObjectTypeNameResolver;
-    private AddressLevelSpecResolverInterface $houseTypeNameResolver;
-    private AddressLevelSpecResolverInterface $addHouseTypeNameResolver;
-    private AddressLevelSpecResolverInterface $apartmentTypeNameResolver;
-    private AddressLevelSpecResolverInterface $roomTypeNameResolver;
+    private ObjectAddressLevelSpecResolverInterface $addrObjectTypeNameResolver;
+    private TypeAddressLevelSpecResolverInterface $houseSpecResolver;
+    private TypeAddressLevelSpecResolverInterface $addHouseSpecResolver;
+    private TypeAddressLevelSpecResolverInterface $apartmentSpecResolver;
+    private TypeAddressLevelSpecResolverInterface $roomSpecResolver;
     private ActualityComparator $actualityPeriodComparator;
     private AddressSynonymizer $addressSynonymizer;
 
     public function __construct(
-        AddressLevelSpecResolverInterface $addrObjectTypeNameResolver,
-        AddressLevelSpecResolverInterface $houseTypeNameResolver,
-        AddressLevelSpecResolverInterface $addHouseTypeNameResolver,
-        AddressLevelSpecResolverInterface $apartmentTypeNameResolver,
-        AddressLevelSpecResolverInterface $roomTypeNameResolver,
+        ObjectAddressLevelSpecResolverInterface $addrObjectTypeNameResolver,
+        TypeAddressLevelSpecResolverInterface $houseTypeNameResolver,
+        TypeAddressLevelSpecResolverInterface $addHouseTypeNameResolver,
+        TypeAddressLevelSpecResolverInterface $apartmentTypeNameResolver,
+        TypeAddressLevelSpecResolverInterface $roomTypeNameResolver,
         ActualityComparator $actualityPeriodComparator,
         AddressSynonymizer $addressSynonymizer
     ) {
         $this->addrObjectTypeNameResolver = $addrObjectTypeNameResolver;
-        $this->houseTypeNameResolver = $houseTypeNameResolver;
-        $this->addHouseTypeNameResolver = $addHouseTypeNameResolver;
-        $this->apartmentTypeNameResolver = $apartmentTypeNameResolver;
-        $this->roomTypeNameResolver = $roomTypeNameResolver;
+        $this->houseSpecResolver = $houseTypeNameResolver;
+        $this->addHouseSpecResolver = $addHouseTypeNameResolver;
+        $this->apartmentSpecResolver = $apartmentTypeNameResolver;
+        $this->roomSpecResolver = $roomTypeNameResolver;
         $this->actualityPeriodComparator = $actualityPeriodComparator;
         $this->addressSynonymizer = $addressSynonymizer;
     }
 
-    // todo: refactor a huge loop
+    // todo: too huge loop
     public function build(array $data, ?Address $existsAddress = null): Address
     {
         $hierarchyId = (int)$data['hierarchy_id'];
@@ -57,18 +57,18 @@ class FiasAddressBuilder implements AddressBuilderInterface
          * группируем по уровням ФИАС, так как дополнительные локаций таких как СНТ, ГСК mapped на один и тот же
          * уровень \Addresser\AddressRepository\AddressLevel::SETTLEMENT - может быть несколько актуальных значений.
          */
-        $parentsByLevels = [];
+        $groupedParents = [];
         foreach ($parents as $k => $item) {
             $fiasLevel = $this->resolveFiasLevel($item['relation']);
 
-            $parentsByLevels[$fiasLevel] = $parentsByLevels[$fiasLevel] ?? [];
-            $parentsByLevels[$fiasLevel][] = $item;
+            $groupedParents[$fiasLevel] = $groupedParents[$fiasLevel] ?? [];
+            $groupedParents[$fiasLevel][] = $item;
         }
 
         // мы должны сохранить изменения внесенные другими builder
         $address = $existsAddress ?? new Address();
 
-        foreach ($parentsByLevels as $fiasLevel => $levelItems) {
+        foreach ($groupedParents as $fiasLevel => $levelItems) {
             // находим актуальное значение
             $actualItem = array_values(
                 array_filter(
@@ -91,9 +91,6 @@ class FiasAddressBuilder implements AddressBuilderInterface
             }
 
             $actualItem = $actualItem[0];
-            $addressLevel = FiasLevel::mapAdmHierarchyToAddressLevel($fiasLevel);
-            $relationData = $actualItem['relation']['relation_data'];
-
             $actualParams = $this->resolveActualParams(
                 $actualItem['params'] ?? [],
                 [FiasParamType::KLADR, FiasParamType::OKATO, FiasParamType::OKTMO, FiasParamType::POSTAL_CODE]
@@ -105,6 +102,9 @@ class FiasAddressBuilder implements AddressBuilderInterface
             $postalCode = $actualParams[FiasParamType::POSTAL_CODE]['value'] ?? null;
 
             $fiasId = null;
+            $addressLevel = FiasLevel::mapAdmHierarchyToAddressLevel($fiasLevel);
+            $relationData = $actualItem['relation']['relation_data'];
+
             switch ($addressLevel) {
                 case AddressLevel::REGION:
                     $fiasId = $relationData['objectguid'];
@@ -128,7 +128,7 @@ class FiasAddressBuilder implements AddressBuilderInterface
                     $address->setRegionFiasId($fiasId);
                     $address->setRegionKladrId($kladrId);
 
-                    $typeName = $this->resolveLevelSpec($addressLevel, $relationData);
+                    $typeName = $this->addrObjectTypeNameResolver->resolve($fiasLevel, $relationData['typename']);
                     $address->setRegionType($typeName->getShortName());
                     $address->setRegionTypeFull($typeName->getName());
 
@@ -143,7 +143,7 @@ class FiasAddressBuilder implements AddressBuilderInterface
                     $address->setAreaFiasId($fiasId);
                     $address->setAreaKladrId($kladrId);
 
-                    $typeName = $this->resolveLevelSpec($addressLevel, $relationData);
+                    $typeName = $this->addrObjectTypeNameResolver->resolve($fiasLevel, $relationData['typename']);
                     $address->setAreaType($typeName->getShortName());
                     $address->setAreaTypeFull($typeName->getName());
 
@@ -158,7 +158,7 @@ class FiasAddressBuilder implements AddressBuilderInterface
                     $address->setCityFiasId($fiasId);
                     $address->setCityKladrId($kladrId);
 
-                    $typeName = $this->resolveLevelSpec($addressLevel, $relationData);
+                    $typeName = $this->addrObjectTypeNameResolver->resolve($fiasLevel, $relationData['typename']);
                     $address->setCityType($typeName->getShortName());
                     $address->setCityTypeFull($typeName->getName());
 
@@ -173,7 +173,7 @@ class FiasAddressBuilder implements AddressBuilderInterface
                     $address->setSettlementFiasId($fiasId);
                     $address->setSettlementKladrId($kladrId);
 
-                    $typeName = $this->resolveLevelSpec($addressLevel, $relationData);
+                    $typeName = $this->addrObjectTypeNameResolver->resolve($fiasLevel, $relationData['typename']);
                     $address->setSettlementType($typeName->getShortName());
                     $address->setSettlementTypeFull($typeName->getName());
 
@@ -188,7 +188,7 @@ class FiasAddressBuilder implements AddressBuilderInterface
                     $address->setStreetFiasId($fiasId);
                     $address->setStreetKladrId($kladrId);
 
-                    $typeName = $this->resolveLevelSpec($addressLevel, $relationData);
+                    $typeName = $this->addrObjectTypeNameResolver->resolve($fiasLevel, $relationData['typename']);
                     $address->setStreetType($typeName->getShortName());
                     $address->setStreetTypeFull($typeName->getName());
 
@@ -201,7 +201,7 @@ class FiasAddressBuilder implements AddressBuilderInterface
                     $address->setHouseFiasId($fiasId);
                     $address->setHouseKladrId($kladrId);
 
-                    $typeName = $this->resolveLevelSpec($addressLevel, $relationData);
+                    $typeName = $this->houseSpecResolver->resolve((int)$relationData['housetype']);
                     $address->setHouseType($typeName->getShortName());
                     $address->setHouseTypeFull($typeName->getName());
 
@@ -209,16 +209,14 @@ class FiasAddressBuilder implements AddressBuilderInterface
 
                     $address->setBlock1($relationData['addnum1'] ?? null);
                     if ($relationData['addtype1']) {
-                        $blockTypeName = $this->resolveHouseBlockSpec((int)$relationData['addtype1']);
-
+                        $blockTypeName = $this->addHouseSpecResolver->resolve((int)$relationData['addtype1']);
                         $address->setBlockType1($blockTypeName->getShortName());
                         $address->setBlockTypeFull1($blockTypeName->getName());
                     }
 
                     $address->setBlock2($relationData['addnum2'] ?? null);
                     if ($relationData['addtype2']) {
-                        $blockTypeName = $this->resolveHouseBlockSpec((int)$relationData['addtype2']);
-
+                        $blockTypeName = $this->addHouseSpecResolver->resolve((int)$relationData['addtype2']);
                         $address->setBlockType2($blockTypeName->getShortName());
                         $address->setBlockTypeFull2($blockTypeName->getName());
                     }
@@ -227,7 +225,7 @@ class FiasAddressBuilder implements AddressBuilderInterface
                     $fiasId = $relationData['objectguid'];
                     $address->setFlatFiasId($fiasId);
 
-                    $typeName = $this->resolveLevelSpec($addressLevel, $relationData);
+                    $typeName = $this->apartmentSpecResolver->resolve((int)$relationData['aparttype']);
                     $address->setFlatType($typeName->getShortName());
                     $address->setFlatTypeFull($typeName->getName());
 
@@ -237,7 +235,7 @@ class FiasAddressBuilder implements AddressBuilderInterface
                     $fiasId = $relationData['objectguid'];
                     $address->setRoomFiasId($fiasId);
 
-                    $typeName = $this->resolveLevelSpec($addressLevel, $relationData);
+                    $typeName = $this->roomSpecResolver->resolve((int)$relationData['roomtype']);
                     $address->setRoomType($typeName->getShortName());
                     $address->setRoomTypeFull($typeName->getName());
 
@@ -246,11 +244,13 @@ class FiasAddressBuilder implements AddressBuilderInterface
                 case AddressLevel::STEAD:
                 case AddressLevel::CAR_PLACE:
                     // эти уровни не индексируем, таким образом сюда они попадать не должны
-                    throw new RuntimeException('Unsupported address level.');
+                    throw new InvalidAddressLevelException(sprintf('Unsupported address level "%d".', $addressLevel));
             }
 
             // данные последнего уровня
-            if ($addressLevel === \array_key_last($parentsByLevels)) {
+            // здесь пользуемся тем что $fiasLevel уникальный
+            // TODO: подумать о повторах для СНТ
+            if ($fiasLevel === \array_key_last($groupedParents)) {
                 if (null === $fiasId) {
                     throw AddressBuildFailedException::withIdentifier(
                         'object_id',
@@ -302,63 +302,13 @@ class FiasAddressBuilder implements AddressBuilderInterface
         );
     }
 
-    private function resolveLevelSpec(int $addressLevel, array $relationData): AddressLevelSpec
-    {
-        $typeName = null;
-
-        switch ($addressLevel) {
-            case AddressLevel::REGION:
-            case AddressLevel::AREA:
-            case AddressLevel::CITY:
-            case AddressLevel::SETTLEMENT:
-            case AddressLevel::STREET:
-                return $this->addrObjectTypeNameResolver->resolve($addressLevel, $relationData['typename']);
-            case AddressLevel::HOUSE:
-                // Респ Башкортостан, г Кумертау, ул Брикетная, влд 5 к А стр 1/6
-                return $this->houseTypeNameResolver->resolve(AddressLevel::HOUSE, (int)$relationData['housetype']);
-            case AddressLevel::FLAT:
-                return $this->apartmentTypeNameResolver->resolve(
-                    AddressLevel::FLAT,
-                    (int)$relationData['aparttype']
-                );
-            case AddressLevel::ROOM:
-                return $this->roomTypeNameResolver->resolve(AddressLevel::ROOM, (int)$relationData['roomtype']);
-        }
-
-        throw new AddressBuildFailedException(
-            sprintf('AddressLevel %d has no type', $addressLevel)
-        );
-    }
-
-    private function resolveHouseBlockSpec(int $addHouseType): AddressLevelSpec
-    {
-        return $this->addHouseTypeNameResolver->resolve(AddressLevel::HOUSE, $addHouseType);
-    }
-
-    private function resolveAddressLevel(array $relation): int
-    {
-        $relationType = $relation['relation_type'];
-
-        switch ($relationType) {
-            case FiasRelationType::ADDR_OBJ:
-                $fiasLevel = (int)$relation['relation_data']['level'];
-
-                return FiasLevel::mapAdmHierarchyToAddressLevel($fiasLevel);
-            case FiasRelationType::HOUSE:
-                return AddressLevel::HOUSE;
-            case FiasRelationType::APARTMENT:
-                return AddressLevel::FLAT;
-            case FiasRelationType::ROOM:
-                return AddressLevel::ROOM;
-            case FiasRelationType::CAR_PLACE:
-                return AddressLevel::CAR_PLACE;
-            case FiasRelationType::STEAD:
-                return AddressLevel::STEAD;
-        }
-
-        throw new RuntimeException(sprintf('Failed to resolve AddressLevel by relation_type "%s"', $relationType));
-    }
-
+    /**
+     * Поле 'level' есть только в таблице addr_obj.
+     * Соответственно для остальных таблиц мы определяем его по relation_type.
+     *
+     * @param array $relation
+     * @return int
+     */
     private function resolveFiasLevel(array $relation): int
     {
         $relationType = $relation['relation_type'];

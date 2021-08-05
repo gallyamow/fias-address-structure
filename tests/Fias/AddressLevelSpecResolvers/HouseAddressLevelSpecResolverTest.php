@@ -5,15 +5,14 @@ declare(strict_types=1);
 namespace Addresser\AddressRepository\Tests\Fias\AddressLevelSpecResolvers;
 
 use Addresser\AddressRepository\AddressLevel;
-use Addresser\AddressRepository\Exceptions\AddressLevelSpecNotFoundException;
-use Addresser\AddressRepository\Fias\AddressLevelSpecResolverInterface;
-use Addresser\AddressRepository\Fias\AddressLevelSpecResolvers\HouseAddressLevelSpecResolver;
 use Addresser\AddressRepository\AddressLevelSpec;
+use Addresser\AddressRepository\Exceptions\AddressLevelSpecNotFoundException;
+use Addresser\AddressRepository\Fias\AddressLevelSpecResolvers\HouseAddressLevelSpecResolver;
 use PHPUnit\Framework\TestCase;
 
 class HouseAddressLevelSpecResolverTest extends TestCase
 {
-    private AddressLevelSpecResolverInterface $resolver;
+    private HouseAddressLevelSpecResolver $resolver;
 
     protected function setUp(): void
     {
@@ -28,7 +27,7 @@ class HouseAddressLevelSpecResolverTest extends TestCase
         $this->expectException(AddressLevelSpecNotFoundException::class);
         $this->assertEquals(
             new AddressLevelSpec(AddressLevel::HOUSE, 'UNDEFINED', 'undefined', AddressLevelSpec::NAME_POSITION_BEFORE),
-            $this->resolver->resolve(AddressLevel::HOUSE, 50000)
+            $this->resolver->resolve(50000)
         );
     }
 
@@ -39,11 +38,11 @@ class HouseAddressLevelSpecResolverTest extends TestCase
     {
         $this->assertEquals(
             new AddressLevelSpec(AddressLevel::HOUSE, 'литера', 'лит.', AddressLevelSpec::NAME_POSITION_BEFORE),
-            $this->resolver->resolve(AddressLevel::HOUSE, 9)
+            $this->resolver->resolve(9)
         );
         $this->assertEquals(
             new AddressLevelSpec(AddressLevel::HOUSE, 'корпус', 'корп.', AddressLevelSpec::NAME_POSITION_BEFORE),
-            $this->resolver->resolve(AddressLevel::HOUSE, 10)
+            $this->resolver->resolve(10)
         );
     }
 }

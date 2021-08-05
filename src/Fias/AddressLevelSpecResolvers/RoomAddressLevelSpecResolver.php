@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace Addresser\AddressRepository\Fias\AddressLevelSpecResolvers;
 
+use Addresser\AddressRepository\AddressLevel;
 use Addresser\AddressRepository\AddressLevelSpec;
 use Addresser\AddressRepository\Exceptions\AddressLevelSpecNotFoundException;
-use Addresser\AddressRepository\Fias\AddressLevelSpecResolverInterface;
+use Addresser\AddressRepository\Fias\TypeAddressLevelSpecResolverInterface;
 
-class RoomAddressLevelSpecResolver implements AddressLevelSpecResolverInterface
+class RoomAddressLevelSpecResolver implements TypeAddressLevelSpecResolverInterface
 {
-    public function resolve(int $addressLevel, $identifier): AddressLevelSpec
+    public function resolve(int $typeId): AddressLevelSpec
     {
-        $typeId = (int)$identifier;
-        $currAddressLevel = $addressLevel;
+        $currAddressLevel = AddressLevel::ROOM;
 
         switch ($typeId) {
             case 0:
@@ -41,7 +41,7 @@ class RoomAddressLevelSpecResolver implements AddressLevelSpecResolverInterface
                     AddressLevelSpec::NAME_POSITION_BEFORE
                 );
             default:
-                throw AddressLevelSpecNotFoundException::withIdentifier($addressLevel, $identifier, 'room_types');
+                throw AddressLevelSpecNotFoundException::withIdentifier($currAddressLevel, $typeId, 'room_types');
         }
     }
 }
