@@ -47,6 +47,7 @@ class FiasAddressBuilder implements AddressBuilderInterface
     public function build(array $data, ?Address $existsAddress = null): Address
     {
         $hierarchyId = (int)$data['hierarchy_id'];
+        $objectId = (int)$data['object_id'];
 
         $parents = json_decode($data['parents'], true, 512, JSON_THROW_ON_ERROR);
 
@@ -59,7 +60,7 @@ class FiasAddressBuilder implements AddressBuilderInterface
             $parentsByLevels[$addressLevel][] = $item;
         }
 
-        // мы должны сохранить изменения внесенные другиги builder
+        // мы должны сохранить изменения внесенные другими builder
         $address = $existsAddress ?? new Address();
 
         foreach ($parentsByLevels as $addressLevel => $levelItems) {
@@ -73,8 +74,10 @@ class FiasAddressBuilder implements AddressBuilderInterface
                 )
             );
             if (count($actualItem) > 1) {
-                throw new AddressBuildFailedException(
-                    sprintf('Several %d actual relation found on one level %d', count($actualItem), $addressLevel),
+                throw AddressBuildFailedException::withIdentifier(
+                    'object_id',
+                    $objectId,
+                    sprintf('There are "%d" actual relations for one level "%d"', count($actualItem), $addressLevel),
                 );
             }
             $actualItem = $actualItem[0];
@@ -97,10 +100,21 @@ class FiasAddressBuilder implements AddressBuilderInterface
             switch ($addressLevel) {
                 case AddressLevel::REGION:
                     $fiasId = $relationData['objectguid'];
-                    $name = $relationData['name'];
+                    if (empty($fiasId)) {
+                        throw AddressBuildFailedException::withIdentifier(
+                            'object_id',
+                            $objectId,
+                            sprintf('Empty fiasId for region level.'),
+                        );
+                    }
 
-                    if (null === $fiasId || empty($name) || null === $kladrId) {
-                        throw new AddressBuildFailedException('Null values for region');
+                    $name = $relationData['name'];
+                    if (empty($name)) {
+                        throw AddressBuildFailedException::withIdentifier(
+                            'object_id',
+                            $objectId,
+                            sprintf('Empty name for region level.'),
+                        );
                     }
 
                     $address->setRegionFiasId($fiasId);
@@ -222,23 +236,19 @@ class FiasAddressBuilder implements AddressBuilderInterface
                     $address->setRoom($this->prepareString($relationData['number']));
                     break;
                 case AddressLevel::STEAD:
-                    $fiasId = $relationData['objectguid'];
-                    // TODO: Пока не решили хранить ли
-                    // $address->setSteadFiasId($fiasId);
-                    // $address->setStead($this->prepareString($relationData['number']));
-                    break;
                 case AddressLevel::CAR_PLACE:
-                    $fiasId = $relationData['objectguid'];
-                    // TODO: Пока не решили хранить ли
-                    // $address->setCarPlaceFiasId($fiasId);
-                    // $address->setCarPlace($this->prepareString($relationData['number']));
-                    break;
+                    // эти уровни не индексируем, таким образом сюда они попадать не должны
+                    throw new \DomainException('Unsupported address level.');
             }
 
             // данные последнего уровня
             if ($addressLevel === \array_key_last($parentsByLevels)) {
                 if (null === $fiasId) {
-                    throw new AddressBuildFailedException('Null value for fiasId');
+                    throw AddressBuildFailedException::withIdentifier(
+                        'object_id',
+                        $objectId,
+                        sprintf('Empty fiasId for region level.'),
+                    );
                 }
 
                 $address->setFiasId($fiasId);

@@ -6,8 +6,8 @@ namespace Addresser\AddressRepository\Fias\AddressLevelSpecResolvers;
 
 use Addresser\AddressRepository\AddressLevel;
 use Addresser\AddressRepository\AddressLevelSpec;
-use Addresser\AddressRepository\Exceptions\LevelNameSpecNotFoundException;
-use Addresser\AddressRepository\Exceptions\WrongAddressLevelResolvingException;
+use Addresser\AddressRepository\Exceptions\AddressLevelSpecNotFoundException;
+use Addresser\AddressRepository\Exceptions\InvalidAddressLevelException;
 use Addresser\AddressRepository\Fias\AddressLevelSpecResolverInterface;
 use Addresser\AddressRepository\Fias\FiasLevel;
 
@@ -902,8 +902,8 @@ class ObjectAddressLevelSpecResolver implements AddressLevelSpecResolverInterfac
             ],
             true
         )) {
-            throw new WrongAddressLevelResolvingException(
-                sprintf('"%s" cannot resolve level %d', self::class, $addressLevel)
+            throw new InvalidAddressLevelException(
+                sprintf('Address level "%d" does not support spec resolving.', $addressLevel)
             );
         }
 
@@ -956,7 +956,7 @@ class ObjectAddressLevelSpecResolver implements AddressLevelSpecResolverInterfac
         );
 
         if (empty($variants)) {
-            throw LevelNameSpecNotFoundException::withFiasRelationTypeAndTypeId('addr_obj_types', $identifier);
+            throw AddressLevelSpecNotFoundException::withIdentifier($addressLevel, $identifier, 'addr_obj_types');
         }
 
         $variant = $variants[0];

@@ -6,8 +6,8 @@ namespace Addresser\AddressRepository\Tests\Fias\AddressLevelSpecResolvers;
 
 use Addresser\AddressRepository\AddressLevel;
 use Addresser\AddressRepository\AddressLevelSpec;
-use Addresser\AddressRepository\Exceptions\LevelNameSpecNotFoundException;
-use Addresser\AddressRepository\Exceptions\WrongAddressLevelResolvingException;
+use Addresser\AddressRepository\Exceptions\AddressLevelSpecNotFoundException;
+use Addresser\AddressRepository\Exceptions\InvalidAddressLevelException;
 use Addresser\AddressRepository\Fias\AddressLevelSpecResolvers\ObjectAddressLevelSpecResolver;
 use PHPUnit\Framework\TestCase;
 
@@ -23,19 +23,33 @@ class ObjectAddressLevelSpecResolverTest extends TestCase
     /**
      * @test
      */
-    public function itShouldThrowExceptionWhenWrongAddressLevelPassed(): void
+    public function itShouldThrowExceptionWhenHouseLevelPassed(): void
     {
-        $this->expectException(WrongAddressLevelResolvingException::class);
+        $this->expectException(InvalidAddressLevelException::class);
         $this->assertEquals(
             new AddressLevelSpec(AddressLevel::HOUSE, 'дом', 'д.', AddressLevelSpec::NAME_POSITION_AFTER),
             $this->resolver->resolve(AddressLevel::HOUSE, 'д.')
         );
+    }
 
+    /**
+     * @test
+     */
+    public function itShouldThrowExceptionWhenHouseFlatPassed(): void
+    {
+        $this->expectException(InvalidAddressLevelException::class);
         $this->assertEquals(
             new AddressLevelSpec(AddressLevel::FLAT, 'квартира', 'кв.', AddressLevelSpec::NAME_POSITION_BEFORE),
             $this->resolver->resolve(AddressLevel::FLAT, 'кв.')
         );
+    }
 
+    /**
+     * @test
+     */
+    public function itShouldThrowExceptionWhenHouseRoomPassed(): void
+    {
+        $this->expectException(InvalidAddressLevelException::class);
         $this->assertEquals(
             new AddressLevelSpec(AddressLevel::ROOM, 'комната', 'комн.', AddressLevelSpec::NAME_POSITION_BEFORE),
             $this->resolver->resolve(AddressLevel::ROOM, 'комн.')
@@ -47,7 +61,7 @@ class ObjectAddressLevelSpecResolverTest extends TestCase
      */
     public function itShouldThrowExceptionWhenCannotResolve(): void
     {
-        $this->expectException(LevelNameSpecNotFoundException::class);
+        $this->expectException(AddressLevelSpecNotFoundException::class);
         $this->assertEquals(
             new AddressLevelSpec(AddressLevel::AREA, 'Район', 'р-н.', AddressLevelSpec::NAME_POSITION_AFTER),
             $this->resolver->resolve(50, 'undefined')

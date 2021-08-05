@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Addresser\AddressRepository\Tests\Fias\AddressLevelSpecResolvers;
 
 use Addresser\AddressRepository\AddressLevel;
-use Addresser\AddressRepository\Exceptions\LevelNameSpecNotFoundException;
+use Addresser\AddressRepository\Exceptions\AddressLevelSpecNotFoundException;
 use Addresser\AddressRepository\Fias\AddressLevelSpecResolverInterface;
 use Addresser\AddressRepository\Fias\AddressLevelSpecResolvers\HouseAddressLevelSpecResolver;
 use Addresser\AddressRepository\AddressLevelSpec;
@@ -25,7 +25,7 @@ class HouseAddressLevelSpecResolverTest extends TestCase
      */
     public function itShouldThrowExceptionWhenCannotResolve(): void
     {
-        $this->expectException(LevelNameSpecNotFoundException::class);
+        $this->expectException(AddressLevelSpecNotFoundException::class);
         $this->assertEquals(
             new AddressLevelSpec(AddressLevel::HOUSE, 'UNDEFINED', 'undefined', AddressLevelSpec::NAME_POSITION_BEFORE),
             $this->resolver->resolve(AddressLevel::HOUSE, 50000)

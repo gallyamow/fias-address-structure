@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Addresser\AddressRepository\Fias\AddressLevelSpecResolvers;
 
 use Addresser\AddressRepository\AddressLevel;
-use Addresser\AddressRepository\Exceptions\LevelNameSpecNotFoundException;
+use Addresser\AddressRepository\Exceptions\AddressLevelSpecNotFoundException;
 use Addresser\AddressRepository\Fias\AddressLevelSpecResolverInterface;
 use Addresser\AddressRepository\AddressLevelSpec;
 
@@ -38,7 +38,7 @@ class AddHouseAddressLevelSpecResolver implements AddressLevelSpecResolverInterf
                     $addressLevel, 'литера', 'лит.', AddressLevelSpec::NAME_POSITION_BEFORE
                 );
             default:
-                throw LevelNameSpecNotFoundException::withFiasRelationTypeAndTypeId('addhouse_types', $identifier);
+                throw AddressLevelSpecNotFoundException::withIdentifier($addressLevel, $identifier, 'addhouse_types');
         }
     }
 }

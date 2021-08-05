@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Addresser\AddressRepository\Fias\AddressLevelSpecResolvers;
 
 use Addresser\AddressRepository\AddressLevelSpec;
-use Addresser\AddressRepository\Exceptions\LevelNameSpecNotFoundException;
+use Addresser\AddressRepository\Exceptions\AddressLevelSpecNotFoundException;
 use Addresser\AddressRepository\Fias\AddressLevelSpecResolverInterface;
 
 /**
@@ -86,7 +86,7 @@ class ApartmentAddressLevelSpecResolver implements AddressLevelSpecResolverInter
                 // было г-ж
                 return new AddressLevelSpec($currAddressLevel, 'гараж', 'гар.', AddressLevelSpec::NAME_POSITION_BEFORE);
             default:
-                throw LevelNameSpecNotFoundException::withFiasRelationTypeAndTypeId('apartment_types', $typeId);
+                throw AddressLevelSpecNotFoundException::withIdentifier($addressLevel, $identifier, 'apartment_types');
         }
     }
 }

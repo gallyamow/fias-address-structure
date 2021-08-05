@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Addresser\AddressRepository\Fias\AddressLevelSpecResolvers;
 
 use Addresser\AddressRepository\AddressLevelSpec;
-use Addresser\AddressRepository\Exceptions\LevelNameSpecNotFoundException;
+use Addresser\AddressRepository\Exceptions\AddressLevelSpecNotFoundException;
 use Addresser\AddressRepository\Fias\AddressLevelSpecResolverInterface;
 
 class RoomAddressLevelSpecResolver implements AddressLevelSpecResolverInterface
@@ -41,7 +41,7 @@ class RoomAddressLevelSpecResolver implements AddressLevelSpecResolverInterface
                     AddressLevelSpec::NAME_POSITION_BEFORE
                 );
             default:
-                throw LevelNameSpecNotFoundException::withFiasRelationTypeAndTypeId('room_types', $typeId);
+                throw AddressLevelSpecNotFoundException::withIdentifier($addressLevel, $identifier, 'room_types');
         }
     }
 }

@@ -11,5 +11,5 @@ interface AddressBuilderInterface
      * @param Address|null $existsAddress
      * @return Address
      */
-    function build(array $data, ?Address $existsAddress = null): Address;
+    public function build(array $data, ?Address $existsAddress = null): Address;
 }
