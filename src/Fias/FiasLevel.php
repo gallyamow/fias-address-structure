@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Addresser\AddressRepository\Fias;
 
 use Addresser\AddressRepository\AddressLevel;
+use Addresser\AddressRepository\Exceptions\InvalidAddressLevelException;
 
 class FiasLevel
 {
@@ -27,12 +28,14 @@ class FiasLevel
 
     /**
      * Сельское/городское поселение
-     * (с.п. Старотимошкинское)
+     * Похоже используется для городов в муниципальном разделении.
+     * (с.п. Старотимошкинское, вн.р-н Красноглинский, город Болгар, город Арск)
      */
     public const RURAL_URBAN_SETTLEMENT = 4;
 
     /**
      * Город
+     * Не все из записи из этого уровня соответствуют городам (много с/с, территорий - у многих из них неактивный path).
      * (г. Нефтегорск, г. Болгар, с/п Асановское, с/с Юматовский)
      */
     public const CITY = 5;
@@ -104,40 +107,56 @@ class FiasLevel
     public const CAR_PLACE = 17;
 
     /**
+     * Этот mapping не совсем однозначный.
+     * Переводит уровни административного разделения на наши уровни.
+     *
      * @param int $fiasLevel
      * @return int
      */
-    public static function mapToAddressLevel(int $fiasLevel): ?int
+    public static function mapAdmHierarchyToAddressLevel(int $fiasLevel): ?int
     {
         // обратный mapping нельзя сделать, так как теряется некоторая информация
         switch ($fiasLevel) {
-            case self::REGION:
-                return AddressLevel::REGION;
-            case self::ADMINISTRATIVE_REGION: // р-н Янаульский
-            case self::MUNICIPAL_DISTRICT: // м.р-н Янаульский
-                return AddressLevel::AREA;
-            case self::RURAL_URBAN_SETTLEMENT: // с.п. Старотимошкинское
-            case self::CITY: // г. Нефтегорск, г. Болгар, с/п Асановское, с/с Юматовский
-                return AddressLevel::CITY;
-            case self::SETTLEMENT: // п Краный Яр, тер Мечта, ж/д_ст Ардаши, высел Ахмасиха
-            case self::ELEMENT_OF_THE_PLANNING_STRUCTURE: // снт Импульс/Станкозавод, тер гк т-14
-            case self::INTRACITY_LEVEL: // р-н ЖБИ, р-н Советский
-            case self::ADDITIONAL_TERRITORIES_LEVEL: // гск Колесо, гск Восход
-                return AddressLevel::SETTLEMENT;
-            case self::ROAD_NETWORK_ELEMENT: // ул Привокзальная, пер Центральный
-            case self::OBJECT_LEVEL_IN_ADDITIONAL_TERRITORIES: // ул 11 Линия, а/я Рябиновая
-            case self::COUNTY_LEVEL: // нет
-                return AddressLevel::STREET;
-            case self::STEAD: // нет
+            /** этот level не должен присутствовать при обработке административного деления **/
+            case self::MUNICIPAL_DISTRICT: // м.р-н Янаульский, г.о. Казань
+            case self::RURAL_URBAN_SETTLEMENT: // с.п. Старотимошкинское, вн.р-н Красноглинский
+                throw new InvalidAddressLevelException(
+                    sprintf('Wrong fiasLevel "%d" used in administrative hierarchy.', $fiasLevel)
+                );
+
+            // TODO: бросать исключение (так как в addr_obj их нет)?
+            case self::STEAD: // записей в addr_obj нет
                 return AddressLevel::STEAD;
-            case self::CAR_PLACE: // нет
+            case self::CAR_PLACE: // записей в addr_obj нет
                 return AddressLevel::CAR_PLACE;
             case self::BUILDING: // записей в addr_obj нет, FiasAddressBuilder делает вывод на основе relation_type
                 return AddressLevel::HOUSE;
             case self::PREMISES: // записей в addr_obj нет, FiasAddressBuilder делает вывод на основе relation_type
                 return AddressLevel::FLAT;
-            case self::PREMISES_WITHIN_THE_PREMISES: // нет
+            case self::PREMISES_WITHIN_THE_PREMISES: // записей в addr_obj не
                 return AddressLevel::ROOM;
+
+            case self::REGION:
+                return AddressLevel::REGION;
+
+            case self::ADMINISTRATIVE_REGION: // р-н Янаульский
+                return AddressLevel::AREA;
+
+            case self::CITY: // г. Нефтегорск, г. Болгар, с/п Асановское, с/с Юматовский
+                return AddressLevel::CITY;
+
+            case self::SETTLEMENT: // п Краный Яр, тер Мечта, ж/д_ст Ардаши, высел Ахмасиха, автодорога Трасса Саранск-Самара
+            case self::ELEMENT_OF_THE_PLANNING_STRUCTURE: // снт Импульс/Станкозавод, тер гк т-14, зона Осиновый кол
+            case self::INTRACITY_LEVEL: // р-н ЖБИ, р-н Советский
+            case self::ADDITIONAL_TERRITORIES_LEVEL: // гск Колесо, гск Восход
+                /** этот level требует дополнительного разбора **/
+                return AddressLevel::SETTLEMENT;
+
+            case self::ROAD_NETWORK_ELEMENT: // ул Привокзальная, пер Центральный
+            case self::OBJECT_LEVEL_IN_ADDITIONAL_TERRITORIES: // ул 11 Линия, а/я Рябиновая
+                // TODO: бросать исключение (так как в addr_obj их нет)?
+            case self::COUNTY_LEVEL: // нет
+                return AddressLevel::STREET;
         }
     }
 }

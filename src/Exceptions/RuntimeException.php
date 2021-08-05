@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Addresser\AddressRepository\Exceptions;
 
-class InvalidAddressLevelException extends RuntimeException
+class RuntimeException extends \RuntimeException implements Exception
 {
+
 }

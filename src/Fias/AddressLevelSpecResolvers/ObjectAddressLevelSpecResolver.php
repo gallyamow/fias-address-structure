@@ -1051,7 +1051,7 @@ class ObjectAddressLevelSpecResolver implements AddressLevelSpecResolverInterfac
                             $addressLevel,
                             array_map(
                                 static function ($fiasLevel) {
-                                    return FiasLevel::mapToAddressLevel($fiasLevel);
+                                    return FiasLevel::mapAdmHierarchyToAddressLevel($fiasLevel);
                                 },
                                 $group['levels']
                             ),

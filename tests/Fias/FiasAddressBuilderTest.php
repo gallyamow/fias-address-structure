@@ -9,6 +9,7 @@ use Addresser\AddressRepository\AddressBuilderInterface;
 use Addresser\AddressRepository\AddressLevel;
 use Addresser\AddressRepository\AddressSynonymizer;
 use Addresser\AddressRepository\Exceptions\InvalidAddressLevelException;
+use Addresser\AddressRepository\Exceptions\RuntimeException;
 use Addresser\AddressRepository\Fias\AddressLevelSpecResolvers\AddHouseAddressLevelSpecResolver;
 use Addresser\AddressRepository\Fias\AddressLevelSpecResolvers\ApartmentAddressLevelSpecResolver;
 use Addresser\AddressRepository\Fias\AddressLevelSpecResolvers\HouseAddressLevelSpecResolver;
@@ -36,11 +37,14 @@ class FiasAddressBuilderTest extends TestCase
     }
 
     /**
+     * CAR_PLACE - пока не обрабатываем
      * @test
      */
     public function itShouldThrowExceptionWhenBuildsCarPlace(): void
     {
-        $this->expectException(\DomainException::class);
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Unsupported address level.');
+
         $this->builder->build(
             [
                 'hierarchy_id' => 110545915,
@@ -52,11 +56,14 @@ class FiasAddressBuilderTest extends TestCase
     }
 
     /**
+     * STEAD - пока не обрабатываем
      * @test
      */
     public function itShouldThrowExceptionWhenBuildsStead(): void
     {
-        $this->expectException(\DomainException::class);
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Unsupported address level.');
+
         $this->builder->build(
             [
                 'hierarchy_id' => 111485344,
@@ -1043,5 +1050,94 @@ class FiasAddressBuilderTest extends TestCase
         $this->assertEquals('лит.', $address->getBlockType2());
         $this->assertEquals('литера', $address->getBlockTypeFull2());
         $this->assertEquals('Б,б,б1,Л', $address->getBlock2());
+    }
+
+    /**
+     * @test2
+     */
+    public function itCorrectlyBuildSnt(): void
+    {
+        $address = $this->builder->build(
+            [
+                'hierarchy_id' => 3277596,
+                'object_id' => 11454,
+                'path_ltree' => '5705.6143.5791.11454',
+                'parents' => '[{"params": [{"values": [{"value": "80000000", "type_id": 7, "end_date": "2079-06-06", "start_date": "1900-01-01"}, {"value": "800000000000000000001", "type_id": 13, "end_date": "2079-06-06", "start_date": "2015-12-01"}, {"value": "0200", "type_id": 1, "end_date": "2079-06-06", "start_date": "1900-01-01"}, {"value": "Республика Башкортостан", "type_id": 16, "end_date": "2079-06-06", "start_date": "1900-01-01"}, {"value": "02000000000", "type_id": 11, "end_date": "2079-06-06", "start_date": "1900-01-01"}, {"value": "0", "type_id": 14, "end_date": "2079-06-06", "start_date": "1900-01-01"}, {"value": "80000000000", "type_id": 6, "end_date": "2079-06-06", "start_date": "2015-12-01"}, {"value": "452000", "type_id": 5, "end_date": "2079-06-06", "start_date": "2015-12-01"}, {"value": "0200", "type_id": 2, "end_date": "2079-06-06", "start_date": "1900-01-01"}, {"value": "0200000000000", "type_id": 10, "end_date": "2079-06-06", "start_date": "2015-12-01"}], "object_id": 5705, "hierarchy_id": 1}], "relation": {"object_id": 5705, "relation_id": 6356, "hierarchy_id": 1, "relation_data": {"id": 6356, "name": "Башкортостан", "level": "1", "nextid": 0, "previd": 0, "enddate": "2079-06-06", "changeid": 17925, "isactive": 1, "isactual": 1, "objectid": 5705, "typename": "Респ", "startdate": "1900-01-01", "objectguid": "6f2cbfd8-692a-4ee4-9b16-067210bde3fc", "opertypeid": 1, "updatedate": "2016-02-27"}, "relation_type": "addr_obj", "relation_is_active": 1, "relation_is_actual": 1}},{"params": [{"values": [{"value": "807270000010000000001", "type_id": 13, "end_date": "2079-06-06", "start_date": "2016-08-31"}, {"value": "0200000300000", "type_id": 10, "end_date": "2079-06-06", "start_date": "2016-08-31"}, {"value": "0", "type_id": 14, "end_date": "2079-06-06", "start_date": "1900-01-01"}, {"value": "02000003000", "type_id": 11, "end_date": "2079-06-06", "start_date": "1900-01-01"}, {"value": "80427000000", "type_id": 6, "end_date": "2079-06-06", "start_date": "1900-01-01"}, {"value": "0264", "type_id": 2, "end_date": "2079-06-06", "start_date": "1900-01-01"}, {"value": "0264", "type_id": 1, "end_date": "2079-06-06", "start_date": "1900-01-01"}, {"value": "80727000001", "type_id": 7, "end_date": "2079-06-06", "start_date": "2020-03-05"}], "object_id": 6143, "hierarchy_id": 3245176}], "relation": {"object_id": 6143, "relation_id": 6890, "hierarchy_id": 3245176, "relation_data": {"id": 6890, "name": "Нефтекамск", "level": "5", "nextid": 0, "previd": 0, "enddate": "2079-06-06", "changeid": 19302, "isactive": 1, "isactual": 1, "objectid": 6143, "typename": "г", "startdate": "1900-01-01", "objectguid": "2c9997d2-ce94-431a-96c9-722d2238d5c8", "opertypeid": 1, "updatedate": "2016-08-31"}, "relation_type": "addr_obj", "relation_is_active": 1, "relation_is_actual": 1}},{"params": [{"values": [{"value": "02000003006", "type_id": 11, "end_date": "2079-06-06", "start_date": "1900-01-01"}, {"value": "0264", "type_id": 1, "end_date": "2079-06-06", "start_date": "1900-01-01"}, {"value": "0264", "type_id": 2, "end_date": "2079-06-06", "start_date": "1900-01-01"}, {"value": "80427000003", "type_id": 6, "end_date": "2079-06-06", "start_date": "1900-01-01"}, {"value": "0", "type_id": 14, "end_date": "2079-06-06", "start_date": "1900-01-01"}, {"value": "80727000131", "type_id": 7, "end_date": "2079-06-06", "start_date": "2014-01-05"}, {"value": "0200000300600", "type_id": 10, "end_date": "2079-06-06", "start_date": "2014-08-15"}, {"value": "807270001310000000001", "type_id": 13, "end_date": "2079-06-06", "start_date": "2014-08-15"}], "object_id": 5791, "hierarchy_id": 3253661}], "relation": {"object_id": 5791, "relation_id": 6460, "hierarchy_id": 3253661, "relation_data": {"id": 6460, "name": "Энергетик", "level": "6", "nextid": 6468, "previd": 0, "enddate": "2013-10-30", "changeid": 18195, "isactive": 0, "isactual": 0, "objectid": 5791, "typename": "с", "startdate": "1900-01-01", "objectguid": "0823f2aa-86e2-4584-8523-5f487fff95ab", "opertypeid": 1, "updatedate": "2014-08-20"}, "relation_type": "addr_obj", "relation_is_active": 0, "relation_is_actual": 0}},{"params": [{"values": [{"value": "02000003006", "type_id": 11, "end_date": "2079-06-06", "start_date": "1900-01-01"}, {"value": "0264", "type_id": 1, "end_date": "2079-06-06", "start_date": "1900-01-01"}, {"value": "0264", "type_id": 2, "end_date": "2079-06-06", "start_date": "1900-01-01"}, {"value": "80427000003", "type_id": 6, "end_date": "2079-06-06", "start_date": "1900-01-01"}, {"value": "0", "type_id": 14, "end_date": "2079-06-06", "start_date": "1900-01-01"}, {"value": "80727000131", "type_id": 7, "end_date": "2079-06-06", "start_date": "2014-01-05"}, {"value": "0200000300600", "type_id": 10, "end_date": "2079-06-06", "start_date": "2014-08-15"}, {"value": "807270001310000000001", "type_id": 13, "end_date": "2079-06-06", "start_date": "2014-08-15"}], "object_id": 5791, "hierarchy_id": 3253661}], "relation": {"object_id": 5791, "relation_id": 6468, "hierarchy_id": 3253661, "relation_data": {"id": 6468, "name": "Энергетик", "level": "6", "nextid": 6473, "previd": 6460, "enddate": "2014-08-15", "changeid": 18221, "isactive": 0, "isactual": 0, "objectid": 5791, "typename": "п", "startdate": "2013-10-30", "objectguid": "0823f2aa-86e2-4584-8523-5f487fff95ab", "opertypeid": 20, "updatedate": "2014-01-06"}, "relation_type": "addr_obj", "relation_is_active": 0, "relation_is_actual": 0}},{"params": [{"values": [{"value": "02000003006", "type_id": 11, "end_date": "2079-06-06", "start_date": "1900-01-01"}, {"value": "0264", "type_id": 1, "end_date": "2079-06-06", "start_date": "1900-01-01"}, {"value": "0264", "type_id": 2, "end_date": "2079-06-06", "start_date": "1900-01-01"}, {"value": "80427000003", "type_id": 6, "end_date": "2079-06-06", "start_date": "1900-01-01"}, {"value": "0", "type_id": 14, "end_date": "2079-06-06", "start_date": "1900-01-01"}, {"value": "80727000131", "type_id": 7, "end_date": "2079-06-06", "start_date": "2014-01-05"}, {"value": "0200000300600", "type_id": 10, "end_date": "2079-06-06", "start_date": "2014-08-15"}, {"value": "807270001310000000001", "type_id": 13, "end_date": "2079-06-06", "start_date": "2014-08-15"}], "object_id": 5791, "hierarchy_id": 3253661}], "relation": {"object_id": 5791, "relation_id": 6473, "hierarchy_id": 3253661, "relation_data": {"id": 6473, "name": "Энергетик", "level": "6", "nextid": 0, "previd": 6468, "enddate": "2079-06-06", "changeid": 18238, "isactive": 1, "isactual": 1, "objectid": 5791, "typename": "с", "startdate": "2014-08-15", "objectguid": "0823f2aa-86e2-4584-8523-5f487fff95ab", "opertypeid": 20, "updatedate": "2015-09-15"}, "relation_type": "addr_obj", "relation_is_active": 1, "relation_is_actual": 1}},{"params": [{"values": [{"value": "0264", "type_id": 2, "end_date": "2079-06-06", "start_date": "2016-03-18"}, {"value": "80727000131", "type_id": 7, "end_date": "2079-06-06", "start_date": "2016-03-18"}, {"value": "0264", "type_id": 1, "end_date": "2079-06-06", "start_date": "2016-03-18"}, {"value": "80427000003", "type_id": 6, "end_date": "2079-06-06", "start_date": "2016-03-18"}, {"value": "020000030060006", "type_id": 11, "end_date": "2079-06-06", "start_date": "2016-03-18"}, {"value": "0", "type_id": 14, "end_date": "2079-06-06", "start_date": "2016-03-18"}, {"value": "0006", "type_id": 15, "end_date": "2079-06-06", "start_date": "2016-09-28"}, {"value": "02000003006000600", "type_id": 10, "end_date": "2079-06-06", "start_date": "2018-09-20"}, {"value": "807270001310006000001", "type_id": 13, "end_date": "2079-06-06", "start_date": "2018-09-20"}], "object_id": 11454, "hierarchy_id": 3274655}, {"values": [{"value": "80727000131", "type_id": 7, "end_date": "2079-06-06", "start_date": "2016-03-18"}, {"value": "80427000003", "type_id": 6, "end_date": "2079-06-06", "start_date": "2016-03-18"}, {"value": "020000030060006", "type_id": 11, "end_date": "2079-06-06", "start_date": "2016-03-18"}, {"value": "0264", "type_id": 2, "end_date": "2079-06-06", "start_date": "2016-03-18"}, {"value": "0", "type_id": 14, "end_date": "2079-06-06", "start_date": "2016-03-18"}, {"value": "0264", "type_id": 1, "end_date": "2079-06-06", "start_date": "2016-03-18"}, {"value": "807270001310006000001", "type_id": 13, "end_date": "2079-06-06", "start_date": "2018-09-20"}, {"value": "02000003006000600", "type_id": 10, "end_date": "2079-06-06", "start_date": "2018-09-20"}, {"value": "0006", "type_id": 15, "end_date": "2079-06-06", "start_date": "2016-09-28"}], "object_id": 11454, "hierarchy_id": 3277596}], "relation": {"object_id": 11454, "relation_id": 13676, "hierarchy_id": 3277596, "relation_data": {"id": 13676, "name": "СНТ Родничок", "level": "15", "nextid": 13698, "previd": 0, "enddate": "2016-09-28", "changeid": 33068, "isactive": 0, "isactual": 0, "objectid": 11454, "typename": "снт", "startdate": "2016-03-18", "objectguid": "a4697fc8-eced-4078-881c-2d400a12af21", "opertypeid": 10, "updatedate": "2017-12-10"}, "relation_type": "addr_obj", "relation_is_active": 0, "relation_is_actual": 0}},{"params": [{"values": [{"value": "0264", "type_id": 2, "end_date": "2079-06-06", "start_date": "2016-03-18"}, {"value": "80727000131", "type_id": 7, "end_date": "2079-06-06", "start_date": "2016-03-18"}, {"value": "0264", "type_id": 1, "end_date": "2079-06-06", "start_date": "2016-03-18"}, {"value": "80427000003", "type_id": 6, "end_date": "2079-06-06", "start_date": "2016-03-18"}, {"value": "020000030060006", "type_id": 11, "end_date": "2079-06-06", "start_date": "2016-03-18"}, {"value": "0", "type_id": 14, "end_date": "2079-06-06", "start_date": "2016-03-18"}, {"value": "0006", "type_id": 15, "end_date": "2079-06-06", "start_date": "2016-09-28"}, {"value": "02000003006000600", "type_id": 10, "end_date": "2079-06-06", "start_date": "2018-09-20"}, {"value": "807270001310006000001", "type_id": 13, "end_date": "2079-06-06", "start_date": "2018-09-20"}], "object_id": 11454, "hierarchy_id": 3274655}, {"values": [{"value": "80727000131", "type_id": 7, "end_date": "2079-06-06", "start_date": "2016-03-18"}, {"value": "80427000003", "type_id": 6, "end_date": "2079-06-06", "start_date": "2016-03-18"}, {"value": "020000030060006", "type_id": 11, "end_date": "2079-06-06", "start_date": "2016-03-18"}, {"value": "0264", "type_id": 2, "end_date": "2079-06-06", "start_date": "2016-03-18"}, {"value": "0", "type_id": 14, "end_date": "2079-06-06", "start_date": "2016-03-18"}, {"value": "0264", "type_id": 1, "end_date": "2079-06-06", "start_date": "2016-03-18"}, {"value": "807270001310006000001", "type_id": 13, "end_date": "2079-06-06", "start_date": "2018-09-20"}, {"value": "02000003006000600", "type_id": 10, "end_date": "2079-06-06", "start_date": "2018-09-20"}, {"value": "0006", "type_id": 15, "end_date": "2079-06-06", "start_date": "2016-09-28"}], "object_id": 11454, "hierarchy_id": 3277596}], "relation": {"object_id": 11454, "relation_id": 13698, "hierarchy_id": 3277596, "relation_data": {"id": 13698, "name": "СНТ Родничок", "level": "7", "nextid": 13707, "previd": 13676, "enddate": "2018-09-20", "changeid": 33093, "isactive": 0, "isactual": 0, "objectid": 11454, "typename": "снт", "startdate": "2016-09-28", "objectguid": "a4697fc8-eced-4078-881c-2d400a12af21", "opertypeid": 50, "updatedate": "2018-09-25"}, "relation_type": "addr_obj", "relation_is_active": 0, "relation_is_actual": 0}},{"params": [{"values": [{"value": "0264", "type_id": 2, "end_date": "2079-06-06", "start_date": "2016-03-18"}, {"value": "80727000131", "type_id": 7, "end_date": "2079-06-06", "start_date": "2016-03-18"}, {"value": "0264", "type_id": 1, "end_date": "2079-06-06", "start_date": "2016-03-18"}, {"value": "80427000003", "type_id": 6, "end_date": "2079-06-06", "start_date": "2016-03-18"}, {"value": "020000030060006", "type_id": 11, "end_date": "2079-06-06", "start_date": "2016-03-18"}, {"value": "0", "type_id": 14, "end_date": "2079-06-06", "start_date": "2016-03-18"}, {"value": "0006", "type_id": 15, "end_date": "2079-06-06", "start_date": "2016-09-28"}, {"value": "02000003006000600", "type_id": 10, "end_date": "2079-06-06", "start_date": "2018-09-20"}, {"value": "807270001310006000001", "type_id": 13, "end_date": "2079-06-06", "start_date": "2018-09-20"}], "object_id": 11454, "hierarchy_id": 3274655}, {"values": [{"value": "80727000131", "type_id": 7, "end_date": "2079-06-06", "start_date": "2016-03-18"}, {"value": "80427000003", "type_id": 6, "end_date": "2079-06-06", "start_date": "2016-03-18"}, {"value": "020000030060006", "type_id": 11, "end_date": "2079-06-06", "start_date": "2016-03-18"}, {"value": "0264", "type_id": 2, "end_date": "2079-06-06", "start_date": "2016-03-18"}, {"value": "0", "type_id": 14, "end_date": "2079-06-06", "start_date": "2016-03-18"}, {"value": "0264", "type_id": 1, "end_date": "2079-06-06", "start_date": "2016-03-18"}, {"value": "807270001310006000001", "type_id": 13, "end_date": "2079-06-06", "start_date": "2018-09-20"}, {"value": "02000003006000600", "type_id": 10, "end_date": "2079-06-06", "start_date": "2018-09-20"}, {"value": "0006", "type_id": 15, "end_date": "2079-06-06", "start_date": "2016-09-28"}], "object_id": 11454, "hierarchy_id": 3277596}], "relation": {"object_id": 11454, "relation_id": 13707, "hierarchy_id": 3277596, "relation_data": {"id": 13707, "name": "Родничок", "level": "7", "nextid": 0, "previd": 13698, "enddate": "2079-06-06", "changeid": 33103, "isactive": 1, "isactual": 1, "objectid": 11454, "typename": "тер. СНТ", "startdate": "2018-09-20", "objectguid": "a4697fc8-eced-4078-881c-2d400a12af21", "opertypeid": 20, "updatedate": "2018-12-28"}, "relation_type": "addr_obj", "relation_is_active": 1, "relation_is_actual": 1}}]',
+            ]
+        );
+
+        $this->assertEquals(
+            'респ. Башкортостан, г. Нефтекамск, п. Энергетик, тер. СНТ Родничок',
+            $address->getCompleteShortAddress()
+        );
+
+        // предыдущие уровни заполнены
+        $this->assertEquals('6f2cbfd8-692a-4ee4-9b16-067210bde3fc', $address->getRegionFiasId());
+        $this->assertEquals('0200000000000', $address->getRegionKladrId());
+        $this->assertEquals('респ.', $address->getRegionType());
+        $this->assertEquals('республика', $address->getRegionTypeFull());
+        $this->assertEquals('Башкортостан', $address->getRegion());
+
+        // для нас. пунктов внутри города - город заполнен
+        $this->assertEquals('2c9997d2-ce94-431a-96c9-722d2238d5c8', $address->getCityFiasId());
+        $this->assertEquals('0200000300000', $address->getCityKladrId());
+        $this->assertEquals('г.', $address->getCityType());
+        $this->assertEquals('город', $address->getCityTypeFull());
+        $this->assertEquals('Нефтекамск', $address->getCity());
+
+        $this->assertEquals('f5b6853e-7787-4127-b60a-a2bcc96a9b3f', $address->getSettlementFiasId());
+        $this->assertEquals('0200000300400', $address->getSettlementKladrId());
+        $this->assertEquals('дер.', $address->getSettlementType());
+        $this->assertEquals('деревня', $address->getSettlementTypeFull());
+        $this->assertEquals('Крым-Сараево', $address->getSettlement());
+
+        // район не заполнен
+        $this->assertNull($address->getAreaFiasId());
+        $this->assertNull($address->getAreaKladrId());
+        $this->assertNull($address->getAreaType());
+        $this->assertNull($address->getAreaTypeFull());
+        $this->assertNull($address->getArea());
+
+        // все остальные уровни пустые
+        $this->assertNull($address->getStreetFiasId());
+        $this->assertNull($address->getStreetKladrId());
+        $this->assertNull($address->getStreetType());
+        $this->assertNull($address->getStreetTypeFull());
+        $this->assertNull($address->getStreet());
+
+        $this->assertNull($address->getHouseFiasId());
+        $this->assertNull($address->getHouseKladrId());
+        $this->assertNull($address->getHouseType());
+        $this->assertNull($address->getHouseTypeFull());
+        $this->assertNull($address->getHouse());
+
+        $this->assertNull($address->getBlockType1());
+        $this->assertNull($address->getBlockTypeFull1());
+        $this->assertNull($address->getBlock1());
+
+        $this->assertNull($address->getBlockType2());
+        $this->assertNull($address->getBlockTypeFull2());
+        $this->assertNull($address->getBlock2());
+
+        $this->assertNull($address->getFlatFiasId());
+        $this->assertNull($address->getFlatType());
+        $this->assertNull($address->getFlatTypeFull());
+        $this->assertNull($address->getFlat());
+
+        $this->assertNull($address->getRoomFiasId());
+        $this->assertNull($address->getRoomType());
+        $this->assertNull($address->getRoomTypeFull());
+        $this->assertNull($address->getRoom());
+
+        // текущий уровень заполнен
+        $this->assertEquals('f5b6853e-7787-4127-b60a-a2bcc96a9b3f', $address->getFiasId());
+        $this->assertEquals(3245193, $address->getFiasHierarchyId());
+        $this->assertEquals(FiasLevel::SETTLEMENT, $address->getFiasLevel());
+        $this->assertEquals(AddressLevel::SETTLEMENT, $address->getAddressLevel());
+        $this->assertEquals('0200000300400', $address->getKladrId());
+        $this->assertEquals('80427807004', $address->getOkato());
+        $this->assertEquals('80727000121', $address->getOktmo());
+        $this->assertEquals(null, $address->getPostalCode());
+        $this->assertEmpty($address->getSynonyms());
     }
 }

@@ -11,6 +11,7 @@ use Addresser\AddressRepository\AddressLevel;
 use Addresser\AddressRepository\AddressSynonymizer;
 use Addresser\AddressRepository\Exceptions\AddressBuildFailedException;
 use Addresser\AddressRepository\AddressLevelSpec;
+use Addresser\AddressRepository\Exceptions\RuntimeException;
 
 /**
  * Формирует адрес на основе данных из ФИАС.
@@ -44,6 +45,7 @@ class FiasAddressBuilder implements AddressBuilderInterface
         $this->addressSynonymizer = $addressSynonymizer;
     }
 
+    // todo: refactor a huge loop
     public function build(array $data, ?Address $existsAddress = null): Address
     {
         $hierarchyId = (int)$data['hierarchy_id'];
@@ -51,19 +53,22 @@ class FiasAddressBuilder implements AddressBuilderInterface
 
         $parents = json_decode($data['parents'], true, 512, JSON_THROW_ON_ERROR);
 
-        // группируем по уровням
+        /**
+         * группируем по уровням ФИАС, так как дополнительные локаций таких как СНТ, ГСК mapped на один и тот же
+         * уровень \Addresser\AddressRepository\AddressLevel::SETTLEMENT - может быть несколько актуальных значений.
+         */
         $parentsByLevels = [];
         foreach ($parents as $k => $item) {
-            $relation = $item['relation'];
-            [$addressLevel,] = $this->resolveLevels($relation);
-            $parentsByLevels[$addressLevel] = $parentsByLevels[$addressLevel] ?? [];
-            $parentsByLevels[$addressLevel][] = $item;
+            $fiasLevel = $this->resolveFiasLevel($item['relation']);
+
+            $parentsByLevels[$fiasLevel] = $parentsByLevels[$fiasLevel] ?? [];
+            $parentsByLevels[$fiasLevel][] = $item;
         }
 
         // мы должны сохранить изменения внесенные другими builder
         $address = $existsAddress ?? new Address();
 
-        foreach ($parentsByLevels as $addressLevel => $levelItems) {
+        foreach ($parentsByLevels as $fiasLevel => $levelItems) {
             // находим актуальное значение
             $actualItem = array_values(
                 array_filter(
@@ -73,18 +78,21 @@ class FiasAddressBuilder implements AddressBuilderInterface
                     }
                 )
             );
+
+            /**
+             * Здесь мы должны выделить доп. территории и заполнить ими поля.
+             */
             if (count($actualItem) > 1) {
                 throw AddressBuildFailedException::withIdentifier(
                     'object_id',
                     $objectId,
-                    sprintf('There are "%d" actual relations for one level "%d"', count($actualItem), $addressLevel),
+                    sprintf('There are "%d" actual relations for one fias level "%d"', count($actualItem), $fiasLevel),
                 );
             }
-            $actualItem = $actualItem[0];
 
-            $relation = $actualItem['relation'];
-            [, $fiasLevel] = $this->resolveLevels($relation);
-            $relationData = $relation['relation_data'];
+            $actualItem = $actualItem[0];
+            $addressLevel = FiasLevel::mapAdmHierarchyToAddressLevel($fiasLevel);
+            $relationData = $actualItem['relation']['relation_data'];
 
             $actualParams = $this->resolveActualParams(
                 $actualItem['params'] ?? [],
@@ -238,7 +246,7 @@ class FiasAddressBuilder implements AddressBuilderInterface
                 case AddressLevel::STEAD:
                 case AddressLevel::CAR_PLACE:
                     // эти уровни не индексируем, таким образом сюда они попадать не должны
-                    throw new \DomainException('Unsupported address level.');
+                    throw new RuntimeException('Unsupported address level.');
             }
 
             // данные последнего уровня
@@ -322,46 +330,55 @@ class FiasAddressBuilder implements AddressBuilderInterface
         );
     }
 
-    private function resolveHouseBlockSpec(int $addType): AddressLevelSpec
+    private function resolveHouseBlockSpec(int $addHouseType): AddressLevelSpec
     {
-        return $this->addHouseTypeNameResolver->resolve(AddressLevel::HOUSE, $addType);
+        return $this->addHouseTypeNameResolver->resolve(AddressLevel::HOUSE, $addHouseType);
     }
 
-    private function resolveLevels(array $item): array
+    private function resolveAddressLevel(array $relation): int
     {
-        $relationType = $item['relation_type'];
-
-        $addressLevel = null;
-        $fiasLevel = null;
+        $relationType = $relation['relation_type'];
 
         switch ($relationType) {
             case FiasRelationType::ADDR_OBJ:
-                $fiasLevel = (int)$item['relation_data']['level'];
-                $addressLevel = FiasLevel::mapToAddressLevel($fiasLevel);
-                break;
+                $fiasLevel = (int)$relation['relation_data']['level'];
+
+                return FiasLevel::mapAdmHierarchyToAddressLevel($fiasLevel);
             case FiasRelationType::HOUSE:
-                $addressLevel = AddressLevel::HOUSE;
-                $fiasLevel = FiasLevel::BUILDING;
-                break;
+                return AddressLevel::HOUSE;
             case FiasRelationType::APARTMENT:
-                $addressLevel = AddressLevel::FLAT;
-                $fiasLevel = FiasLevel::PREMISES;
-                break;
+                return AddressLevel::FLAT;
             case FiasRelationType::ROOM:
-                $addressLevel = AddressLevel::ROOM;
-                $fiasLevel = FiasLevel::PREMISES_WITHIN_THE_PREMISES;
-                break;
+                return AddressLevel::ROOM;
             case FiasRelationType::CAR_PLACE:
-                $addressLevel = AddressLevel::CAR_PLACE;
-                $fiasLevel = FiasLevel::CAR_PLACE;
-                break;
+                return AddressLevel::CAR_PLACE;
             case FiasRelationType::STEAD:
-                $addressLevel = AddressLevel::STEAD;
-                $fiasLevel = FiasLevel::STEAD;
-                break;
+                return AddressLevel::STEAD;
         }
 
-        return [$addressLevel, $fiasLevel];
+        throw new RuntimeException(sprintf('Failed to resolve AddressLevel by relation_type "%s"', $relationType));
+    }
+
+    private function resolveFiasLevel(array $relation): int
+    {
+        $relationType = $relation['relation_type'];
+
+        switch ($relationType) {
+            case FiasRelationType::ADDR_OBJ:
+                return (int)$relation['relation_data']['level'];
+            case FiasRelationType::HOUSE:
+                return FiasLevel::BUILDING;
+            case FiasRelationType::APARTMENT:
+                return FiasLevel::PREMISES;
+            case FiasRelationType::ROOM:
+                return FiasLevel::PREMISES_WITHIN_THE_PREMISES;
+            case FiasRelationType::CAR_PLACE:
+                return FiasLevel::CAR_PLACE;
+            case FiasRelationType::STEAD:
+                return FiasLevel::STEAD;
+        }
+
+        throw new RuntimeException(sprintf('Failed to resolve FiasLevel by relation_type "%s"', $relationType));
     }
 
     private function resolveActualParams(array $groupedHierarchyParams, array $keys): array

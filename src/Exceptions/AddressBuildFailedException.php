@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Addresser\AddressRepository\Exceptions;
 
-class AddressBuildFailedException extends \RuntimeException implements Exception
+class AddressBuildFailedException extends RuntimeException
 {
     public static function withIdentifier(string $identifierName, $identifierValue, string $message): self
     {

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Addresser\AddressRepository\Exceptions;
 
-class AddressLevelSpecNotFoundException extends \RuntimeException implements Exception
+class AddressLevelSpecNotFoundException extends RuntimeException
 {
     public static function withIdentifier(int $addressLevel, $identifier, string $message): self
     {

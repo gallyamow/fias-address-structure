@@ -16,79 +16,79 @@ class FiasLevelTest extends TestCase
     {
         $this->assertEquals(
             AddressLevel::REGION,
-            FiasLevel::mapToAddressLevel(FiasLevel::REGION)
+            FiasLevel::mapAdmHierarchyToAddressLevel(FiasLevel::REGION)
         );
 
         $this->assertEquals(
             AddressLevel::AREA,
-            FiasLevel::mapToAddressLevel(FiasLevel::ADMINISTRATIVE_REGION)
+            FiasLevel::mapAdmHierarchyToAddressLevel(FiasLevel::ADMINISTRATIVE_REGION)
         );
         $this->assertEquals(
             AddressLevel::AREA,
-            FiasLevel::mapToAddressLevel(FiasLevel::MUNICIPAL_DISTRICT)
+            FiasLevel::mapAdmHierarchyToAddressLevel(FiasLevel::MUNICIPAL_DISTRICT)
         );
 
         $this->assertEquals(
             AddressLevel::CITY,
-            FiasLevel::mapToAddressLevel(FiasLevel::RURAL_URBAN_SETTLEMENT)
+            FiasLevel::mapAdmHierarchyToAddressLevel(FiasLevel::RURAL_URBAN_SETTLEMENT)
         );
         $this->assertEquals(
             AddressLevel::CITY,
-            FiasLevel::mapToAddressLevel(FiasLevel::CITY)
+            FiasLevel::mapAdmHierarchyToAddressLevel(FiasLevel::CITY)
         );
         $this->assertEquals(
             AddressLevel::SETTLEMENT,
-            FiasLevel::mapToAddressLevel(FiasLevel::SETTLEMENT)
+            FiasLevel::mapAdmHierarchyToAddressLevel(FiasLevel::SETTLEMENT)
         );
 
         $this->assertEquals(
             AddressLevel::SETTLEMENT,
-            FiasLevel::mapToAddressLevel(FiasLevel::ELEMENT_OF_THE_PLANNING_STRUCTURE)
+            FiasLevel::mapAdmHierarchyToAddressLevel(FiasLevel::ELEMENT_OF_THE_PLANNING_STRUCTURE)
         );
         $this->assertEquals(
             AddressLevel::SETTLEMENT,
-            FiasLevel::mapToAddressLevel(FiasLevel::INTRACITY_LEVEL)
+            FiasLevel::mapAdmHierarchyToAddressLevel(FiasLevel::INTRACITY_LEVEL)
         );
 
         $this->assertEquals(
             AddressLevel::STREET,
-            FiasLevel::mapToAddressLevel(FiasLevel::ROAD_NETWORK_ELEMENT)
+            FiasLevel::mapAdmHierarchyToAddressLevel(FiasLevel::ROAD_NETWORK_ELEMENT)
         );
         $this->assertEquals(
             AddressLevel::STREET,
-            FiasLevel::mapToAddressLevel(FiasLevel::OBJECT_LEVEL_IN_ADDITIONAL_TERRITORIES)
+            FiasLevel::mapAdmHierarchyToAddressLevel(FiasLevel::OBJECT_LEVEL_IN_ADDITIONAL_TERRITORIES)
         );
 
         $this->assertEquals(
             AddressLevel::STEAD,
-            FiasLevel::mapToAddressLevel(FiasLevel::STEAD)
+            FiasLevel::mapAdmHierarchyToAddressLevel(FiasLevel::STEAD)
         );
 
         $this->assertEquals(
             AddressLevel::CAR_PLACE,
-            FiasLevel::mapToAddressLevel(FiasLevel::CAR_PLACE)
+            FiasLevel::mapAdmHierarchyToAddressLevel(FiasLevel::CAR_PLACE)
         );
 
         // пока nulls
         $this->assertEquals(
             AddressLevel::HOUSE,
-            FiasLevel::mapToAddressLevel(FiasLevel::BUILDING)
+            FiasLevel::mapAdmHierarchyToAddressLevel(FiasLevel::BUILDING)
         );
 
         $this->assertEquals(
             AddressLevel::FLAT,
-            FiasLevel::mapToAddressLevel(FiasLevel::PREMISES)
+            FiasLevel::mapAdmHierarchyToAddressLevel(FiasLevel::PREMISES)
         );
 
         $this->assertEquals(
             AddressLevel::ROOM,
-            FiasLevel::mapToAddressLevel(FiasLevel::PREMISES_WITHIN_THE_PREMISES)
+            FiasLevel::mapAdmHierarchyToAddressLevel(FiasLevel::PREMISES_WITHIN_THE_PREMISES)
         );
 
         // не понятный уровень
         $this->assertEquals(
             AddressLevel::STREET,
-            FiasLevel::mapToAddressLevel(FiasLevel::COUNTY_LEVEL)
+            FiasLevel::mapAdmHierarchyToAddressLevel(FiasLevel::COUNTY_LEVEL)
         );
     }
 }

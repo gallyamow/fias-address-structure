@@ -40,42 +40,65 @@ class Address implements \JsonSerializable
     private ?string $oktmo = null;
     private ?string $postalCode = null;
 
-    // регион
+    /**
+     * Поля региона
+     */
     private string $regionFiasId;
     private ?string $regionKladrId;
     private string $regionType;
     private string $regionTypeFull;
     private string $region;
 
-    // район
+    /**
+     * Поля района внутри региона.
+     */
     private ?string $areaFiasId = null;
     private ?string $areaKladrId = null;
     private ?string $areaType = null;
     private ?string $areaTypeFull = null;
     private ?string $area = null;
 
-    // город
+    /**
+     * Поля города
+     */
     private ?string $cityFiasId = null;
     private ?string $cityKladrId = null;
     private ?string $cityType = null;
     private ?string $cityTypeFull = null;
     private ?string $city = null;
 
-    // населенный пункт
+    /**
+     * Поля поселения (внутри города или района).
+     * Сюда могут попадать различные небольшие населенные пункты как внутри городов, так и внутри районов.
+     */
     private ?string $settlementFiasId = null;
     private ?string $settlementKladrId = null;
     private ?string $settlementType = null;
     private ?string $settlementTypeFull = null;
     private ?string $settlement = null;
 
-    // улица
+    /**
+     * Поля территории (внутри города или района).
+     * Сюда попадают СНТ, тер гк, зоны, гск
+     */
+    private ?string $territoryFiasId = null;
+    private ?string $territoryKladrId = null;
+    private ?string $territoryType = null;
+    private ?string $territoryTypeFull = null;
+    private ?string $territory = null;
+
+    /**
+     * Поля улицы
+     */
     private ?string $streetFiasId = null;
     private ?string $streetKladrId = null;
     private ?string $streetType = null;
     private ?string $streetTypeFull = null;
     private ?string $street = null;
 
-    // дом
+    /**
+     * Поля дома
+     */
     private ?string $houseFiasId = null;
     private ?string $houseKladrId = null;
     private ?string $houseType = null;
@@ -92,13 +115,17 @@ class Address implements \JsonSerializable
     private ?string $blockTypeFull2 = null;
     private ?string $block2 = null;
 
-    // квартира
+    /**
+     * Поля квартиры
+     */
     private ?string $flatFiasId = null;
     private ?string $flatType = null;
     private ?string $flatTypeFull = null;
     private ?string $flat = null;
 
-    // помещение
+    /**
+     * Поля помещения
+     */
     private ?string $roomFiasId = null;
     private ?string $roomType = null;
     private ?string $roomTypeFull = null;
@@ -167,7 +194,7 @@ class Address implements \JsonSerializable
 
         // показываем все переименования
         if (!empty($this->getRenaming())) {
-            $chunks[] = '(бывш. ' . implode(', ', $this->getRenaming()) . ')';
+            $chunks[] = '(бывш. '.implode(', ', $this->getRenaming()).')';
         }
 
         return implode(', ', $chunks);
@@ -1035,5 +1062,85 @@ class Address implements \JsonSerializable
     public function setRenaming(array $renaming): void
     {
         $this->renaming = $renaming;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getTerritoryFiasId(): ?string
+    {
+        return $this->territoryFiasId;
+    }
+
+    /**
+     * @param string|null $territoryFiasId
+     */
+    public function setTerritoryFiasId(?string $territoryFiasId): void
+    {
+        $this->territoryFiasId = $territoryFiasId;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getTerritoryKladrId(): ?string
+    {
+        return $this->territoryKladrId;
+    }
+
+    /**
+     * @param string|null $territoryKladrId
+     */
+    public function setTerritoryKladrId(?string $territoryKladrId): void
+    {
+        $this->territoryKladrId = $territoryKladrId;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getTerritoryType(): ?string
+    {
+        return $this->territoryType;
+    }
+
+    /**
+     * @param string|null $territoryType
+     */
+    public function setTerritoryType(?string $territoryType): void
+    {
+        $this->territoryType = $territoryType;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getTerritoryTypeFull(): ?string
+    {
+        return $this->territoryTypeFull;
+    }
+
+    /**
+     * @param string|null $territoryTypeFull
+     */
+    public function setTerritoryTypeFull(?string $territoryTypeFull): void
+    {
+        $this->territoryTypeFull = $territoryTypeFull;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getTerritory(): ?string
+    {
+        return $this->territory;
+    }
+
+    /**
+     * @param string|null $territory
+     */
+    public function setTerritory(?string $territory): void
+    {
+        $this->territory = $territory;
     }
 }
