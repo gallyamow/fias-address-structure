@@ -147,7 +147,7 @@ class FiasLevel
 
             case self::SETTLEMENT: // п Краный Яр, тер Мечта, ж/д_ст Ардаши, высел Ахмасиха, автодорога Трасса Саранск-Самара
             case self::ELEMENT_OF_THE_PLANNING_STRUCTURE: // снт Импульс/Станкозавод, тер гк т-14, зона Осиновый кол
-            case self::INTRACITY_LEVEL: // р-н ЖБИ, р-н Советский
+            case self::INTRACITY_LEVEL: // р-н ЖБИ, р-н Советский, Чайковка микрорайон
             case self::ADDITIONAL_TERRITORIES_LEVEL: // гск Колесо, гск Восход
                 /** этот level требует дополнительного разбора **/
                 return AddressLevel::SETTLEMENT;

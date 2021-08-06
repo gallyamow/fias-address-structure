@@ -12,17 +12,17 @@ final class AddressLevel
     /**
      * регион
      */
-    public const REGION = 1;
+    public const REGION = 10;
 
     /**
      * район в регионе
      */
-    public const AREA = 2;
+    public const AREA = 20;
 
     /**
      * город
      */
-    public const CITY = 3;
+    public const CITY = 31;
 
     /**
      * Поселение (внутри города, внутри районов).
@@ -31,35 +31,35 @@ final class AddressLevel
      *
      * @see \Addresser\AddressRepository\Fias\FiasLevel::mapAdmHierarchyToAddressLevel
      */
-    public const SETTLEMENT = 4;
+    public const SETTLEMENT = 32;
 
     /**
      * улица
      */
-    public const STREET = 5;
+    public const STREET = 40;
 
     /**
      * дом
      */
-    public const HOUSE = 6;
-
-    /**
-     * квартира
-     */
-    public const FLAT = 7;
-
-    /**
-     * комната, помещение
-     */
-    public const ROOM = 8;
+    public const HOUSE = 51;
 
     /**
      * участок
      */
-    public const STEAD = 50;
+    public const STEAD = 52;
+
+    /**
+     * квартира
+     */
+    public const FLAT = 61;
 
     /**
      * машиноместо
      */
-    public const CAR_PLACE = 60;
+    public const CAR_PLACE = 62;
+
+    /**
+     * комната, помещение
+     */
+    public const ROOM = 70;
 }
