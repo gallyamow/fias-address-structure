@@ -25,7 +25,6 @@ class Address implements \JsonSerializable
 
     /**
      * Это поле не относится к адресу и нужно для возобновления индексации.
-     * TODO: подумать нужно ли оно
      * @var int
      */
     private int $fiasHierarchyId;

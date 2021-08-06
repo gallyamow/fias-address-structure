@@ -111,7 +111,9 @@ class FiasAddressBuilder implements AddressBuilderInterface
                 );
             }
 
+            // пока в случае неоднозначностей бросаем Exception, поэтому можем просто брать единственный элемент
             $mainParent = $actualParents[0];
+
             $mainRelation = $mainParent['relation'];
             $mainRelationData = $mainRelation['relation_data'];
 
@@ -301,8 +303,6 @@ class FiasAddressBuilder implements AddressBuilderInterface
             }
 
             // последний уровень данных
-            // TODO: подумать о повторах для СНТ
-            // как быть с тем что на этом последнем уровне может быть несколько relation
             if ($addressLevel === \array_key_last($groupedParents)) {
                 if (null === $fiasId) {
                     throw AddressBuildFailedException::withIdentifier(
@@ -349,13 +349,14 @@ class FiasAddressBuilder implements AddressBuilderInterface
             )
         );
 
-        // TODO: проверить что используется только для последнего уровня
-        // TODO: прибавлять level spec short
         return array_values(
             array_filter(
                 array_unique(
                     array_map(
                         static function ($item) use ($nameField) {
+                            // здесь хорошо использовать withTypeName, но тогда будут проблемы в случае если
+                            // у населенного пункта было и переименования и смета вида.
+                            // то есть если сейчас г. Янаул, а в истории д. Янаул, с. Янаул = бывш. д.Янаул, с.Янаул
                             return $item['relation']['relation_data'][$nameField];
                         },
                         $notActualItems
