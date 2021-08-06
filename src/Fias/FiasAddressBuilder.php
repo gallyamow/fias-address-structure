@@ -54,21 +54,22 @@ class FiasAddressBuilder implements AddressBuilderInterface
         $parents = json_decode($data['parents'], true, 512, JSON_THROW_ON_ERROR);
 
         /**
-         * группируем по уровням ФИАС, так как дополнительные локаций таких как СНТ, ГСК mapped на один и тот же
-         * уровень \Addresser\AddressRepository\AddressLevel::SETTLEMENT - может быть несколько актуальных значений.
+         * Группируем по AddressLevel. Так как дополнительные локаций таких как СНТ, ГСК mapped на один и тот же
+         * уровень AddressLevel::SETTLEMENT может быть несколько актуальных значений.
          */
         $groupedParents = [];
         foreach ($parents as $k => $item) {
-            $fiasLevel = $this->resolveFiasLevel($item['relation']);
+            $addressLevel = $this->resolveAddressLevel($item['relation']);
 
-            $groupedParents[$fiasLevel] = $groupedParents[$fiasLevel] ?? [];
-            $groupedParents[$fiasLevel][] = $item;
+            $groupedParents[$addressLevel] = $groupedParents[$addressLevel] ?? [];
+            $groupedParents[$addressLevel][] = $item;
         }
 
         // мы должны сохранить изменения внесенные другими builder
         $address = $existsAddress ?? new Address();
+        $actualName = null;
 
-        foreach ($groupedParents as $fiasLevel => $levelItems) {
+        foreach ($groupedParents as $addressLevel => $levelItems) {
             // находим актуальное значение
             $actualItem = array_values(
                 array_filter(
@@ -80,17 +81,37 @@ class FiasAddressBuilder implements AddressBuilderInterface
             );
 
             /**
+             * Все relation на одном уровне AddressLevel неактивные.
+             * Такое может быть при перемещении для устаревших levels (например ADDITIONAL_TERRITORIES_LEVEL).
+             */
+            if (count($actualItem) === 0) {
+                throw AddressBuildFailedException::withIdentifier(
+                    'object_id',
+                    $objectId,
+                    sprintf('There are no actual relations for one address level "%d"', $addressLevel),
+                );
+            }
+
+            /**
+             * Есть несколько активных relations на одном уровне AddressLevel.
              * Здесь мы должны выделить доп. территории и заполнить ими поля.
              */
             if (count($actualItem) > 1) {
                 throw AddressBuildFailedException::withIdentifier(
                     'object_id',
                     $objectId,
-                    sprintf('There are "%d" actual relations for one fias level "%d"', count($actualItem), $fiasLevel),
+                    sprintf(
+                        'There are "%d" actual relations for one address level "%d"',
+                        count($actualItem),
+                        $addressLevel
+                    ),
                 );
             }
 
             $actualItem = $actualItem[0];
+            $relation = $actualItem['relation'];
+            $fiasLevel = $this->resolveFiasLevel($relation);
+
             $actualParams = $this->resolveActualParams(
                 $actualItem['params'] ?? [],
                 [FiasParamType::KLADR, FiasParamType::OKATO, FiasParamType::OKTMO, FiasParamType::POSTAL_CODE]
@@ -102,8 +123,7 @@ class FiasAddressBuilder implements AddressBuilderInterface
             $postalCode = $actualParams[FiasParamType::POSTAL_CODE]['value'] ?? null;
 
             $fiasId = null;
-            $addressLevel = FiasLevel::mapAdmHierarchyToAddressLevel($fiasLevel);
-            $relationData = $actualItem['relation']['relation_data'];
+            $relationData = $relation['relation_data'];
 
             switch ($addressLevel) {
                 case AddressLevel::REGION:
@@ -134,7 +154,7 @@ class FiasAddressBuilder implements AddressBuilderInterface
 
                     $address->setRegion($this->prepareString($name));
                     // учитываем переименование регионов
-                    $address->setRenaming($this->resolveLevelRenaming($levelItems, $name));
+                    $actualName = $name;
                     break;
                 case AddressLevel::AREA:
                     $fiasId = $relationData['objectguid'];
@@ -149,7 +169,7 @@ class FiasAddressBuilder implements AddressBuilderInterface
 
                     $address->setArea($this->prepareString($name));
                     // учитываем переименование районов
-                    $address->setRenaming($this->resolveLevelRenaming($levelItems, $name));
+                    $actualName = $name;
                     break;
                 case AddressLevel::CITY:
                     $fiasId = $relationData['objectguid'];
@@ -164,7 +184,7 @@ class FiasAddressBuilder implements AddressBuilderInterface
 
                     $address->setCity($this->prepareString($name));
                     // учитываем переименование городов
-                    $address->setRenaming($this->resolveLevelRenaming($levelItems, $name));
+                    $actualName = $name;
                     break;
                 case AddressLevel::SETTLEMENT:
                     $fiasId = $relationData['objectguid'];
@@ -179,7 +199,7 @@ class FiasAddressBuilder implements AddressBuilderInterface
 
                     $address->setSettlement($this->prepareString($name));
                     // учитываем переименование поселений
-                    $address->setRenaming($this->resolveLevelRenaming($levelItems, $name));
+                    $actualName = $name;
                     break;
                 case AddressLevel::STREET:
                     $fiasId = $relationData['objectguid'];
@@ -194,7 +214,7 @@ class FiasAddressBuilder implements AddressBuilderInterface
 
                     $address->setStreet($this->prepareString($name));
                     // учитываем переименование улиц
-                    $address->setRenaming($this->resolveLevelRenaming($levelItems, $name));
+                    $actualName = $name;
                     break;
                 case AddressLevel::HOUSE:
                     $fiasId = $relationData['objectguid'];
@@ -247,10 +267,10 @@ class FiasAddressBuilder implements AddressBuilderInterface
                     throw new InvalidAddressLevelException(sprintf('Unsupported address level "%d".', $addressLevel));
             }
 
-            // данные последнего уровня
-            // здесь пользуемся тем что $fiasLevel уникальный
+            // последний уровень данных
             // TODO: подумать о повторах для СНТ
-            if ($fiasLevel === \array_key_last($groupedParents)) {
+            // как быть с тем что на этом последнем уровне может быть несколько relation
+            if ($addressLevel === \array_key_last($groupedParents)) {
                 if (null === $fiasId) {
                     throw AddressBuildFailedException::withIdentifier(
                         'object_id',
@@ -267,7 +287,18 @@ class FiasAddressBuilder implements AddressBuilderInterface
                 $address->setOktmo($oktmo ?? null);
                 $address->setPostalCode($postalCode ?? null);
                 $address->setKladrId($kladrId ?? null);
-                $address->setSynonyms($this->addressSynonymizer->getSynonyms($fiasId));
+
+                // переименования и синонимы пишем только для определенных level на конечном уровне данных
+                switch ($addressLevel) {
+                    case AddressLevel::REGION:
+                    case AddressLevel::AREA:
+                    case AddressLevel::CITY:
+                    case AddressLevel::SETTLEMENT:
+                    case AddressLevel::STREET:
+                        $address->setRenaming($this->resolveLevelRenaming($levelItems, $actualName));
+                        $address->setSynonyms($this->addressSynonymizer->getSynonyms($fiasId));
+                        break;
+                }
             }
         }
 
@@ -285,6 +316,8 @@ class FiasAddressBuilder implements AddressBuilderInterface
             )
         );
 
+        // TODO: проверить что используется только для последнего уровня
+        // TODO: прибавлять level spec short
         return array_values(
             array_filter(
                 array_unique(
@@ -301,6 +334,38 @@ class FiasAddressBuilder implements AddressBuilderInterface
             )
         );
     }
+
+    /**
+     * Поле 'level' есть только в таблице addr_obj.
+     * Соответственно для остальных таблиц мы определяем его по relation_type.
+     *
+     * @param array $relation
+     * @return int
+     */
+    private function resolveAddressLevel(array $relation): int
+    {
+        $relationType = $relation['relation_type'];
+
+        switch ($relationType) {
+            case FiasRelationType::ADDR_OBJ:
+                $fiasLevel = (int)$relation['relation_data']['level'];
+
+                return FiasLevel::mapAdmHierarchyToAddressLevel($fiasLevel);
+            case FiasRelationType::HOUSE:
+                return AddressLevel::HOUSE;
+            case FiasRelationType::APARTMENT:
+                return AddressLevel::FLAT;
+            case FiasRelationType::ROOM:
+                return AddressLevel::ROOM;
+            case FiasRelationType::CAR_PLACE:
+                return AddressLevel::CAR_PLACE;
+            case FiasRelationType::STEAD:
+                return AddressLevel::STEAD;
+        }
+
+        throw new RuntimeException(sprintf('Failed to resolve AddressLevel by relation_type "%s"', $relationType));
+    }
+
 
     /**
      * Поле 'level' есть только в таблице addr_obj.

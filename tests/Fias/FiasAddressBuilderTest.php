@@ -1052,9 +1052,9 @@ class FiasAddressBuilderTest extends TestCase
     }
 
     /**
-     * @test2
+     * @test
      */
-    public function itCorrectlyBuildSnt(): void
+    public function itCorrectlyBuildTerritory(): void
     {
         $address = $this->builder->build(
             [
@@ -1085,10 +1085,16 @@ class FiasAddressBuilderTest extends TestCase
         $this->assertEquals('Нефтекамск', $address->getCity());
 
         $this->assertEquals('f5b6853e-7787-4127-b60a-a2bcc96a9b3f', $address->getSettlementFiasId());
-        $this->assertEquals('0200000300400', $address->getSettlementKladrId());
-        $this->assertEquals('дер.', $address->getSettlementType());
-        $this->assertEquals('деревня', $address->getSettlementTypeFull());
-        $this->assertEquals('Крым-Сараево', $address->getSettlement());
+        $this->assertEquals('0200000300600', $address->getSettlementKladrId());
+        $this->assertEquals('с.', $address->getSettlementType());
+        $this->assertEquals('село', $address->getSettlementTypeFull());
+        $this->assertEquals('Энергетик', $address->getSettlement());
+
+        $this->assertEquals('a4697fc8-eced-4078-881c-2d400a12af21', $address->getTerritoryFiasId());
+        $this->assertEquals('02000003006000600', $address->getTerritoryKladrId());
+        $this->assertEquals('тер. СНТ.', $address->getTerritoryType());
+        $this->assertEquals('территория СНТ', $address->getTerritoryTypeFull());
+        $this->assertEquals('Родничек', $address->getTerritory());
 
         // район не заполнен
         $this->assertNull($address->getAreaFiasId());
@@ -1130,12 +1136,13 @@ class FiasAddressBuilderTest extends TestCase
 
         // текущий уровень заполнен
         $this->assertEquals('f5b6853e-7787-4127-b60a-a2bcc96a9b3f', $address->getFiasId());
-        $this->assertEquals(3245193, $address->getFiasHierarchyId());
+        $this->assertEquals(3277596, $address->getFiasHierarchyId());
+        // остались на уровне поселения
         $this->assertEquals(FiasLevel::SETTLEMENT, $address->getFiasLevel());
         $this->assertEquals(AddressLevel::SETTLEMENT, $address->getAddressLevel());
-        $this->assertEquals('0200000300400', $address->getKladrId());
-        $this->assertEquals('80427807004', $address->getOkato());
-        $this->assertEquals('80727000121', $address->getOktmo());
+        $this->assertEquals('02000003006000600', $address->getKladrId());
+        $this->assertEquals('80427000003', $address->getOkato());
+        $this->assertEquals('80727000131', $address->getOktmo());
         $this->assertEquals(null, $address->getPostalCode());
         $this->assertEmpty($address->getSynonyms());
     }
