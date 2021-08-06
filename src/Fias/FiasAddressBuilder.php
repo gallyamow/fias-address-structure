@@ -95,7 +95,7 @@ class FiasAddressBuilder implements AddressBuilderInterface
 
             /**
              * Есть несколько активных relations на одном уровне AddressLevel.
-             * Здесь мы должны выделить доп. территории и заполнить ими поля.
+             * Надо решить как их объединять либо взять из них какой то 1
              */
             if (count($actualParents) > 1) {
                 throw AddressBuildFailedException::withIdentifier(
@@ -202,6 +202,21 @@ class FiasAddressBuilder implements AddressBuilderInterface
 
                     $address->setSettlement($this->prepareString($name));
                     // учитываем переименование поселений
+                    $actualName = $name;
+                    break;
+                case AddressLevel::TERRITORY:
+                    $fiasId = $mainRelationData['objectguid'];
+                    $name = $mainRelationData['name'];
+
+                    $address->setTerritoryFiasId($fiasId);
+                    $address->setTerritoryKladrId($kladrId);
+
+                    $typeName = $this->addrObjectTypeNameResolver->resolve($fiasLevel, $mainRelationData['typename']);
+                    $address->setTerritoryType($typeName->getShortName());
+                    $address->setTerritoryTypeFull($typeName->getName());
+
+                    $address->setSettlement($this->prepareString($name));
+                    // учитываем переименование территорий
                     $actualName = $name;
                     break;
                 case AddressLevel::STREET:

@@ -71,12 +71,16 @@ class FiasLevelTest extends TestCase
         );
 
         $this->assertEquals(
-            AddressLevel::SETTLEMENT,
+            AddressLevel::TERRITORY,
             FiasLevel::mapAdmHierarchyToAddressLevel(FiasLevel::ELEMENT_OF_THE_PLANNING_STRUCTURE)
         );
         $this->assertEquals(
-            AddressLevel::SETTLEMENT,
+            AddressLevel::TERRITORY,
             FiasLevel::mapAdmHierarchyToAddressLevel(FiasLevel::INTRACITY_LEVEL)
+        );
+        $this->assertEquals(
+            AddressLevel::TERRITORY,
+            FiasLevel::mapAdmHierarchyToAddressLevel(FiasLevel::ADDITIONAL_TERRITORIES_LEVEL)
         );
 
         $this->assertEquals(

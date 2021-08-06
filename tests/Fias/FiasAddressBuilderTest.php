@@ -102,6 +102,7 @@ class FiasAddressBuilderTest extends TestCase
         $this->assertNull($address->getAreaFiasId());
         $this->assertNull($address->getCityFiasId());
         $this->assertNull($address->getSettlementFiasId());
+        $this->assertNull($address->getTerritoryFiasId());
         $this->assertNull($address->getStreetFiasId());
         $this->assertNull($address->getHouseFiasId());
         $this->assertNull($address->getBlock1());
@@ -217,6 +218,12 @@ class FiasAddressBuilderTest extends TestCase
         $this->assertNull($address->getSettlementTypeFull());
         $this->assertNull($address->getSettlement());
 
+        $this->assertNull($address->getTerritoryFiasId());
+        $this->assertNull($address->getTerritoryKladrId());
+        $this->assertNull($address->getTerritoryType());
+        $this->assertNull($address->getTerritoryTypeFull());
+        $this->assertNull($address->getTerritory());
+
         $this->assertNull($address->getStreetFiasId());
         $this->assertNull($address->getStreetKladrId());
         $this->assertNull($address->getStreetType());
@@ -302,6 +309,12 @@ class FiasAddressBuilderTest extends TestCase
         $this->assertNull($address->getSettlementType());
         $this->assertNull($address->getSettlementTypeFull());
         $this->assertNull($address->getSettlement());
+
+        $this->assertNull($address->getTerritoryFiasId());
+        $this->assertNull($address->getTerritoryKladrId());
+        $this->assertNull($address->getTerritoryType());
+        $this->assertNull($address->getTerritoryTypeFull());
+        $this->assertNull($address->getTerritory());
 
         $this->assertNull($address->getStreetFiasId());
         $this->assertNull($address->getStreetKladrId());
@@ -389,6 +402,12 @@ class FiasAddressBuilderTest extends TestCase
         $this->assertNull($address->getSettlementTypeFull());
         $this->assertNull($address->getSettlement());
 
+        $this->assertNull($address->getTerritoryFiasId());
+        $this->assertNull($address->getTerritoryKladrId());
+        $this->assertNull($address->getTerritoryType());
+        $this->assertNull($address->getTerritoryTypeFull());
+        $this->assertNull($address->getTerritory());
+
         $this->assertNull($address->getStreetFiasId());
         $this->assertNull($address->getStreetKladrId());
         $this->assertNull($address->getStreetType());
@@ -473,6 +492,12 @@ class FiasAddressBuilderTest extends TestCase
         $this->assertNull($address->getAreaTypeFull());
         $this->assertNull($address->getArea());
 
+        $this->assertNull($address->getTerritoryFiasId());
+        $this->assertNull($address->getTerritoryKladrId());
+        $this->assertNull($address->getTerritoryType());
+        $this->assertNull($address->getTerritoryTypeFull());
+        $this->assertNull($address->getTerritory());
+
         // все остальные уровни пустые
         $this->assertNull($address->getStreetFiasId());
         $this->assertNull($address->getStreetKladrId());
@@ -548,6 +573,12 @@ class FiasAddressBuilderTest extends TestCase
         $this->assertNull($address->getAreaType());
         $this->assertNull($address->getAreaTypeFull());
         $this->assertNull($address->getArea());
+
+        $this->assertNull($address->getTerritoryFiasId());
+        $this->assertNull($address->getTerritoryKladrId());
+        $this->assertNull($address->getTerritoryType());
+        $this->assertNull($address->getTerritoryTypeFull());
+        $this->assertNull($address->getTerritory());
 
         $this->assertEquals('2c9997d2-ce94-431a-96c9-722d2238d5c8', $address->getCityFiasId());
         $this->assertEquals('0200000300000', $address->getCityKladrId());
@@ -642,6 +673,12 @@ class FiasAddressBuilderTest extends TestCase
         $this->assertEquals('с.', $address->getSettlementType());
         $this->assertEquals('село', $address->getSettlementTypeFull());
         $this->assertEquals('Куяново', $address->getSettlement());
+
+        $this->assertNull($address->getTerritoryFiasId());
+        $this->assertNull($address->getTerritoryKladrId());
+        $this->assertNull($address->getTerritoryType());
+        $this->assertNull($address->getTerritoryTypeFull());
+        $this->assertNull($address->getTerritory());
 
         // все остальные уровни пустые
         $this->assertNull($address->getStreetFiasId());
@@ -740,6 +777,12 @@ class FiasAddressBuilderTest extends TestCase
         $this->assertEquals('Комсомольский', $address->getStreet());
 
         // все остальные уровни пустые
+        $this->assertNull($address->getTerritoryFiasId());
+        $this->assertNull($address->getTerritoryKladrId());
+        $this->assertNull($address->getTerritoryType());
+        $this->assertNull($address->getTerritoryTypeFull());
+        $this->assertNull($address->getTerritory());
+
         $this->assertNull($address->getHouseFiasId());
         $this->assertNull($address->getHouseKladrId());
         $this->assertNull($address->getHouseType());
@@ -821,6 +864,12 @@ class FiasAddressBuilderTest extends TestCase
         $this->assertEquals('с.', $address->getSettlementType());
         $this->assertEquals('село', $address->getSettlementTypeFull());
         $this->assertEquals('Куяново', $address->getSettlement());
+
+        $this->assertNull($address->getTerritoryFiasId());
+        $this->assertNull($address->getTerritoryKladrId());
+        $this->assertNull($address->getTerritoryType());
+        $this->assertNull($address->getTerritoryTypeFull());
+        $this->assertNull($address->getTerritory());
 
         $this->assertEquals('c876fdd0-5f9c-4389-9d98-f1bff7640520', $address->getStreetFiasId());
         $this->assertEquals('02031000003001900', $address->getStreetKladrId());
@@ -910,6 +959,12 @@ class FiasAddressBuilderTest extends TestCase
         $this->assertEquals('с.', $address->getSettlementType());
         $this->assertEquals('село', $address->getSettlementTypeFull());
         $this->assertEquals('Куяново', $address->getSettlement());
+
+        $this->assertNull($address->getTerritoryFiasId());
+        $this->assertNull($address->getTerritoryKladrId());
+        $this->assertNull($address->getTerritoryType());
+        $this->assertNull($address->getTerritoryTypeFull());
+        $this->assertNull($address->getTerritory());
 
         $this->assertEquals('c876fdd0-5f9c-4389-9d98-f1bff7640520', $address->getStreetFiasId());
         $this->assertEquals('02031000003001900', $address->getStreetKladrId());

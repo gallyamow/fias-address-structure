@@ -151,7 +151,6 @@ class Address implements \JsonSerializable
 
     public function getCompleteShortAddress(): string
     {
-        // TODO: область идет в начале
         $chunks = [
             implode(' ', [$this->getRegionType(), $this->getRegion()]),
         ];

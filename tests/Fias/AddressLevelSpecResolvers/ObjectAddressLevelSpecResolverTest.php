@@ -118,7 +118,7 @@ class ObjectAddressLevelSpecResolverTest extends TestCase
     {
         $this->assertEquals(
             new AddressLevelSpec(
-                AddressLevel::SETTLEMENT, 'просека', 'просека', AddressLevelSpec::NAME_POSITION_BEFORE
+                AddressLevel::TERRITORY, 'просека', 'просека', AddressLevelSpec::NAME_POSITION_BEFORE
             ),
             $this->resolver->resolve(FiasLevel::ELEMENT_OF_THE_PLANNING_STRUCTURE, 'пр-к')
         );
@@ -239,15 +239,15 @@ class ObjectAddressLevelSpecResolverTest extends TestCase
         );
 
         $this->assertEquals(
-            new AddressLevelSpec(AddressLevel::SETTLEMENT, 'слобода', 'сл.', AddressLevelSpec::NAME_POSITION_AFTER),
+            new AddressLevelSpec(AddressLevel::TERRITORY, 'слобода', 'сл.', AddressLevelSpec::NAME_POSITION_AFTER),
             $this->resolver->resolve(FiasLevel::ELEMENT_OF_THE_PLANNING_STRUCTURE, 'сл.')
         );
         $this->assertEquals(
-            new AddressLevelSpec(AddressLevel::SETTLEMENT, 'слобода', 'сл.', AddressLevelSpec::NAME_POSITION_AFTER),
+            new AddressLevelSpec(AddressLevel::TERRITORY, 'слобода', 'сл.', AddressLevelSpec::NAME_POSITION_AFTER),
             $this->resolver->resolve(FiasLevel::INTRACITY_LEVEL, 'сл.')
         );
         $this->assertEquals(
-            new AddressLevelSpec(AddressLevel::SETTLEMENT, 'слобода', 'сл.', AddressLevelSpec::NAME_POSITION_AFTER),
+            new AddressLevelSpec(AddressLevel::TERRITORY, 'слобода', 'сл.', AddressLevelSpec::NAME_POSITION_AFTER),
             $this->resolver->resolve(FiasLevel::ADDITIONAL_TERRITORIES_LEVEL, 'сл.')
         );
     }
