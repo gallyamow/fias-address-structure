@@ -162,7 +162,6 @@ class Address implements \JsonSerializable
 
     public function getCompleteShortAddress(): string
     {
-        // TODO: использовать NAME_POSITION_*
         $chunks = [
             $this->getRegionWithType(),
         ];
@@ -177,6 +176,10 @@ class Address implements \JsonSerializable
 
         if (null !== $this->getSettlement()) {
             $chunks[] = $this->getSettlementWithType();
+        }
+
+        if (null !== $this->getTerritory()) {
+            $chunks[] = $this->getTerritoryWithType();
         }
 
         if (null !== $this->getStreet()) {

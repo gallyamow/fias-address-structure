@@ -95,8 +95,9 @@ class FiasAddressBuilder implements AddressBuilderInterface
             }
 
             /**
-             * Есть несколько активных relations на одном уровне AddressLevel.
-             * Надо решить как их объединять либо взять из них какой то 1
+             * Есть несколько активных relations на одном уровне AddressLevel. После введения AddressLevel::Territory
+             * - такого быть не должно поэтому бросаем exception.
+             * ~~Надо решить как их объединять либо взять из них какой то 1~~
              */
             if (count($actualParents) > 1) {
                 throw AddressBuildFailedException::withIdentifier(
