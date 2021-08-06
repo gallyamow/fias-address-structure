@@ -6,9 +6,14 @@ namespace Addresser\AddressRepository;
 
 /**
  * Плоская структура для хранения адреса.
+ *
  * Одна и та же структура будет использована как для хранения информации до районов, так и для хранения
  * информации до квартир.
- * Это представление удобно для обработки через elasticsearch.
+ *
+ * Здесь присутствует некоторая денормализация: поля предыдущих уровней и *withType - для упрощения работы клиентов
+ * (нет необходимости знать с какой стороны прибавлять type), поля *type, *typeFull - как справочная информация.
+ *
+ * Для уровней ниже street полей withType - нет, потому что у них всегда тип стоит в NAME_POSITION_BEFORE.
  */
 class Address implements \JsonSerializable
 {
@@ -48,6 +53,7 @@ class Address implements \JsonSerializable
     private string $regionType;
     private string $regionTypeFull;
     private string $region;
+    private string $regionWithType;
 
     /**
      * Поля района внутри региона.
@@ -57,6 +63,7 @@ class Address implements \JsonSerializable
     private ?string $areaType = null;
     private ?string $areaTypeFull = null;
     private ?string $area = null;
+    private ?string $areaWithType = null;
 
     /**
      * Поля города
@@ -66,6 +73,7 @@ class Address implements \JsonSerializable
     private ?string $cityType = null;
     private ?string $cityTypeFull = null;
     private ?string $city = null;
+    private ?string $cityWithType = null;
 
     /**
      * Поля поселения (внутри города или района).
@@ -76,6 +84,7 @@ class Address implements \JsonSerializable
     private ?string $settlementType = null;
     private ?string $settlementTypeFull = null;
     private ?string $settlement = null;
+    private ?string $settlementWithType = null;
 
     /**
      * Поля территории (внутри города или района).
@@ -86,6 +95,7 @@ class Address implements \JsonSerializable
     private ?string $territoryType = null;
     private ?string $territoryTypeFull = null;
     private ?string $territory = null;
+    private ?string $territoryWithType = null;
 
     /**
      * Поля улицы
@@ -95,6 +105,7 @@ class Address implements \JsonSerializable
     private ?string $streetType = null;
     private ?string $streetTypeFull = null;
     private ?string $street = null;
+    private ?string $streetWithType = null;
 
     /**
      * Поля дома
@@ -151,24 +162,25 @@ class Address implements \JsonSerializable
 
     public function getCompleteShortAddress(): string
     {
+        // TODO: использовать NAME_POSITION_*
         $chunks = [
-            implode(' ', [$this->getRegionType(), $this->getRegion()]),
+            $this->getRegionWithType(),
         ];
 
         if (null !== $this->getArea()) {
-            $chunks[] = implode(' ', [$this->getArea(), $this->getAreaType()]);
+            $chunks[] = $this->getAreaWithType();
         }
 
         if (null !== $this->getCity()) {
-            $chunks[] = implode(' ', [$this->getCityType(), $this->getCity()]);
+            $chunks[] = $this->getCityWithType();
         }
 
         if (null !== $this->getSettlement()) {
-            $chunks[] = implode(' ', [$this->getSettlementType(), $this->getSettlement()]);
+            $chunks[] = $this->getSettlementWithType();
         }
 
         if (null !== $this->getStreet()) {
-            $chunks[] = implode(' ', [$this->getStreetType(), $this->getStreet()]);
+            $chunks[] = $this->getStreetWithType();
         }
 
         if (null !== $this->getHouse()) {
@@ -1141,5 +1153,101 @@ class Address implements \JsonSerializable
     public function setTerritory(?string $territory): void
     {
         $this->territory = $territory;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRegionWithType(): string
+    {
+        return $this->regionWithType;
+    }
+
+    /**
+     * @param string $regionWithType
+     */
+    public function setRegionWithType(string $regionWithType): void
+    {
+        $this->regionWithType = $regionWithType;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getAreaWithType(): ?string
+    {
+        return $this->areaWithType;
+    }
+
+    /**
+     * @param string|null $areaWithType
+     */
+    public function setAreaWithType(?string $areaWithType): void
+    {
+        $this->areaWithType = $areaWithType;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getCityWithType(): ?string
+    {
+        return $this->cityWithType;
+    }
+
+    /**
+     * @param string|null $cityWithType
+     */
+    public function setCityWithType(?string $cityWithType): void
+    {
+        $this->cityWithType = $cityWithType;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getSettlementWithType(): ?string
+    {
+        return $this->settlementWithType;
+    }
+
+    /**
+     * @param string|null $settlementWithType
+     */
+    public function setSettlementWithType(?string $settlementWithType): void
+    {
+        $this->settlementWithType = $settlementWithType;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getTerritoryWithType(): ?string
+    {
+        return $this->territoryWithType;
+    }
+
+    /**
+     * @param string|null $territoryWithType
+     */
+    public function setTerritoryWithType(?string $territoryWithType): void
+    {
+        $this->territoryWithType = $territoryWithType;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getStreetWithType(): ?string
+    {
+        return $this->streetWithType;
+    }
+
+    /**
+     * @param string|null $streetWithType
+     */
+    public function setStreetWithType(?string $streetWithType): void
+    {
+        $this->streetWithType = $streetWithType;
     }
 }

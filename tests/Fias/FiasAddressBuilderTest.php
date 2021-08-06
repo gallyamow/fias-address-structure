@@ -205,30 +205,31 @@ class FiasAddressBuilderTest extends TestCase
         $this->assertNull($address->getAreaType());
         $this->assertNull($address->getAreaTypeFull());
         $this->assertNull($address->getArea());
+        $this->assertNull($address->getAreaWithType());
 
         $this->assertNull($address->getCityFiasId());
         $this->assertNull($address->getCityKladrId());
         $this->assertNull($address->getCityType());
         $this->assertNull($address->getCityTypeFull());
-        $this->assertNull($address->getCity());
+        $this->assertNull($address->getCityWithType());
 
         $this->assertNull($address->getSettlementFiasId());
         $this->assertNull($address->getSettlementKladrId());
         $this->assertNull($address->getSettlementType());
         $this->assertNull($address->getSettlementTypeFull());
-        $this->assertNull($address->getSettlement());
+        $this->assertNull($address->getSettlementWithType());
 
         $this->assertNull($address->getTerritoryFiasId());
         $this->assertNull($address->getTerritoryKladrId());
         $this->assertNull($address->getTerritoryType());
         $this->assertNull($address->getTerritoryTypeFull());
-        $this->assertNull($address->getTerritory());
+        $this->assertNull($address->getTerritoryWithType());
 
         $this->assertNull($address->getStreetFiasId());
         $this->assertNull($address->getStreetKladrId());
         $this->assertNull($address->getStreetType());
         $this->assertNull($address->getStreetTypeFull());
-        $this->assertNull($address->getStreet());
+        $this->assertNull($address->getStreetWithType());
 
         $this->assertNull($address->getHouseFiasId());
         $this->assertNull($address->getHouseKladrId());
@@ -303,24 +304,28 @@ class FiasAddressBuilderTest extends TestCase
         $this->assertNull($address->getCityType());
         $this->assertNull($address->getCityTypeFull());
         $this->assertNull($address->getCity());
+        $this->assertNull($address->getCityWithType());
 
         $this->assertNull($address->getSettlementFiasId());
         $this->assertNull($address->getSettlementKladrId());
         $this->assertNull($address->getSettlementType());
         $this->assertNull($address->getSettlementTypeFull());
         $this->assertNull($address->getSettlement());
+        $this->assertNull($address->getSettlementWithType());
 
         $this->assertNull($address->getTerritoryFiasId());
         $this->assertNull($address->getTerritoryKladrId());
         $this->assertNull($address->getTerritoryType());
         $this->assertNull($address->getTerritoryTypeFull());
         $this->assertNull($address->getTerritory());
+        $this->assertNull($address->getTerritoryWithType());
 
         $this->assertNull($address->getStreetFiasId());
         $this->assertNull($address->getStreetKladrId());
         $this->assertNull($address->getStreetType());
         $this->assertNull($address->getStreetTypeFull());
         $this->assertNull($address->getStreet());
+        $this->assertNull($address->getStreetWithType());
 
         $this->assertNull($address->getHouseFiasId());
         $this->assertNull($address->getHouseKladrId());
@@ -387,6 +392,7 @@ class FiasAddressBuilderTest extends TestCase
         $this->assertNull($address->getAreaType());
         $this->assertNull($address->getAreaTypeFull());
         $this->assertNull($address->getArea());
+        $this->assertNull($address->getAreaWithType());
 
         // соответствующий уровень заполнен
         $this->assertEquals($address->getFiasId(), $address->getCityFiasId());
@@ -401,18 +407,21 @@ class FiasAddressBuilderTest extends TestCase
         $this->assertNull($address->getSettlementType());
         $this->assertNull($address->getSettlementTypeFull());
         $this->assertNull($address->getSettlement());
+        $this->assertNull($address->getSettlementWithType());
 
         $this->assertNull($address->getTerritoryFiasId());
         $this->assertNull($address->getTerritoryKladrId());
         $this->assertNull($address->getTerritoryType());
         $this->assertNull($address->getTerritoryTypeFull());
         $this->assertNull($address->getTerritory());
+        $this->assertNull($address->getTerritoryWithType());
 
         $this->assertNull($address->getStreetFiasId());
         $this->assertNull($address->getStreetKladrId());
         $this->assertNull($address->getStreetType());
         $this->assertNull($address->getStreetTypeFull());
         $this->assertNull($address->getStreet());
+        $this->assertNull($address->getStreetWithType());
 
         $this->assertNull($address->getHouseFiasId());
         $this->assertNull($address->getHouseKladrId());
@@ -471,6 +480,7 @@ class FiasAddressBuilderTest extends TestCase
         $this->assertEquals('респ.', $address->getRegionType());
         $this->assertEquals('республика', $address->getRegionTypeFull());
         $this->assertEquals('Башкортостан', $address->getRegion());
+        $this->assertEquals('респ. Башкортостан', $address->getRegionWithType());
 
         // для нас. пунктов внутри города - город заполнен
         $this->assertEquals('2c9997d2-ce94-431a-96c9-722d2238d5c8', $address->getCityFiasId());
@@ -478,6 +488,7 @@ class FiasAddressBuilderTest extends TestCase
         $this->assertEquals('г.', $address->getCityType());
         $this->assertEquals('город', $address->getCityTypeFull());
         $this->assertEquals('Нефтекамск', $address->getCity());
+        $this->assertEquals('г. Нефтекамск', $address->getCityWithType());
 
         $this->assertEquals('f5b6853e-7787-4127-b60a-a2bcc96a9b3f', $address->getSettlementFiasId());
         $this->assertEquals('0200000300400', $address->getSettlementKladrId());
@@ -491,12 +502,14 @@ class FiasAddressBuilderTest extends TestCase
         $this->assertNull($address->getAreaType());
         $this->assertNull($address->getAreaTypeFull());
         $this->assertNull($address->getArea());
+        $this->assertNull($address->getAreaWithType());
 
         $this->assertNull($address->getTerritoryFiasId());
         $this->assertNull($address->getTerritoryKladrId());
         $this->assertNull($address->getTerritoryType());
         $this->assertNull($address->getTerritoryTypeFull());
         $this->assertNull($address->getTerritory());
+        $this->assertNull($address->getTerritoryWithType());
 
         // все остальные уровни пустые
         $this->assertNull($address->getStreetFiasId());
@@ -504,6 +517,7 @@ class FiasAddressBuilderTest extends TestCase
         $this->assertNull($address->getStreetType());
         $this->assertNull($address->getStreetTypeFull());
         $this->assertNull($address->getStreet());
+        $this->assertNull($address->getStreetWithType());
 
         $this->assertNull($address->getHouseFiasId());
         $this->assertNull($address->getHouseKladrId());
@@ -566,6 +580,7 @@ class FiasAddressBuilderTest extends TestCase
         $this->assertEquals('респ.', $address->getRegionType());
         $this->assertEquals('республика', $address->getRegionTypeFull());
         $this->assertEquals('Башкортостан', $address->getRegion());
+        $this->assertEquals('респ. Башкортостан', $address->getRegionWithType());
 
         // район для города пропущен (не для всех вроде так должно быть)
         $this->assertNull($address->getAreaFiasId());
@@ -573,24 +588,28 @@ class FiasAddressBuilderTest extends TestCase
         $this->assertNull($address->getAreaType());
         $this->assertNull($address->getAreaTypeFull());
         $this->assertNull($address->getArea());
+        $this->assertNull($address->getAreaWithType());
 
         $this->assertNull($address->getTerritoryFiasId());
         $this->assertNull($address->getTerritoryKladrId());
         $this->assertNull($address->getTerritoryType());
         $this->assertNull($address->getTerritoryTypeFull());
         $this->assertNull($address->getTerritory());
+        $this->assertNull($address->getTerritoryWithType());
 
         $this->assertEquals('2c9997d2-ce94-431a-96c9-722d2238d5c8', $address->getCityFiasId());
         $this->assertEquals('0200000300000', $address->getCityKladrId());
         $this->assertEquals('г.', $address->getCityType());
         $this->assertEquals('город', $address->getCityTypeFull());
         $this->assertEquals('Нефтекамск', $address->getCity());
+        $this->assertEquals('г. Нефтекамск', $address->getCityWithType());
 
         $this->assertEquals('b008fb9b-72d8-4949-9eef-d1935589e84d', $address->getStreetFiasId());
         $this->assertEquals('02000003000000200', $address->getStreetKladrId());
         $this->assertEquals('ул.', $address->getStreetType());
         $this->assertEquals('улица', $address->getStreetTypeFull());
         $this->assertEquals('Социалистическая', $address->getStreet());
+        $this->assertEquals('ул. Социалистическая', $address->getStreetWithType());
 
         $this->assertEquals('e3463736-aaa5-4759-b609-a37a2696fe7f', $address->getHouseFiasId());
         $this->assertEquals(null, $address->getHouseKladrId());
@@ -652,6 +671,7 @@ class FiasAddressBuilderTest extends TestCase
         $this->assertNull($address->getCityType());
         $this->assertNull($address->getCityTypeFull());
         $this->assertNull($address->getCity());
+        $this->assertNull($address->getCityWithType());
 
         // предыдущие уровни заполнены
         $this->assertEquals('6f2cbfd8-692a-4ee4-9b16-067210bde3fc', $address->getRegionFiasId());
@@ -659,6 +679,7 @@ class FiasAddressBuilderTest extends TestCase
         $this->assertEquals('респ.', $address->getRegionType());
         $this->assertEquals('республика', $address->getRegionTypeFull());
         $this->assertEquals('Башкортостан', $address->getRegion());
+        $this->assertEquals('респ. Башкортостан', $address->getRegionWithType());
 
         // для нас. пунктов внутри района - район заполнен
         $this->assertEquals('c278cbbc-e209-4b0f-b20e-9c19ed6f6802', $address->getAreaFiasId());
@@ -666,6 +687,7 @@ class FiasAddressBuilderTest extends TestCase
         $this->assertEquals('р-н', $address->getAreaType());
         $this->assertEquals('район', $address->getAreaTypeFull());
         $this->assertEquals('Краснокамский', $address->getArea());
+        $this->assertEquals('Краснокамский р-н', $address->getAreaWithType());
 
         // соответствующий уровень заполнен
         $this->assertEquals($address->getFiasId(), $address->getSettlementFiasId());
@@ -673,12 +695,14 @@ class FiasAddressBuilderTest extends TestCase
         $this->assertEquals('с.', $address->getSettlementType());
         $this->assertEquals('село', $address->getSettlementTypeFull());
         $this->assertEquals('Куяново', $address->getSettlement());
+        $this->assertEquals('с. Куяново', $address->getSettlementWithType());
 
         $this->assertNull($address->getTerritoryFiasId());
         $this->assertNull($address->getTerritoryKladrId());
         $this->assertNull($address->getTerritoryType());
         $this->assertNull($address->getTerritoryTypeFull());
         $this->assertNull($address->getTerritory());
+        $this->assertNull($address->getTerritoryWithType());
 
         // все остальные уровни пустые
         $this->assertNull($address->getStreetFiasId());
@@ -686,6 +710,7 @@ class FiasAddressBuilderTest extends TestCase
         $this->assertNull($address->getStreetType());
         $this->assertNull($address->getStreetTypeFull());
         $this->assertNull($address->getStreet());
+        $this->assertNull($address->getStreetWithType());
 
         $this->assertNull($address->getHouseFiasId());
         $this->assertNull($address->getHouseKladrId());
@@ -755,6 +780,7 @@ class FiasAddressBuilderTest extends TestCase
         $this->assertEquals('респ.', $address->getRegionType());
         $this->assertEquals('республика', $address->getRegionTypeFull());
         $this->assertEquals('Башкортостан', $address->getRegion());
+        $this->assertEquals('респ. Башкортостан', $address->getRegionWithType());
 
         // для поселков и тд район заполнен
         $this->assertEquals('c278cbbc-e209-4b0f-b20e-9c19ed6f6802', $address->getAreaFiasId());
@@ -762,12 +788,14 @@ class FiasAddressBuilderTest extends TestCase
         $this->assertEquals('р-н', $address->getAreaType());
         $this->assertEquals('район', $address->getAreaTypeFull());
         $this->assertEquals('Краснокамский', $address->getArea());
+        $this->assertEquals('Краснокамский район', $address->getAreaWithType());
 
         $this->assertEquals('3e805a9a-186b-4c0f-9eb2-acb750f77557', $address->getSettlementFiasId());
         $this->assertEquals('0203100000300', $address->getSettlementKladrId());
         $this->assertEquals('с.', $address->getSettlementType());
         $this->assertEquals('село', $address->getSettlementTypeFull());
         $this->assertEquals('Куяново', $address->getSettlement());
+        $this->assertEquals('с. Куяново', $address->getSettlementWithType());
 
         // соответствующий уровень заполнен
         $this->assertEquals('c876fdd0-5f9c-4389-9d98-f1bff7640520', $address->getStreetFiasId());
@@ -775,6 +803,7 @@ class FiasAddressBuilderTest extends TestCase
         $this->assertEquals('пр-кт', $address->getStreetType());
         $this->assertEquals('проспект', $address->getStreetTypeFull());
         $this->assertEquals('Комсомольский', $address->getStreet());
+        $this->assertEquals('пр-кт Комсомольский', $address->getStreetWithType());
 
         // все остальные уровни пустые
         $this->assertNull($address->getTerritoryFiasId());
@@ -782,6 +811,7 @@ class FiasAddressBuilderTest extends TestCase
         $this->assertNull($address->getTerritoryType());
         $this->assertNull($address->getTerritoryTypeFull());
         $this->assertNull($address->getTerritory());
+        $this->assertNull($address->getTerritoryWithType());
 
         $this->assertNull($address->getHouseFiasId());
         $this->assertNull($address->getHouseKladrId());
@@ -851,6 +881,7 @@ class FiasAddressBuilderTest extends TestCase
         $this->assertEquals('респ.', $address->getRegionType());
         $this->assertEquals('республика', $address->getRegionTypeFull());
         $this->assertEquals('Башкортостан', $address->getRegion());
+        $this->assertEquals('респ. Башкортостан', $address->getRegionWithType());
 
         // для поселков и тд район заполнен
         $this->assertEquals('c278cbbc-e209-4b0f-b20e-9c19ed6f6802', $address->getAreaFiasId());
@@ -858,24 +889,28 @@ class FiasAddressBuilderTest extends TestCase
         $this->assertEquals('р-н', $address->getAreaType());
         $this->assertEquals('район', $address->getAreaTypeFull());
         $this->assertEquals('Краснокамский', $address->getArea());
+        $this->assertEquals('Краснокамский р-н', $address->getAreaWithType());
 
         $this->assertEquals('3e805a9a-186b-4c0f-9eb2-acb750f77557', $address->getSettlementFiasId());
         $this->assertEquals('0203100000300', $address->getSettlementKladrId());
         $this->assertEquals('с.', $address->getSettlementType());
         $this->assertEquals('село', $address->getSettlementTypeFull());
         $this->assertEquals('Куяново', $address->getSettlement());
+        $this->assertEquals('с. Куяново', $address->getSettlementWithType());
 
         $this->assertNull($address->getTerritoryFiasId());
         $this->assertNull($address->getTerritoryKladrId());
         $this->assertNull($address->getTerritoryType());
         $this->assertNull($address->getTerritoryTypeFull());
         $this->assertNull($address->getTerritory());
+        $this->assertNull($address->getTerritoryWithType());
 
         $this->assertEquals('c876fdd0-5f9c-4389-9d98-f1bff7640520', $address->getStreetFiasId());
         $this->assertEquals('02031000003001900', $address->getStreetKladrId());
         $this->assertEquals('пр-кт', $address->getStreetType());
         $this->assertEquals('проспект', $address->getStreetTypeFull());
         $this->assertEquals('Комсомольский', $address->getStreet());
+        $this->assertEquals('пр-кт Комсомольский', $address->getStreetWithType());
 
         // соответствующий уровень заполнен
         $this->assertEquals('fc29d0da-e0aa-43a2-bd0e-4466332633aa', $address->getHouseFiasId());
@@ -946,6 +981,7 @@ class FiasAddressBuilderTest extends TestCase
         $this->assertEquals('респ.', $address->getRegionType());
         $this->assertEquals('республика', $address->getRegionTypeFull());
         $this->assertEquals('Башкортостан', $address->getRegion());
+        $this->assertEquals('респ. Башкортостан', $address->getRegionWithType());
 
         // для поселков и тд район заполнен
         $this->assertEquals('c278cbbc-e209-4b0f-b20e-9c19ed6f6802', $address->getAreaFiasId());
@@ -953,24 +989,28 @@ class FiasAddressBuilderTest extends TestCase
         $this->assertEquals('р-н', $address->getAreaType());
         $this->assertEquals('район', $address->getAreaTypeFull());
         $this->assertEquals('Краснокамский', $address->getArea());
+        $this->assertEquals('Краснокамский р-н', $address->getAreaWithType());
 
         $this->assertEquals('3e805a9a-186b-4c0f-9eb2-acb750f77557', $address->getSettlementFiasId());
         $this->assertEquals('0203100000300', $address->getSettlementKladrId());
         $this->assertEquals('с.', $address->getSettlementType());
         $this->assertEquals('село', $address->getSettlementTypeFull());
         $this->assertEquals('Куяново', $address->getSettlement());
+        $this->assertEquals('с. Куяново', $address->getSettlementWithType());
 
         $this->assertNull($address->getTerritoryFiasId());
         $this->assertNull($address->getTerritoryKladrId());
         $this->assertNull($address->getTerritoryType());
         $this->assertNull($address->getTerritoryTypeFull());
         $this->assertNull($address->getTerritory());
+        $this->assertNull($address->getTerritoryWithType());
 
         $this->assertEquals('c876fdd0-5f9c-4389-9d98-f1bff7640520', $address->getStreetFiasId());
         $this->assertEquals('02031000003001900', $address->getStreetKladrId());
         $this->assertEquals('пр-кт', $address->getStreetType());
         $this->assertEquals('проспект', $address->getStreetTypeFull());
         $this->assertEquals('Комсомольский', $address->getStreet());
+        $this->assertEquals('пр-кт Комсомольский', $address->getStreetWithType());
 
         $this->assertEquals('fc29d0da-e0aa-43a2-bd0e-4466332633aa', $address->getHouseFiasId());
         $this->assertEquals(null, $address->getHouseKladrId());
@@ -1083,9 +1123,8 @@ class FiasAddressBuilderTest extends TestCase
             ]
         );
 
-        // todo: обл. в конце
         $this->assertEquals(
-            'обл. Ульяновская, г. Ульяновск, ш. Московское, д. 9-А, корп. 2, лит. Б,б,б1,Л',
+            'Ульяновская обл., г. Ульяновск, Московское ш., д. 9-А, корп. 2, лит. Б,б,б1,Л',
             $address->getCompleteShortAddress()
         );
 
@@ -1141,6 +1180,7 @@ class FiasAddressBuilderTest extends TestCase
         $this->assertEquals('респ.', $address->getRegionType());
         $this->assertEquals('республика', $address->getRegionTypeFull());
         $this->assertEquals('Башкортостан', $address->getRegion());
+        $this->assertEquals('респ. Башкортостан', $address->getRegionWithType());
 
         // для нас. пунктов внутри города - город заполнен
         $this->assertEquals('2c9997d2-ce94-431a-96c9-722d2238d5c8', $address->getCityFiasId());
@@ -1148,18 +1188,21 @@ class FiasAddressBuilderTest extends TestCase
         $this->assertEquals('г.', $address->getCityType());
         $this->assertEquals('город', $address->getCityTypeFull());
         $this->assertEquals('Нефтекамск', $address->getCity());
+        $this->assertEquals('г. Нефтекамск', $address->getCityWithType());
 
         $this->assertEquals('f5b6853e-7787-4127-b60a-a2bcc96a9b3f', $address->getSettlementFiasId());
         $this->assertEquals('0200000300600', $address->getSettlementKladrId());
         $this->assertEquals('с.', $address->getSettlementType());
         $this->assertEquals('село', $address->getSettlementTypeFull());
         $this->assertEquals('Энергетик', $address->getSettlement());
+        $this->assertEquals('с. Энергетик', $address->getSettlementWithType());
 
         $this->assertEquals('a4697fc8-eced-4078-881c-2d400a12af21', $address->getTerritoryFiasId());
         $this->assertEquals('02000003006000600', $address->getTerritoryKladrId());
-        $this->assertEquals('тер. СНТ.', $address->getTerritoryType());
+        $this->assertEquals('тер. СНТ', $address->getTerritoryType());
         $this->assertEquals('территория СНТ', $address->getTerritoryTypeFull());
         $this->assertEquals('Родничек', $address->getTerritory());
+        $this->assertEquals('тер. СНТ Родничек', $address->getTerritory());
 
         // район не заполнен
         $this->assertNull($address->getAreaFiasId());
