@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Addresser\AddressRepository;
 
+use Webmozart\Assert\Assert;
+
 /**
  * Плоская структура для хранения адреса.
  *
@@ -145,14 +147,20 @@ class Address implements \JsonSerializable
      * Синонимы - различные сокращенные названия вида Башкирия, Татария, ХМАО.
      * @var array
      */
-    private array $synonyms = [];
+    private ?array $synonyms = null;
 
     /**
      * Старые названия - переименования регионов, городов, улиц.
      * Заполняться будет только на необходимом уровне. Для дочерних - не будет.
      * @var array
      */
-    private array $renaming = [];
+    private ?array $renaming = null;
+
+    /**
+     * Геопозиция.
+     * @var array [lon, lat]
+     */
+    private ?array $location = null;
 
     public function jsonSerialize()
     {
@@ -226,6 +234,7 @@ class Address implements \JsonSerializable
      */
     public function setFiasId(string $fiasId): void
     {
+        Assert::uuid($fiasId);
         $this->fiasId = $fiasId;
     }
 
@@ -242,6 +251,7 @@ class Address implements \JsonSerializable
      */
     public function setFiasHierarchyId(int $fiasHierarchyId): void
     {
+        Assert::positiveInteger($fiasHierarchyId);
         $this->fiasHierarchyId = $fiasHierarchyId;
     }
 
@@ -258,6 +268,7 @@ class Address implements \JsonSerializable
      */
     public function setFiasLevel(int $fiasLevel): void
     {
+        Assert::positiveInteger($fiasLevel);
         $this->fiasLevel = $fiasLevel;
     }
 
@@ -274,6 +285,7 @@ class Address implements \JsonSerializable
      */
     public function setAddressLevel(int $addressLevel): void
     {
+        Assert::positiveInteger($addressLevel);
         $this->addressLevel = $addressLevel;
     }
 
@@ -290,6 +302,7 @@ class Address implements \JsonSerializable
      */
     public function setRegionFiasId(string $regionFiasId): void
     {
+        Assert::uuid($regionFiasId);
         $this->regionFiasId = $regionFiasId;
     }
 
@@ -306,6 +319,7 @@ class Address implements \JsonSerializable
      */
     public function setRegionKladrId(?string $regionKladrId): void
     {
+        Assert::nullOrStringNotEmpty($regionKladrId);
         $this->regionKladrId = $regionKladrId;
     }
 
@@ -322,6 +336,7 @@ class Address implements \JsonSerializable
      */
     public function setRegionType(string $regionType): void
     {
+        Assert::stringNotEmpty($regionType);
         $this->regionType = $regionType;
     }
 
@@ -338,6 +353,7 @@ class Address implements \JsonSerializable
      */
     public function setRegionTypeFull(string $regionTypeFull): void
     {
+        Assert::stringNotEmpty($regionTypeFull);
         $this->regionTypeFull = $regionTypeFull;
     }
 
@@ -354,6 +370,7 @@ class Address implements \JsonSerializable
      */
     public function setRegion(string $region): void
     {
+        Assert::stringNotEmpty($region);
         $this->region = $region;
     }
 
@@ -370,6 +387,7 @@ class Address implements \JsonSerializable
      */
     public function setFlatFiasId(?string $flatFiasId): void
     {
+        Assert::nullOrStringNotEmpty($flatFiasId);
         $this->flatFiasId = $flatFiasId;
     }
 
@@ -386,6 +404,7 @@ class Address implements \JsonSerializable
      */
     public function setFlatType(?string $flatType): void
     {
+        Assert::nullOrStringNotEmpty($flatType);
         $this->flatType = $flatType;
     }
 
@@ -402,6 +421,7 @@ class Address implements \JsonSerializable
      */
     public function setFlatTypeFull(?string $flatTypeFull): void
     {
+        Assert::nullOrStringNotEmpty($flatTypeFull);
         $this->flatTypeFull = $flatTypeFull;
     }
 
@@ -418,6 +438,7 @@ class Address implements \JsonSerializable
      */
     public function setFlat(?string $flat): void
     {
+        Assert::nullOrStringNotEmpty($flat);
         $this->flat = $flat;
     }
 
@@ -434,6 +455,7 @@ class Address implements \JsonSerializable
      */
     public function setCityFiasId(?string $cityFiasId): void
     {
+        Assert::nullOrStringNotEmpty($cityFiasId);
         $this->cityFiasId = $cityFiasId;
     }
 
@@ -450,6 +472,7 @@ class Address implements \JsonSerializable
      */
     public function setCityKladrId(?string $cityKladrId): void
     {
+        Assert::nullOrStringNotEmpty($cityKladrId);
         $this->cityKladrId = $cityKladrId;
     }
 
@@ -466,6 +489,7 @@ class Address implements \JsonSerializable
      */
     public function setCityType(?string $cityType): void
     {
+        Assert::nullOrStringNotEmpty($cityType);
         $this->cityType = $cityType;
     }
 
@@ -482,6 +506,7 @@ class Address implements \JsonSerializable
      */
     public function setCityTypeFull(?string $cityTypeFull): void
     {
+        Assert::nullOrStringNotEmpty($cityTypeFull);
         $this->cityTypeFull = $cityTypeFull;
     }
 
@@ -498,6 +523,7 @@ class Address implements \JsonSerializable
      */
     public function setCity(?string $city): void
     {
+        Assert::nullOrStringNotEmpty($city);
         $this->city = $city;
     }
 
@@ -514,6 +540,7 @@ class Address implements \JsonSerializable
      */
     public function setSettlementFiasId(?string $settlementFiasId): void
     {
+        Assert::nullOrStringNotEmpty($settlementFiasId);
         $this->settlementFiasId = $settlementFiasId;
     }
 
@@ -530,6 +557,7 @@ class Address implements \JsonSerializable
      */
     public function setSettlementKladrId(?string $settlementKladrId): void
     {
+        Assert::nullOrStringNotEmpty($settlementKladrId);
         $this->settlementKladrId = $settlementKladrId;
     }
 
@@ -546,6 +574,7 @@ class Address implements \JsonSerializable
      */
     public function setSettlementType(?string $settlementType): void
     {
+        Assert::nullOrStringNotEmpty($settlementType);
         $this->settlementType = $settlementType;
     }
 
@@ -562,6 +591,7 @@ class Address implements \JsonSerializable
      */
     public function setSettlementTypeFull(?string $settlementTypeFull): void
     {
+        Assert::nullOrStringNotEmpty($settlementTypeFull);
         $this->settlementTypeFull = $settlementTypeFull;
     }
 
@@ -578,6 +608,7 @@ class Address implements \JsonSerializable
      */
     public function setSettlement(?string $settlement): void
     {
+        Assert::nullOrStringNotEmpty($settlement);
         $this->settlement = $settlement;
     }
 
@@ -594,6 +625,7 @@ class Address implements \JsonSerializable
      */
     public function setStreetFiasId(?string $streetFiasId): void
     {
+        Assert::nullOrUuid($streetFiasId);
         $this->streetFiasId = $streetFiasId;
     }
 
@@ -610,6 +642,7 @@ class Address implements \JsonSerializable
      */
     public function setStreetKladrId(?string $streetKladrId): void
     {
+        Assert::nullOrStringNotEmpty($streetKladrId);
         $this->streetKladrId = $streetKladrId;
     }
 
@@ -626,6 +659,7 @@ class Address implements \JsonSerializable
      */
     public function setStreetType(?string $streetType): void
     {
+        Assert::nullOrStringNotEmpty($streetType);
         $this->streetType = $streetType;
     }
 
@@ -642,6 +676,7 @@ class Address implements \JsonSerializable
      */
     public function setStreetTypeFull(?string $streetTypeFull): void
     {
+        Assert::nullOrStringNotEmpty($streetTypeFull);
         $this->streetTypeFull = $streetTypeFull;
     }
 
@@ -658,6 +693,7 @@ class Address implements \JsonSerializable
      */
     public function setStreet(?string $street): void
     {
+        Assert::nullOrStringNotEmpty($street);
         $this->street = $street;
     }
 
@@ -674,6 +710,7 @@ class Address implements \JsonSerializable
      */
     public function setHouseFiasId(?string $houseFiasId): void
     {
+        Assert::nullOrUuid($houseFiasId);
         $this->houseFiasId = $houseFiasId;
     }
 
@@ -690,6 +727,7 @@ class Address implements \JsonSerializable
      */
     public function setHouseKladrId(?string $houseKladrId): void
     {
+        Assert::nullOrStringNotEmpty($houseKladrId);
         $this->houseKladrId = $houseKladrId;
     }
 
@@ -706,6 +744,7 @@ class Address implements \JsonSerializable
      */
     public function setHouseType(?string $houseType): void
     {
+        Assert::nullOrStringNotEmpty($houseType);
         $this->houseType = $houseType;
     }
 
@@ -722,6 +761,7 @@ class Address implements \JsonSerializable
      */
     public function setHouseTypeFull(?string $houseTypeFull): void
     {
+        Assert::nullOrStringNotEmpty($houseTypeFull);
         $this->houseTypeFull = $houseTypeFull;
     }
 
@@ -738,6 +778,7 @@ class Address implements \JsonSerializable
      */
     public function setHouse(?string $house): void
     {
+        Assert::nullOrStringNotEmpty($house);
         $this->house = $house;
     }
 
@@ -754,6 +795,7 @@ class Address implements \JsonSerializable
      */
     public function setBlockType1(?string $blockType1): void
     {
+        Assert::nullOrStringNotEmpty($blockType1);
         $this->blockType1 = $blockType1;
     }
 
@@ -770,6 +812,7 @@ class Address implements \JsonSerializable
      */
     public function setBlockTypeFull1(?string $blockTypeFull1): void
     {
+        Assert::nullOrStringNotEmpty($blockTypeFull1);
         $this->blockTypeFull1 = $blockTypeFull1;
     }
 
@@ -786,6 +829,7 @@ class Address implements \JsonSerializable
      */
     public function setBlockType2(?string $blockType2): void
     {
+        Assert::nullOrStringNotEmpty($blockType2);
         $this->blockType2 = $blockType2;
     }
 
@@ -802,6 +846,7 @@ class Address implements \JsonSerializable
      */
     public function setBlockTypeFull2(?string $blockTypeFull2): void
     {
+        Assert::nullOrStringNotEmpty($blockTypeFull2);
         $this->blockTypeFull2 = $blockTypeFull2;
     }
 
@@ -818,6 +863,7 @@ class Address implements \JsonSerializable
      */
     public function setBlock2(?string $block2): void
     {
+        Assert::nullOrStringNotEmpty($block2);
         $this->block2 = $block2;
     }
 
@@ -834,6 +880,7 @@ class Address implements \JsonSerializable
      */
     public function setBlock1(?string $block1): void
     {
+        Assert::nullOrStringNotEmpty($block1);
         $this->block1 = $block1;
     }
 
@@ -850,6 +897,7 @@ class Address implements \JsonSerializable
      */
     public function setAreaFiasId(?string $areaFiasId): void
     {
+        Assert::nullOrUuid($areaFiasId);
         $this->areaFiasId = $areaFiasId;
     }
 
@@ -866,6 +914,7 @@ class Address implements \JsonSerializable
      */
     public function setAreaKladrId(?string $areaKladrId): void
     {
+        Assert::nullOrStringNotEmpty($areaKladrId);
         $this->areaKladrId = $areaKladrId;
     }
 
@@ -882,6 +931,7 @@ class Address implements \JsonSerializable
      */
     public function setAreaType(?string $areaType): void
     {
+        Assert::nullOrStringNotEmpty($areaType);
         $this->areaType = $areaType;
     }
 
@@ -898,6 +948,7 @@ class Address implements \JsonSerializable
      */
     public function setAreaTypeFull(?string $areaTypeFull): void
     {
+        Assert::nullOrStringNotEmpty($areaTypeFull);
         $this->areaTypeFull = $areaTypeFull;
     }
 
@@ -914,6 +965,7 @@ class Address implements \JsonSerializable
      */
     public function setArea(?string $area): void
     {
+        Assert::nullOrStringNotEmpty($area);
         $this->area = $area;
     }
 
@@ -930,6 +982,7 @@ class Address implements \JsonSerializable
      */
     public function setKladrId(?string $kladrId): void
     {
+        Assert::nullOrStringNotEmpty($kladrId);
         $this->kladrId = $kladrId;
     }
 
@@ -946,6 +999,7 @@ class Address implements \JsonSerializable
      */
     public function setOkato(?string $okato): void
     {
+        Assert::nullOrStringNotEmpty($okato);
         $this->okato = $okato;
     }
 
@@ -962,6 +1016,7 @@ class Address implements \JsonSerializable
      */
     public function setOktmo(?string $oktmo): void
     {
+        Assert::nullOrStringNotEmpty($oktmo);
         $this->oktmo = $oktmo;
     }
 
@@ -978,6 +1033,7 @@ class Address implements \JsonSerializable
      */
     public function setPostalCode(?string $postalCode): void
     {
+        Assert::nullOrStringNotEmpty($postalCode);
         $this->postalCode = $postalCode;
     }
 
@@ -994,6 +1050,7 @@ class Address implements \JsonSerializable
      */
     public function setRoomFiasId(?string $roomFiasId): void
     {
+        Assert::nullOrStringNotEmpty($roomFiasId);
         $this->roomFiasId = $roomFiasId;
     }
 
@@ -1010,6 +1067,7 @@ class Address implements \JsonSerializable
      */
     public function setRoomType(?string $roomType): void
     {
+        Assert::nullOrStringNotEmpty($roomType);
         $this->roomType = $roomType;
     }
 
@@ -1026,6 +1084,7 @@ class Address implements \JsonSerializable
      */
     public function setRoomTypeFull(?string $roomTypeFull): void
     {
+        Assert::nullOrStringNotEmpty($roomTypeFull);
         $this->roomTypeFull = $roomTypeFull;
     }
 
@@ -1042,38 +1101,41 @@ class Address implements \JsonSerializable
      */
     public function setRoom(?string $room): void
     {
+        Assert::nullOrStringNotEmpty($room);
         $this->room = $room;
     }
 
     /**
-     * @return array
+     * @return array|null
      */
-    public function getSynonyms(): array
+    public function getSynonyms(): ?array
     {
         return $this->synonyms;
     }
 
     /**
-     * @param array $synonyms
+     * @param array|null $synonyms
      */
-    public function setSynonyms(array $synonyms): void
+    public function setSynonyms(?array $synonyms): void
     {
+        Assert::nullOrNotEmpty($synonyms);
         $this->synonyms = $synonyms;
     }
 
     /**
-     * @return array
+     * @return array|null
      */
-    public function getRenaming(): array
+    public function getRenaming(): ?array
     {
         return $this->renaming;
     }
 
     /**
-     * @param array $renaming
+     * @param array|null $renaming
      */
-    public function setRenaming(array $renaming): void
+    public function setRenaming(?array $renaming): void
     {
+        Assert::nullOrNotEmpty($renaming);
         $this->renaming = $renaming;
     }
 
@@ -1090,6 +1152,7 @@ class Address implements \JsonSerializable
      */
     public function setTerritoryFiasId(?string $territoryFiasId): void
     {
+        Assert::nullOrStringNotEmpty($territoryFiasId);
         $this->territoryFiasId = $territoryFiasId;
     }
 
@@ -1106,6 +1169,7 @@ class Address implements \JsonSerializable
      */
     public function setTerritoryKladrId(?string $territoryKladrId): void
     {
+        Assert::nullOrStringNotEmpty($territoryKladrId);
         $this->territoryKladrId = $territoryKladrId;
     }
 
@@ -1122,6 +1186,7 @@ class Address implements \JsonSerializable
      */
     public function setTerritoryType(?string $territoryType): void
     {
+        Assert::nullOrStringNotEmpty($territoryType);
         $this->territoryType = $territoryType;
     }
 
@@ -1138,6 +1203,7 @@ class Address implements \JsonSerializable
      */
     public function setTerritoryTypeFull(?string $territoryTypeFull): void
     {
+        Assert::nullOrStringNotEmpty($territoryTypeFull);
         $this->territoryTypeFull = $territoryTypeFull;
     }
 
@@ -1154,6 +1220,7 @@ class Address implements \JsonSerializable
      */
     public function setTerritory(?string $territory): void
     {
+        Assert::nullOrStringNotEmpty($territory);
         $this->territory = $territory;
     }
 
@@ -1170,6 +1237,7 @@ class Address implements \JsonSerializable
      */
     public function setRegionWithType(string $regionWithType): void
     {
+        Assert::stringNotEmpty($regionWithType);
         $this->regionWithType = $regionWithType;
     }
 
@@ -1186,6 +1254,7 @@ class Address implements \JsonSerializable
      */
     public function setAreaWithType(?string $areaWithType): void
     {
+        Assert::nullOrStringNotEmpty($areaWithType);
         $this->areaWithType = $areaWithType;
     }
 
@@ -1202,6 +1271,7 @@ class Address implements \JsonSerializable
      */
     public function setCityWithType(?string $cityWithType): void
     {
+        Assert::nullOrStringNotEmpty($cityWithType);
         $this->cityWithType = $cityWithType;
     }
 
@@ -1218,6 +1288,7 @@ class Address implements \JsonSerializable
      */
     public function setSettlementWithType(?string $settlementWithType): void
     {
+        Assert::nullOrStringNotEmpty($settlementWithType);
         $this->settlementWithType = $settlementWithType;
     }
 
@@ -1234,6 +1305,7 @@ class Address implements \JsonSerializable
      */
     public function setTerritoryWithType(?string $territoryWithType): void
     {
+        Assert::nullOrStringNotEmpty($territoryWithType);
         $this->territoryWithType = $territoryWithType;
     }
 
@@ -1250,6 +1322,24 @@ class Address implements \JsonSerializable
      */
     public function setStreetWithType(?string $streetWithType): void
     {
+        Assert::nullOrStringNotEmpty($streetWithType);
         $this->streetWithType = $streetWithType;
+    }
+
+    /**
+     * @return array
+     */
+    public function getLocation(): array
+    {
+        return $this->location;
+    }
+
+    /**
+     * @param array $location
+     */
+    public function setLocation(array $location): void
+    {
+        Assert::nullOrNotEmpty($location);
+        $this->location = $location;
     }
 }

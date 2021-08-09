@@ -135,7 +135,7 @@ class FiasAddressBuilder implements AddressBuilderInterface
             switch ($addressLevel) {
                 case AddressLevel::REGION:
                     $fiasId = $mainRelationData['objectguid'];
-                    if (empty($fiasId)) {
+                    if ('' === $fiasId) {
                         throw AddressBuildFailedException::withIdentifier(
                             'object_id',
                             $objectId,
@@ -144,7 +144,7 @@ class FiasAddressBuilder implements AddressBuilderInterface
                     }
 
                     $name = $this->prepareString($mainRelationData['name']);
-                    if (empty($name)) {
+                    if ('' === $name) {
                         throw AddressBuildFailedException::withIdentifier(
                             'object_id',
                             $objectId,
@@ -328,8 +328,8 @@ class FiasAddressBuilder implements AddressBuilderInterface
                     case AddressLevel::CITY:
                     case AddressLevel::SETTLEMENT:
                     case AddressLevel::STREET:
-                        $address->setRenaming($this->resolveLevelRenaming($levelParents, $actualNaming));
-                        $address->setSynonyms($this->addressSynonymizer->getSynonyms($fiasId));
+                        $address->setRenaming($this->resolveLevelRenaming($levelParents, $actualNaming) ?: null);
+                        $address->setSynonyms($this->addressSynonymizer->getSynonyms($fiasId) ?: null);
                         break;
                 }
             }
@@ -482,6 +482,6 @@ class FiasAddressBuilder implements AddressBuilderInterface
         }
         $tmp = trim($s);
 
-        return empty($tmp) ? null : $tmp;
+        return '' === $tmp ? null : $tmp;
     }
 }
