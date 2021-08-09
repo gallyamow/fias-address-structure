@@ -50,7 +50,7 @@ class Address implements \JsonSerializable
      * Поля региона
      */
     private string $regionFiasId;
-    private ?string $regionKladrId;
+    private string $regionKladrId;
     private string $regionType;
     private string $regionTypeFull;
     private string $region;
@@ -307,19 +307,19 @@ class Address implements \JsonSerializable
     }
 
     /**
-     * @return string|null
+     * @return string
      */
-    public function getRegionKladrId(): ?string
+    public function getRegionKladrId(): string
     {
         return $this->regionKladrId;
     }
 
     /**
-     * @param string|null $regionKladrId
+     * @param string $regionKladrId
      */
-    public function setRegionKladrId(?string $regionKladrId): void
+    public function setRegionKladrId(string $regionKladrId): void
     {
-        Assert::nullOrStringNotEmpty($regionKladrId);
+        Assert::stringNotEmpty($regionKladrId);
         $this->regionKladrId = $regionKladrId;
     }
 
