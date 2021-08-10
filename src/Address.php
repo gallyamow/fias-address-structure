@@ -164,6 +164,11 @@ class Address implements \JsonSerializable
 
     public function jsonSerialize()
     {
+        return $this->toArray();
+    }
+
+    public function toArray()
+    {
         return get_object_vars($this);
     }
 
@@ -1340,6 +1345,12 @@ class Address implements \JsonSerializable
     public function setLocation(array $location): void
     {
         Assert::nullOrNotEmpty($location);
+
+        if (null !== $location) {
+            Assert::isList($location);
+            Assert::count($location, 2);
+        }
+
         $this->location = $location;
     }
 }
