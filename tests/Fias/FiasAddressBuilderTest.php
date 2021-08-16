@@ -150,8 +150,14 @@ class FiasAddressBuilderTest extends TestCase
         );
 
         $this->assertEquals(
-            'респ. Башкортостан, г. Нефтекамск, дер. Крым-Сараево, (бывш. Крымсараево)',
-            $address->getCompleteStreetWithRenaming()
+            'респ. Башкортостан, г. Нефтекамск, дер. Крым-Сараево (бывш. Крымсараево)',
+            $address->getCompleteAddress(true)
+        );
+
+        // не выводится если не передавать параметр
+        $this->assertEquals(
+            'респ. Башкортостан, г. Нефтекамск, дер. Крым-Сараево',
+            $address->getCompleteAddress()
         );
     }
 
@@ -485,8 +491,8 @@ class FiasAddressBuilderTest extends TestCase
         );
 
         $this->assertEquals(
-            'респ. Башкортостан, г. Нефтекамск, дер. Крым-Сараево',
-            $address->getCompleteAddress()
+            'респ. Башкортостан, г. Нефтекамск, дер. Крым-Сараево (бывш. Крымсараево)',
+            $address->getCompleteAddress(true)
         );
 
         // предыдущие уровни заполнены
