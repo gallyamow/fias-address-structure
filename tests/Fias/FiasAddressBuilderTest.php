@@ -138,6 +138,21 @@ class FiasAddressBuilderTest extends TestCase
 
         // есть переименования
         $this->assertEquals(['Крымсараево'], $address->getRenaming());
+
+        // выводится в complete
+        $address = $this->builder->build(
+            [
+                'hierarchy_id' => 3245193,
+                'object_id' => 5512,
+                'path_ltree' => '5705.6143.5512',
+                'parents' => '[{"params": [{"values": [{"value": "0", "type_id": 14, "end_date": "2079-06-06", "start_date": "1900-01-01"}, {"value": "800000000000000000001", "type_id": 13, "end_date": "2079-06-06", "start_date": "2015-12-01"}, {"value": "0200000000000", "type_id": 10, "end_date": "2079-06-06", "start_date": "2015-12-01"}, {"value": "452000", "type_id": 5, "end_date": "2079-06-06", "start_date": "2015-12-01"}, {"value": "80000000000", "type_id": 6, "end_date": "2079-06-06", "start_date": "2015-12-01"}, {"value": "0200", "type_id": 1, "end_date": "2079-06-06", "start_date": "1900-01-01"}, {"value": "0200", "type_id": 2, "end_date": "2079-06-06", "start_date": "1900-01-01"}, {"value": "02000000000", "type_id": 11, "end_date": "2079-06-06", "start_date": "1900-01-01"}, {"value": "80000000", "type_id": 7, "end_date": "2079-06-06", "start_date": "1900-01-01"}, {"value": "Республика Башкортостан", "type_id": 16, "end_date": "2079-06-06", "start_date": "1900-01-01"}], "object_id": 5705, "hierarchy_id": 1}], "relation": {"object_id": 5705, "relation_id": 6356, "hierarchy_id": 1, "relation_data": {"id": 6356, "name": "Башкортостан", "level": "1", "nextid": 0, "previd": 0, "enddate": "2079-06-06", "changeid": 17925, "isactive": 1, "isactual": 1, "objectid": 5705, "typename": "Респ", "startdate": "1900-01-01", "objectguid": "6f2cbfd8-692a-4ee4-9b16-067210bde3fc", "opertypeid": 1, "updatedate": "2016-02-27"}, "relation_type": "addr_obj", "relation_is_active": 1, "relation_is_actual": 1}},{"params": [{"values": [{"value": "0264", "type_id": 1, "end_date": "2079-06-06", "start_date": "1900-01-01"}, {"value": "0", "type_id": 14, "end_date": "2079-06-06", "start_date": "1900-01-01"}, {"value": "02000003000", "type_id": 11, "end_date": "2079-06-06", "start_date": "1900-01-01"}, {"value": "80427000000", "type_id": 6, "end_date": "2079-06-06", "start_date": "1900-01-01"}, {"value": "0264", "type_id": 2, "end_date": "2079-06-06", "start_date": "1900-01-01"}, {"value": "80727000001", "type_id": 7, "end_date": "2079-06-06", "start_date": "2020-03-05"}, {"value": "0200000300000", "type_id": 10, "end_date": "2079-06-06", "start_date": "2016-08-31"}, {"value": "807270000010000000001", "type_id": 13, "end_date": "2079-06-06", "start_date": "2016-08-31"}], "object_id": 6143, "hierarchy_id": 3245176}], "relation": {"object_id": 6143, "relation_id": 6890, "hierarchy_id": 3245176, "relation_data": {"id": 6890, "name": "Нефтекамск", "level": "5", "nextid": 0, "previd": 0, "enddate": "2079-06-06", "changeid": 19302, "isactive": 1, "isactual": 1, "objectid": 6143, "typename": "г", "startdate": "1900-01-01", "objectguid": "2c9997d2-ce94-431a-96c9-722d2238d5c8", "opertypeid": 1, "updatedate": "2016-08-31"}, "relation_type": "addr_obj", "relation_is_active": 1, "relation_is_actual": 1}},{"params": [{"values": [{"value": "0264", "type_id": 2, "end_date": "2079-06-06", "start_date": "1900-01-01"}, {"value": "02000003004", "type_id": 11, "end_date": "2079-06-06", "start_date": "1900-01-01"}, {"value": "0", "type_id": 14, "end_date": "2079-06-06", "start_date": "1900-01-01"}, {"value": "80727000121", "type_id": 7, "end_date": "2079-06-06", "start_date": "2014-01-05"}, {"value": "807270001210000000001", "type_id": 13, "end_date": "2079-06-06", "start_date": "2014-01-05"}, {"value": "0200000300400", "type_id": 10, "end_date": "2079-06-06", "start_date": "2014-01-05"}, {"value": "0264", "type_id": 1, "end_date": "2079-06-06", "start_date": "1900-01-01"}, {"value": "80427807004", "type_id": 6, "end_date": "2079-06-06", "start_date": "1900-01-01"}], "object_id": 5512, "hierarchy_id": 3245193}], "relation": {"object_id": 5512, "relation_id": 6108, "hierarchy_id": 3245193, "relation_data": {"id": 6108, "name": "Крымсараево", "level": "6", "nextid": 6118, "previd": 0, "enddate": "1900-01-01", "changeid": 17231, "isactive": 0, "isactual": 0, "objectid": 5512, "typename": "д", "startdate": "1900-01-01", "objectguid": "f5b6853e-7787-4127-b60a-a2bcc96a9b3f", "opertypeid": 1, "updatedate": "2017-11-16"}, "relation_type": "addr_obj", "relation_is_active": 0, "relation_is_actual": 0}},{"params": [{"values": [{"value": "0264", "type_id": 2, "end_date": "2079-06-06", "start_date": "1900-01-01"}, {"value": "02000003004", "type_id": 11, "end_date": "2079-06-06", "start_date": "1900-01-01"}, {"value": "0", "type_id": 14, "end_date": "2079-06-06", "start_date": "1900-01-01"}, {"value": "80727000121", "type_id": 7, "end_date": "2079-06-06", "start_date": "2014-01-05"}, {"value": "807270001210000000001", "type_id": 13, "end_date": "2079-06-06", "start_date": "2014-01-05"}, {"value": "0200000300400", "type_id": 10, "end_date": "2079-06-06", "start_date": "2014-01-05"}, {"value": "0264", "type_id": 1, "end_date": "2079-06-06", "start_date": "1900-01-01"}, {"value": "80427807004", "type_id": 6, "end_date": "2079-06-06", "start_date": "1900-01-01"}], "object_id": 5512, "hierarchy_id": 3245193}], "relation": {"object_id": 5512, "relation_id": 6118, "hierarchy_id": 3245193, "relation_data": {"id": 6118, "name": "Крым-Сараево", "level": "6", "nextid": 0, "previd": 6108, "enddate": "2079-06-06", "changeid": 17273, "isactive": 1, "isactual": 1, "objectid": 5512, "typename": "д", "startdate": "1900-01-01", "objectguid": "f5b6853e-7787-4127-b60a-a2bcc96a9b3f", "opertypeid": 1, "updatedate": "2014-01-06"}, "relation_type": "addr_obj", "relation_is_active": 1, "relation_is_actual": 1}}]',
+            ]
+        );
+
+        $this->assertEquals(
+            'респ. Башкортостан, г. Нефтекамск, дер. Крым-Сараево, (бывш. Крымсараево)',
+            $address->getCompleteStreetWithRenaming()
+        );
     }
 
     /**
@@ -190,7 +205,7 @@ class FiasAddressBuilderTest extends TestCase
             ]
         );
 
-        $this->assertEquals('респ. Башкортостан', $address->getCompleteShortAddress());
+        $this->assertEquals('респ. Башкортостан', $address->getCompleteAddress());
 
         // соответствующий уровень заполнен
         $this->assertEquals($address->getFiasId(), $address->getRegionFiasId());
@@ -282,7 +297,7 @@ class FiasAddressBuilderTest extends TestCase
             ]
         );
 
-        $this->assertEquals('респ. Башкортостан, Краснокамский р-н', $address->getCompleteShortAddress());
+        $this->assertEquals('респ. Башкортостан, Краснокамский р-н', $address->getCompleteAddress());
 
         // предыдущие уровни заполнены
         $this->assertEquals('6f2cbfd8-692a-4ee4-9b16-067210bde3fc', $address->getRegionFiasId());
@@ -377,7 +392,7 @@ class FiasAddressBuilderTest extends TestCase
             ]
         );
 
-        $this->assertEquals('респ. Башкортостан, г. Нефтекамск', $address->getCompleteShortAddress());
+        $this->assertEquals('респ. Башкортостан, г. Нефтекамск', $address->getCompleteAddress());
 
         // предыдущие уровни заполнены
         $this->assertEquals('6f2cbfd8-692a-4ee4-9b16-067210bde3fc', $address->getRegionFiasId());
@@ -470,8 +485,8 @@ class FiasAddressBuilderTest extends TestCase
         );
 
         $this->assertEquals(
-            'респ. Башкортостан, г. Нефтекамск, дер. Крым-Сараево, (бывш. Крымсараево)',
-            $address->getCompleteShortAddress()
+            'респ. Башкортостан, г. Нефтекамск, дер. Крым-Сараево',
+            $address->getCompleteAddress()
         );
 
         // предыдущие уровни заполнены
@@ -571,7 +586,7 @@ class FiasAddressBuilderTest extends TestCase
 
         $this->assertEquals(
             'респ. Башкортостан, г. Нефтекамск, ул. Социалистическая, д. 18, кв. 1',
-            $address->getCompleteShortAddress()
+            $address->getCompleteAddress()
         );
 
         // предыдущие уровни заполнены
@@ -663,7 +678,7 @@ class FiasAddressBuilderTest extends TestCase
             ]
         );
 
-        $this->assertEquals('респ. Башкортостан, Краснокамский р-н, с. Куяново', $address->getCompleteShortAddress());
+        $this->assertEquals('респ. Башкортостан, Краснокамский р-н, с. Куяново', $address->getCompleteAddress());
 
         // город пуст
         $this->assertNull($address->getCityFiasId());
@@ -764,7 +779,7 @@ class FiasAddressBuilderTest extends TestCase
 
         $this->assertEquals(
             'респ. Башкортостан, Краснокамский р-н, с. Куяново, пр-кт Комсомольский',
-            $address->getCompleteShortAddress()
+            $address->getCompleteAddress()
         );
 
         // город пуст
@@ -865,7 +880,7 @@ class FiasAddressBuilderTest extends TestCase
 
         $this->assertEquals(
             'респ. Башкортостан, Краснокамский р-н, с. Куяново, пр-кт Комсомольский, д. 33',
-            $address->getCompleteShortAddress()
+            $address->getCompleteAddress()
         );
 
         // город пуст
@@ -965,7 +980,7 @@ class FiasAddressBuilderTest extends TestCase
 
         $this->assertEquals(
             'респ. Башкортостан, Краснокамский р-н, с. Куяново, пр-кт Комсомольский, д. 33, кв. 2',
-            $address->getCompleteShortAddress()
+            $address->getCompleteAddress()
         );
 
         // город пуст
@@ -1065,7 +1080,7 @@ class FiasAddressBuilderTest extends TestCase
 
         $this->assertEquals(
             'респ. Башкортостан, г. Нефтекамск, ул. Социалистическая, зд. 10А, стр. 4',
-            $address->getCompleteShortAddress()
+            $address->getCompleteAddress()
         );
 
         // соответствующий уровень заполнен
@@ -1095,7 +1110,7 @@ class FiasAddressBuilderTest extends TestCase
 
         $this->assertEquals(
             'респ. Башкортостан, г. Кумертау, ул. Брикетная, влд. 5, корп. А, стр. 1/6',
-            $address->getCompleteShortAddress()
+            $address->getCompleteAddress()
         );
 
         // соответствующий уровень заполнен
@@ -1125,7 +1140,7 @@ class FiasAddressBuilderTest extends TestCase
 
         $this->assertEquals(
             'Ульяновская обл., г. Ульяновск, Московское ш., д. 9-А, корп. 2, лит. Б,б,б1,Л',
-            $address->getCompleteShortAddress()
+            $address->getCompleteAddress()
         );
 
         // соответствующий уровень заполнен
@@ -1161,7 +1176,7 @@ class FiasAddressBuilderTest extends TestCase
 
         $this->assertEquals(
             'респ. Башкортостан, г. Нефтекамск, с. Энергетик, тер. СНТ Родничок',
-            $address->getCompleteShortAddress()
+            $address->getCompleteAddress()
         );
 
         // предыдущие уровни заполнены
@@ -1262,7 +1277,7 @@ class FiasAddressBuilderTest extends TestCase
 
         $this->assertEquals(
             'Оренбургская обл., Оренбургский р-н, тер. Пригородный сельсовет, днп Кристалл, ул. Абрикосовая',
-            $address->getCompleteShortAddress()
+            $address->getCompleteAddress()
         );
     }
 
@@ -1282,7 +1297,7 @@ class FiasAddressBuilderTest extends TestCase
 
         $this->assertEquals(
             'Оренбургская обл., Оренбургский р-н, тер. Пригородный сельсовет, днп Кристалл, ул. Абрикосовая, д. 2',
-            $address->getCompleteShortAddress()
+            $address->getCompleteAddress()
         );
     }
 }

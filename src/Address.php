@@ -172,11 +172,17 @@ class Address implements \JsonSerializable
         return get_object_vars($this);
     }
 
-    public function getCompleteShortAddress(): string
+    /**
+     * Полное название местности (до города, нас. пункта, поселения, территории и тд)
+     * @return string
+     */
+    public function getCompleteLocality(): string
     {
-        $chunks = [
-            $this->getRegionWithType(),
-        ];
+        $chunks = [];
+
+        if ('' !== $this->getRegionWithType()) {
+            $chunks[] = $this->getRegionWithType();
+        }
 
         if (null !== $this->getArea()) {
             $chunks[] = $this->getAreaWithType();
@@ -194,9 +200,57 @@ class Address implements \JsonSerializable
             $chunks[] = $this->getTerritoryWithType();
         }
 
+
+        return implode(', ', $chunks);
+    }
+
+    /**
+     * Полное название улицы (до улицы)
+     * @return string
+     */
+    public function getCompleteStreet(): string
+    {
+        $chunks = [];
+
+        if ('' !== $this->getCompleteLocality()) {
+            $chunks[] = $this->getCompleteLocality();
+        }
+
         if (null !== $this->getStreet()) {
             $chunks[] = $this->getStreetWithType();
         }
+
+        return implode(', ', $chunks);
+    }
+
+    /**
+     * Полное название улицы (до улицы c переименованиями)
+     * @return string
+     */
+    public function getCompleteStreetWithRenaming(): string
+    {
+        $chunks = [];
+
+        if ('' !== $this->getCompleteStreet()) {
+            $chunks[] = $this->getCompleteStreet();
+        }
+
+        // можем добавлять на уровне улицы, так как переименования хранятся только на уровне самих владельцев
+        // переименования могут быть только на этих уровнях
+        if (!empty($this->getRenaming())) {
+            $chunks[] = '(бывш. '.implode(', ', $this->getRenaming()).')';
+        }
+
+        return implode(', ', $chunks);
+    }
+
+    /**
+     * Полное название дома.
+     * @return string
+     */
+    public function getEntireHouse(): string
+    {
+        $chunks = [];
 
         if (null !== $this->getHouse()) {
             $chunks[] = implode(' ', [$this->getHouseType(), $this->getHouse()]);
@@ -210,6 +264,17 @@ class Address implements \JsonSerializable
             $chunks[] = implode(' ', [$this->getBlockType2(), $this->getBlock2()]);
         }
 
+        return implode(', ', $chunks);
+    }
+
+    /**
+     * Квартира или квартира+комната
+     * @return string
+     */
+    public function getEntireApartment(): string
+    {
+        $chunks = [];
+
         if (null !== $this->getFlat()) {
             $chunks[] = implode(' ', [$this->getFlatType(), $this->getFlat()]);
         }
@@ -218,9 +283,23 @@ class Address implements \JsonSerializable
             $chunks[] = implode(' ', [$this->getRoomType(), $this->getRoom()]);
         }
 
-        // показываем все переименования
-        if (!empty($this->getRenaming())) {
-            $chunks[] = '(бывш. '.implode(', ', $this->getRenaming()).')';
+        return implode(', ', $chunks);
+    }
+
+    public function getCompleteAddress(): string
+    {
+        $chunks = [];
+
+        if ('' !== $this->getCompleteStreet()) {
+            $chunks[] = $this->getCompleteStreet();
+        }
+
+        if ('' !== $this->getEntireHouse()) {
+            $chunks[] = $this->getEntireHouse();
+        }
+
+        if ('' !== $this->getEntireApartment()) {
+            $chunks[] = $this->getEntireApartment();
         }
 
         return implode(', ', $chunks);
