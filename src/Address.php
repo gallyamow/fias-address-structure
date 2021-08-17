@@ -187,9 +187,8 @@ class Address implements \JsonSerializable
         return $res;
     }
 
-    public function getStamp(bool $includeRenaming = false): string
+    public function getStamp(string $delimiter, bool $includeRenaming = false): string
     {
-        $delimiter = '#';
         $res = $this->buildCompleteAddress(AddressLevel::ROOM, $delimiter, false);
 
         if ($includeRenaming && !empty($this->getRenaming())) {
