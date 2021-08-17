@@ -13,8 +13,10 @@ use Webmozart\Assert\Assert;
  * Одна и та же структура будет использована как для хранения информации до районов, так и для хранения
  * информации до квартир.
  *
- * Здесь присутствует некоторая денормализация: поля предыдущих уровней и *withType - для упрощения работы клиентов
- * (нет необходимости знать с какой стороны прибавлять type), поля *type, *typeFull - как справочная информация.
+ * Здесь присутствует некоторая денормализация:
+ *  поля предыдущих уровней - чтобы всегда был доступ ко всем верхним уровням
+ *  поля *withType, *withFullType - для упрощения работы клиентов
+ *  поля *type, *typeFull - как справочная информация
  *
  * Для уровней ниже street полей withType - нет, потому что у них всегда тип стоит в NAME_POSITION_BEFORE.
  */
@@ -56,6 +58,7 @@ class Address implements \JsonSerializable
     private string $regionTypeFull;
     private string $region;
     private string $regionWithType;
+    private string $regionWithFullType;
 
     /**
      * Поля района внутри региона.
@@ -66,6 +69,7 @@ class Address implements \JsonSerializable
     private ?string $areaTypeFull = null;
     private ?string $area = null;
     private ?string $areaWithType = null;
+    private ?string $areaWithFullType = null;
 
     /**
      * Поля города
@@ -76,6 +80,7 @@ class Address implements \JsonSerializable
     private ?string $cityTypeFull = null;
     private ?string $city = null;
     private ?string $cityWithType = null;
+    private ?string $cityWithFullType = null;
 
     /**
      * Поля поселения (внутри города или района).
@@ -87,6 +92,7 @@ class Address implements \JsonSerializable
     private ?string $settlementTypeFull = null;
     private ?string $settlement = null;
     private ?string $settlementWithType = null;
+    private ?string $settlementWithFullType = null;
 
     /**
      * Поля территории (внутри города или района).
@@ -98,6 +104,7 @@ class Address implements \JsonSerializable
     private ?string $territoryTypeFull = null;
     private ?string $territory = null;
     private ?string $territoryWithType = null;
+    private ?string $territoryWithFullType = null;
 
     /**
      * Поля улицы
@@ -108,6 +115,7 @@ class Address implements \JsonSerializable
     private ?string $streetTypeFull = null;
     private ?string $street = null;
     private ?string $streetWithType = null;
+    private ?string $streetWithFullType = null;
 
     /**
      * Поля дома
@@ -173,10 +181,24 @@ class Address implements \JsonSerializable
         return get_object_vars($this);
     }
 
-    public function getCompleteAddress(bool $includeRenaming = false): string
+    public function getFullString(bool $includeRenaming = false): string
     {
         $delimiter = ', ';
-        $res = $this->buildCompleteAddress(AddressLevel::ROOM, $delimiter, true);
+        $res = $this->buildCompleteAddress(AddressLevel::ROOM, $delimiter, 'full');
+
+        if ($includeRenaming && !empty($this->getRenaming())) {
+            // можем добавлять здесь, так как переименования хранятся только на уровне самих владельцев
+            $tmp = implode($delimiter, $this->getRenaming());
+            $res .= ' (бывш. '.$tmp.')';
+        }
+
+        return $res;
+    }
+
+    public function getShortString(bool $includeRenaming = false): string
+    {
+        $delimiter = ', ';
+        $res = $this->buildCompleteAddress(AddressLevel::ROOM, $delimiter, 'short');
 
         if ($includeRenaming && !empty($this->getRenaming())) {
             // можем добавлять здесь, так как переименования хранятся только на уровне самих владельцев
@@ -189,7 +211,7 @@ class Address implements \JsonSerializable
 
     public function getStamp(string $delimiter, bool $includeRenaming = false): string
     {
-        $res = $this->buildCompleteAddress(AddressLevel::ROOM, $delimiter, false);
+        $res = $this->buildCompleteAddress(AddressLevel::ROOM, $delimiter, null);
 
         if ($includeRenaming && !empty($this->getRenaming())) {
             // можем добавлять здесь, так как переименования хранятся только на уровне самих владельцев
@@ -202,11 +224,15 @@ class Address implements \JsonSerializable
     /**
      * @param int $addressLevel
      * @param string $delimiter
-     * @param bool $includeType
+     * @param string|null $includeType
      * @return string
      */
-    private function buildCompleteAddress(int $addressLevel, string $delimiter, bool $includeType): string
+    private function buildCompleteAddress(int $addressLevel, string $delimiter, ?string $includeType): string
     {
+        if (!in_array($includeType, [null, 'short', 'full'], true)) {
+            throw new \RuntimeException(sprintf('Illegal includeType "%s".', $includeType));
+        }
+
         $chunks = [];
 
         $parentLevels = AddressLevel::getTree($addressLevel);
@@ -214,37 +240,91 @@ class Address implements \JsonSerializable
             switch ($level) {
                 case AddressLevel::REGION:
                     if ('' !== $this->getRegion()) {
-                        $chunks[] = $includeType ? $this->getRegionWithType() : $this->getRegion();
+                        switch ($includeType) {
+                            case 'short':
+                                $chunks[] = $this->getRegionWithType();
+                                break;
+                            case 'full':
+                                $chunks[] = $this->getRegionWithFullType();
+                                break;
+                            case null:
+                                $chunks[] = $this->getRegion();
+                        }
                     }
                     break;
                 case AddressLevel::AREA:
                     if (null !== $this->getArea()) {
-                        $chunks[] = $includeType ? $this->getAreaWithType() : $this->getArea();
+                        switch ($includeType) {
+                            case 'short':
+                                $chunks[] = $this->getAreaWithType();
+                                break;
+                            case 'full':
+                                $chunks[] = $this->getAreaWithFullType();
+                                break;
+                            case null:
+                                $chunks[] = $this->getArea();
+                        }
                     }
                     break;
                 case AddressLevel::CITY:
                     if (null !== $this->getCity()) {
-                        $chunks[] = $includeType ? $this->getCityWithType() : $this->getCity();
+                        switch ($includeType) {
+                            case 'short':
+                                $chunks[] = $this->getCityWithType();
+                                break;
+                            case 'full':
+                                $chunks[] = $this->getCityWithFullType();
+                                break;
+                            case null:
+                                $chunks[] = $this->getCity();
+                        }
                     }
                     break;
                 case AddressLevel::SETTLEMENT:
                     if (null !== $this->getSettlement()) {
-                        $chunks[] = $includeType ? $this->getSettlementWithType() : $this->getSettlement();
+                        switch ($includeType) {
+                            case 'short':
+                                $chunks[] = $this->getSettlementWithType();
+                                break;
+                            case 'full':
+                                $chunks[] = $this->getSettlementWithFullType();
+                                break;
+                            case null:
+                                $chunks[] = $this->getSettlement();
+                        }
                     }
                     break;
                 case AddressLevel::TERRITORY:
                     if (null !== $this->getTerritory()) {
-                        $chunks[] = $includeType ? $this->getTerritoryWithType() : $this->getTerritory();
+                        switch ($includeType) {
+                            case 'short':
+                                $chunks[] = $this->getTerritoryWithType();
+                                break;
+                            case 'full':
+                                $chunks[] = $this->getTerritoryWithFullType();
+                                break;
+                            case null:
+                                $chunks[] = $this->getTerritory();
+                        }
                     }
                     break;
                 case AddressLevel::STREET:
                     if (null !== $this->getStreet()) {
-                        $chunks[] = $includeType ? $this->getStreetWithType() : $this->getStreet();
+                        switch ($includeType) {
+                            case 'short':
+                                $chunks[] = $this->getStreetWithType();
+                                break;
+                            case 'full':
+                                $chunks[] = $this->getStreetWithFullType();
+                                break;
+                            case null:
+                                $chunks[] = $this->getStreet();
+                        }
                     }
                     break;
                 case AddressLevel::HOUSE:
-                    if (null !== ($tmp = $this->getEntireHouse($includeType))) {
-                        $chunks[] = $tmp;
+                    if (null !== ($entireHouse = $this->getEntireHouse(null !== $includeType))) {
+                        $chunks[] = $entireHouse;
                     }
                     break;
                 case AddressLevel::FLAT:
@@ -273,27 +353,27 @@ class Address implements \JsonSerializable
 
     /**
      * Полное название дома.
-     * @param bool $includeType
+     * @param bool $withType
      * @return string|null
      */
-    public function getEntireHouse(bool $includeType): ?string
+    public function getEntireHouse(bool $withType): ?string
     {
         $chunks = [];
 
         if (null !== $this->getHouse()) {
-            $chunks[] = $includeType
+            $chunks[] = $withType
                 ? implode(' ', [$this->getHouseType(), $this->getHouse()])
                 : $this->getHouse();
         }
 
         if (null !== $this->getBlock1()) {
-            $chunks[] = $includeType
+            $chunks[] = $withType
                 ? implode(' ', [$this->getBlockType1(), $this->getBlock1()])
                 : $this->getBlock1();
         }
 
         if (null !== $this->getBlock2()) {
-            $chunks[] = $includeType
+            $chunks[] = $withType
                 ? implode(' ', [$this->getBlockType2(), $this->getBlock2()])
                 : $this->getBlock2();
         }
@@ -1429,5 +1509,107 @@ class Address implements \JsonSerializable
         }
 
         $this->location = $location;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRegionWithFullType(): string
+    {
+        return $this->regionWithFullType;
+    }
+
+    /**
+     * @param string $regionWithFullType
+     */
+    public function setRegionWithFullType(string $regionWithFullType): void
+    {
+        Assert::stringNotEmpty($regionWithFullType);
+        $this->regionWithFullType = $regionWithFullType;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getAreaWithFullType(): ?string
+    {
+        return $this->areaWithFullType;
+    }
+
+    /**
+     * @param string|null $areaWithFullType
+     */
+    public function setAreaWithFullType(?string $areaWithFullType): void
+    {
+        Assert::nullOrStringNotEmpty($areaWithFullType);
+        $this->areaWithFullType = $areaWithFullType;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getCityWithFullType(): ?string
+    {
+        return $this->cityWithFullType;
+    }
+
+    /**
+     * @param string|null $cityWithFullType
+     */
+    public function setCityWithFullType(?string $cityWithFullType): void
+    {
+        Assert::nullOrStringNotEmpty($cityWithFullType);
+        $this->cityWithFullType = $cityWithFullType;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getSettlementWithFullType(): ?string
+    {
+        return $this->settlementWithFullType;
+    }
+
+    /**
+     * @param string|null $settlementWithFullType
+     */
+    public function setSettlementWithFullType(?string $settlementWithFullType): void
+    {
+        Assert::nullOrStringNotEmpty($settlementWithFullType);
+        $this->settlementWithFullType = $settlementWithFullType;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getTerritoryWithFullType(): ?string
+    {
+        return $this->territoryWithFullType;
+    }
+
+    /**
+     * @param string|null $territoryWithFullType
+     */
+    public function setTerritoryWithFullType(?string $territoryWithFullType): void
+    {
+        Assert::nullOrStringNotEmpty($territoryWithFullType);
+        $this->territoryWithFullType = $territoryWithFullType;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getStreetWithFullType(): ?string
+    {
+        return $this->streetWithFullType;
+    }
+
+    /**
+     * @param string|null $streetWithFullType
+     */
+    public function setStreetWithFullType(?string $streetWithFullType): void
+    {
+        Assert::nullOrStringNotEmpty($streetWithFullType);
+        $this->streetWithFullType = $streetWithFullType;
     }
 }

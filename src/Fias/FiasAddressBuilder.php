@@ -160,7 +160,8 @@ class FiasAddressBuilder implements AddressBuilderInterface
                     $address->setRegionTypeFull($levelSpec->getName());
 
                     $address->setRegion($name);
-                    $address->setRegionWithType($this->resolveWithTypeName($name, $levelSpec));
+                    $address->setRegionWithType($this->resolveWithShortTypeName($name, $levelSpec));
+                    $address->setRegionWithFullType($this->resolveWithFullTypeName($name, $levelSpec));
 
                     // учитываем переименование регионов
                     $actualNaming = $name;
@@ -177,7 +178,8 @@ class FiasAddressBuilder implements AddressBuilderInterface
                     $address->setAreaTypeFull($levelSpec->getName());
 
                     $address->setArea($name);
-                    $address->setAreaWithType($this->resolveWithTypeName($name, $levelSpec));
+                    $address->setAreaWithType($this->resolveWithShortTypeName($name, $levelSpec));
+                    $address->setAreaWithFullType($this->resolveWithFullTypeName($name, $levelSpec));
 
                     // учитываем переименование районов
                     $actualNaming = $name;
@@ -195,7 +197,8 @@ class FiasAddressBuilder implements AddressBuilderInterface
                     $address->setCityTypeFull($levelSpec->getName());
 
                     $address->setCity($name);
-                    $address->setCityWithType($this->resolveWithTypeName($name, $levelSpec));
+                    $address->setCityWithType($this->resolveWithShortTypeName($name, $levelSpec));
+                    $address->setCityWithFullType($this->resolveWithFullTypeName($name, $levelSpec));
 
                     // учитываем переименование городов
                     $actualNaming = $name;
@@ -212,7 +215,8 @@ class FiasAddressBuilder implements AddressBuilderInterface
                     $address->setSettlementTypeFull($levelSpec->getName());
 
                     $address->setSettlement($name);
-                    $address->setSettlementWithType($this->resolveWithTypeName($name, $levelSpec));
+                    $address->setSettlementWithType($this->resolveWithShortTypeName($name, $levelSpec));
+                    $address->setSettlementWithFullType($this->resolveWithFullTypeName($name, $levelSpec));
 
                     // учитываем переименование поселений
                     $actualNaming = $name;
@@ -229,7 +233,8 @@ class FiasAddressBuilder implements AddressBuilderInterface
                     $address->setTerritoryTypeFull($levelSpec->getName());
 
                     $address->setTerritory($name);
-                    $address->setTerritoryWithType($this->resolveWithTypeName($name, $levelSpec));
+                    $address->setTerritoryWithType($this->resolveWithShortTypeName($name, $levelSpec));
+                    $address->setTerritoryWithFullType($this->resolveWithFullTypeName($name, $levelSpec));
 
                     // учитываем переименование территорий
                     $actualNaming = $name;
@@ -246,7 +251,8 @@ class FiasAddressBuilder implements AddressBuilderInterface
                     $address->setStreetTypeFull($levelSpec->getName());
 
                     $address->setStreet($name);
-                    $address->setStreetWithType($this->resolveWithTypeName($name, $levelSpec));
+                    $address->setStreetWithType($this->resolveWithShortTypeName($name, $levelSpec));
+                    $address->setStreetWithFullType($this->resolveWithFullTypeName($name, $levelSpec));
 
                     // учитываем переименование улиц
                     $actualNaming = $name;
@@ -465,13 +471,23 @@ class FiasAddressBuilder implements AddressBuilderInterface
         return $res;
     }
 
-    private function resolveWithTypeName(string $name, AddressLevelSpec $addressLevelSpec): string
+    private function resolveWithFullTypeName(string $name, AddressLevelSpec $addressLevelSpec): string
     {
-        switch ($addressLevelSpec->getNamePosition()) {
+        return $this->buildWithTypeName($addressLevelSpec->getName(), $name, $addressLevelSpec->getNamePosition());
+    }
+
+    private function resolveWithShortTypeName(string $name, AddressLevelSpec $addressLevelSpec): string
+    {
+        return $this->buildWithTypeName($addressLevelSpec->getShortName(), $name, $addressLevelSpec->getNamePosition());
+    }
+
+    private function buildWithTypeName(string $typeName, string $name, int $position): string
+    {
+        switch ($position) {
             case AddressLevelSpec::NAME_POSITION_BEFORE:
-                return $addressLevelSpec->getShortName().' '.$name;
+                return $typeName.' '.$name;
             case AddressLevelSpec::NAME_POSITION_AFTER:
-                return $name.' '.$addressLevelSpec->getShortName();
+                return $name.' '.$typeName;
         }
     }
 
