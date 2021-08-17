@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Addresser\AddressRepository;
 
+use Addresser\AddressRepository\Exceptions\InvalidAddressLevelException;
 use Webmozart\Assert\Assert;
 
 /**
@@ -172,125 +173,135 @@ class Address implements \JsonSerializable
         return get_object_vars($this);
     }
 
-    /**
-     * Полное название местности (до города, нас. пункта, поселения, территории и тд)
-     * @return string
-     */
-    public function getCompleteLocality(): string
+    public function getCompleteAddress(bool $includeRenaming = false): string
     {
-        $chunks = [];
+        $delimiter = ', ';
+        $res = $this->buildCompleteAddress(AddressLevel::ROOM, $delimiter, true);
 
-        if ('' !== $this->getRegionWithType()) {
-            $chunks[] = $this->getRegionWithType();
+        if ($includeRenaming && !empty($this->getRenaming())) {
+            // можем добавлять здесь, так как переименования хранятся только на уровне самих владельцев
+            $tmp = implode($delimiter, $this->getRenaming());
+            $res .= ' (бывш. '.$tmp.')';
         }
 
-        if (null !== $this->getArea()) {
-            $chunks[] = $this->getAreaWithType();
+        return $res;
+    }
+
+    public function getStamp(bool $includeRenaming = false): string
+    {
+        $delimiter = '#';
+        $res = $this->buildCompleteAddress(AddressLevel::ROOM, $delimiter, false);
+
+        if ($includeRenaming && !empty($this->getRenaming())) {
+            // можем добавлять здесь, так как переименования хранятся только на уровне самих владельцев
+            $res .= $delimiter.implode($delimiter, $this->getRenaming());
         }
 
-        if (null !== $this->getCity()) {
-            $chunks[] = $this->getCityWithType();
-        }
-
-        if (null !== $this->getSettlement()) {
-            $chunks[] = $this->getSettlementWithType();
-        }
-
-        if (null !== $this->getTerritory()) {
-            $chunks[] = $this->getTerritoryWithType();
-        }
-
-
-        return implode(', ', $chunks);
+        return $res;
     }
 
     /**
-     * Полное название улицы (до улицы)
+     * @param int $addressLevel
+     * @param string $delimiter
+     * @param bool $includeType
      * @return string
      */
-    public function getCompleteStreet(): string
+    private function buildCompleteAddress(int $addressLevel, string $delimiter, bool $includeType): string
     {
         $chunks = [];
 
-        if ('' !== $this->getCompleteLocality()) {
-            $chunks[] = $this->getCompleteLocality();
+        $parentLevels = AddressLevel::getTree($addressLevel);
+        foreach ($parentLevels as $level) {
+            switch ($level) {
+                case AddressLevel::REGION:
+                    if ('' !== $this->getRegion()) {
+                        $chunks[] = $includeType ? $this->getRegionWithType() : $this->getRegion();
+                    }
+                    break;
+                case AddressLevel::AREA:
+                    if (null !== $this->getArea()) {
+                        $chunks[] = $includeType ? $this->getAreaWithType() : $this->getArea();
+                    }
+                    break;
+                case AddressLevel::CITY:
+                    if (null !== $this->getCity()) {
+                        $chunks[] = $includeType ? $this->getCityWithType() : $this->getCity();
+                    }
+                    break;
+                case AddressLevel::SETTLEMENT:
+                    if (null !== $this->getSettlement()) {
+                        $chunks[] = $includeType ? $this->getSettlementWithType() : $this->getSettlement();
+                    }
+                    break;
+                case AddressLevel::TERRITORY:
+                    if (null !== $this->getTerritory()) {
+                        $chunks[] = $includeType ? $this->getTerritoryWithType() : $this->getTerritory();
+                    }
+                    break;
+                case AddressLevel::STREET:
+                    if (null !== $this->getStreet()) {
+                        $chunks[] = $includeType ? $this->getStreetWithType() : $this->getStreet();
+                    }
+                    break;
+                case AddressLevel::HOUSE:
+                    if (null !== ($tmp = $this->getEntireHouse($includeType))) {
+                        $chunks[] = $tmp;
+                    }
+                    break;
+                case AddressLevel::FLAT:
+                    if (null !== $this->getFlat()) {
+                        $chunks[] = $includeType
+                            ? implode(' ', [$this->getFlatType(), $this->getFlat()])
+                            : $this->getFlat();
+                    }
+                    break;
+                case AddressLevel::ROOM:
+                    if (null !== $this->getRoom()) {
+                        $chunks[] = $includeType
+                            ? implode(' ', [$this->getRoomType(), $this->getRoom()])
+                            : $this->getRoom();
+                    }
+                    break;
+                case AddressLevel::STEAD:
+                case AddressLevel::CAR_PLACE:
+                    // эти уровни не индексируем, таким образом сюда они попадать не должны
+                    throw new InvalidAddressLevelException(sprintf('Unsupported address level "%d".', $level));
+            }
         }
 
-        if (null !== $this->getStreet()) {
-            $chunks[] = $this->getStreetWithType();
-        }
-
-        return implode(', ', $chunks);
+        return implode($delimiter, $chunks);
     }
 
     /**
      * Полное название дома.
-     * @return string
+     * @param bool $includeType
+     * @return string|null
      */
-    public function getEntireHouse(): string
+    public function getEntireHouse(bool $includeType): ?string
     {
         $chunks = [];
 
         if (null !== $this->getHouse()) {
-            $chunks[] = implode(' ', [$this->getHouseType(), $this->getHouse()]);
+            $chunks[] = $includeType
+                ? implode(' ', [$this->getHouseType(), $this->getHouse()])
+                : $this->getHouse();
         }
 
         if (null !== $this->getBlock1()) {
-            $chunks[] = implode(' ', [$this->getBlockType1(), $this->getBlock1()]);
+            $chunks[] = $includeType
+                ? implode(' ', [$this->getBlockType1(), $this->getBlock1()])
+                : $this->getBlock1();
         }
 
         if (null !== $this->getBlock2()) {
-            $chunks[] = implode(' ', [$this->getBlockType2(), $this->getBlock2()]);
-        }
-
-        return implode(', ', $chunks);
-    }
-
-    /**
-     * Квартира или квартира+комната
-     * @return string
-     */
-    public function getEntireApartment(): string
-    {
-        $chunks = [];
-
-        if (null !== $this->getFlat()) {
-            $chunks[] = implode(' ', [$this->getFlatType(), $this->getFlat()]);
-        }
-
-        if (null !== $this->getRoom()) {
-            $chunks[] = implode(' ', [$this->getRoomType(), $this->getRoom()]);
-        }
-
-        return implode(', ', $chunks);
-    }
-
-    public function getCompleteAddress(bool $includeRenaming = false): string
-    {
-        $chunks = [];
-
-        if ('' !== $this->getCompleteStreet()) {
-            $chunks[] = $this->getCompleteStreet();
-        }
-
-        if ('' !== $this->getEntireHouse()) {
-            $chunks[] = $this->getEntireHouse();
-        }
-
-        if ('' !== $this->getEntireApartment()) {
-            $chunks[] = $this->getEntireApartment();
+            $chunks[] = $includeType
+                ? implode(' ', [$this->getBlockType2(), $this->getBlock2()])
+                : $this->getBlock2();
         }
 
         $res = implode(', ', $chunks);
 
-        if ($includeRenaming && !empty($this->getRenaming())) {
-            // просто через пробел
-            // можем добавлять на уровне улицы, так как переименования хранятся только на уровне самих владельцев
-            // переименования могут быть только на этих уровнях
-            $res .= ' (бывш. '.implode(', ', $this->getRenaming()).')';
-        }
-
-        return $res;
+        return '' === $res ? null : $res;
     }
 
     /**
