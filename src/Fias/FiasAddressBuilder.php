@@ -85,13 +85,18 @@ class FiasAddressBuilder implements AddressBuilderInterface
              * Все relation на одном уровне AddressLevel неактивные.
              * Такое было ранее при группировке по FiasLevel (для устаревших уровней, например ADDITIONAL_TERRITORIES_LEVEL),
              * при группировке по AddressLevel - такого быть не должно поэтому бросаем exception.
+             *
+             * пример: г Казань, тер ГСК Монтажник - был перемещен по уровню ФИАС. Был ранее на уровне 8 (до 2019-05-05),
+             * далее перемещен на 7. В итоге на 8 уровне у него нет актуальных relation.
+             * Такие уровни мы должны пропускать.
              */
             if (count($actualParents) === 0) {
-                throw AddressBuildFailedException::withIdentifier(
-                    'object_id',
-                    $objectId,
-                    sprintf('There are no actual relations for one address level "%d"', $addressLevel),
-                );
+                // throw AddressBuildFailedException::withIdentifier(
+                //     'object_id',
+                //     $objectId,
+                //     sprintf('There are no actual relations for one address level "%d"', $addressLevel),
+                // );
+                continue;
             }
 
             /**
