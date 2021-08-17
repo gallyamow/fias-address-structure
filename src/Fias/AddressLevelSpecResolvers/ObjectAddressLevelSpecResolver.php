@@ -547,7 +547,7 @@ class ObjectAddressLevelSpecResolver implements ObjectAddressLevelSpecResolverIn
         [
             'name' => 'площадь',
             'shortName' => 'пл.',
-            'namePosition' => AddressLevelSpec::NAME_POSITION_BEFORE,
+            'namePosition' => AddressLevelSpec::NAME_POSITION_AFTER,
             'variants' => [['names' => ['пл', 'пл.'], 'levels' => [7, 8, 16]]],
         ],
         [

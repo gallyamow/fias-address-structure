@@ -82,7 +82,7 @@ class HouseAddressLevelSpecResolver implements TypeAddressLevelSpecResolverInter
             case 14:
                 return new AddressLevelSpec(
                     $currAddressLevel,
-                    'объект незавершенного строительства,ОНС',
+                    'объект незавершенного строительства',
                     'ОНС',
                     AddressLevelSpec::NAME_POSITION_BEFORE
                 );
