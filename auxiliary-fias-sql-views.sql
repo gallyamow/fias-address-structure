@@ -1,4 +1,10 @@
--- tree - возможна такая ситуация когда есть несколько путей иерархии, причем только 1 из них активный?. См. objectid=6092
+-- В некоторые запросы введено использование таблицы gar.adm_hierarchy и использование его поля hierarchy_id.
+-- Это сделано потому что:
+--  здесь нет единой таблицы объектов.
+--  здесь таблица gar.adm_hierarchy используется как связующее звено всех видов объектов из всех таблиц
+--  (addr_obj, apartments, houses, carplaces, rooms, steads)
+
+-- tree
 DROP MATERIALIZED VIEW IF EXISTS gar.v_adm_hierarchy_path;
 CREATE MATERIALIZED VIEW gar.v_adm_hierarchy_path AS
 WITH RECURSIVE nodes(hierarchy_id, object_id, path, is_active) AS (
@@ -20,12 +26,16 @@ WITH RECURSIVE nodes(hierarchy_id, object_id, path, is_active) AS (
 SELECT *, array_to_string(path, '.')::ltree AS path_ltree
 FROM nodes;
 
-CREATE INDEX ON gar.v_adm_hierarchy_path(hierarchy_id); -- неуникальный, потому что разные пути используют одну и ту же запись
-CREATE INDEX ON gar.v_adm_hierarchy_path(object_id); -- должен быть уникальным, но дублируется
+-- Неуникальные так как может быть ситуация когда было несколько путей, через один и тот же объект.
+-- Часть путей может быть уже не активна. Объекты могут перемещаться по иерархии.
+-- См. object_id=6092
+CREATE INDEX ON gar.v_adm_hierarchy_path(hierarchy_id);
+CREATE INDEX ON gar.v_adm_hierarchy_path(object_id);
+
 CREATE INDEX ON gar.v_adm_hierarchy_path USING GIST(path_ltree);
 -- не потребовался?
 
--- связанные с каждой записью данные, ключевое поле здесь hierarchy_id
+-- связанные с каждым элементом иерархии (через объект) данные (hierarchy_id)
 DROP MATERIALIZED VIEW IF EXISTS gar.v_adm_hierarchy_relation;
 CREATE MATERIALIZED VIEW gar.v_adm_hierarchy_relation AS
 SELECT t.id AS hierarchy_id,
@@ -73,7 +83,7 @@ FROM (
 CREATE INDEX ON gar.v_adm_hierarchy_relation(hierarchy_id); -- неуникальный, потому что могут быть переименования домов и тд.  (@see objectid=70743973)
 CREATE INDEX ON gar.v_adm_hierarchy_relation(object_id);
 
--- связанные с каждым объектом параметры, ключевое поле здесь hierarchy_id
+-- связанные с каждым элементом иерархии параметры (hierarchy_id)
 DROP MATERIALIZED VIEW IF EXISTS gar.v_adm_hierarchy_actual_params;
 CREATE MATERIALIZED VIEW gar.v_adm_hierarchy_actual_params AS
 SELECT hr.id AS hierarchy_id,
@@ -86,3 +96,23 @@ FROM gar.adm_hierarchy hr
 GROUP BY hr.id;
 CREATE INDEX ON gar.v_adm_hierarchy_actual_params(object_id);
 -- TODO: индексы по object_id вроде больше не нужны
+
+-- denormalized gar.v_adm_hierarchy_path
+DROP MATERIALIZED VIEW IF EXISTS gar.v_adm_hierarchy_path_ext;
+CREATE MATERIALIZED VIEW gar.v_adm_hierarchy_path_ext AS
+SELECT p.*,
+    (
+        SELECT array_to_json(array_agg(jsonb_build_object('relation', row_to_json(r2.*), 'params', (
+                                                                                                       SELECT array_to_json(array_agg(row_to_json(params.*)))
+                                                                                                       FROM gar.v_adm_hierarchy_actual_params AS params
+                                                                                                       WHERE params.object_id = r2.object_id
+                                                                                                   ))))
+        FROM unnest(p.path) AS pid
+                 JOIN gar.adm_hierarchy AS hr2
+        on hr2.objectid = pid AND hr2.isactive = 1 -- для каждого объекта из пути мы находим актуальное положение в иерархии
+            -- (переходы по иерархии мы таким образом игнорируем)
+                 JOIN gar.v_adm_hierarchy_relation r2 ON r2.hierarchy_id = hr2.id -- затем получаем все relations к этому положению
+        -- (переименования в том числе)
+    ) AS parents
+FROM gar.v_adm_hierarchy_path AS p;
+CREATE INDEX ON gar.v_adm_hierarchy_path_ext(hierarchy_id);
