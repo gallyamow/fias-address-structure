@@ -49,34 +49,42 @@ class FiasAddressBuilder implements AddressBuilderInterface
     // todo: too huge loop
     public function build(array $data, ?Address $existsAddress = null): Address
     {
-        $hierarchyId = (int)$data['hierarchy_id'];
         $objectId = (int)$data['object_id'];
 
-        $parents = json_decode($data['parents'], true, 512, JSON_THROW_ON_ERROR);
+        $objects = json_decode($data['objects'], true, 512, JSON_THROW_ON_ERROR);
+        $params = json_decode($data['params'], true, 512, JSON_THROW_ON_ERROR);
 
         /**
          * Группируем по AddressLevel. Так как дополнительные локаций таких как СНТ, ГСК mapped на один и тот же
          * уровень AddressLevel::SETTLEMENT может быть несколько актуальных значений.
          */
-        $groupedParents = [];
-        foreach ($parents as $k => $item) {
-            $addressLevel = $this->resolveAddressLevel($item['relation']);
+        $parentsByLevel = [];
+        foreach ($objects as $item) {
+            $relations = $item['relations'];
+            foreach ($relations as $relation) {
+                $addressLevel = $this->resolveAddressLevel($relation);
 
-            $groupedParents[$addressLevel] = $groupedParents[$addressLevel] ?? [];
-            $groupedParents[$addressLevel][] = $item;
+                $parentsByLevel[$addressLevel] = $parentsByLevel[$addressLevel] ?? [];
+                $parentsByLevel[$addressLevel][] = $relation;
+            }
+        }
+
+        $paramsByObject = [];
+        foreach ($params as $item) {
+            $paramsByObject[$item['object_id']] = $item['values'];
         }
 
         // мы должны сохранить изменения внесенные другими builder
         $address = $existsAddress ?? new Address();
-        $actualNaming = null;
+        $actualName = null;
 
-        foreach ($groupedParents as $addressLevel => $levelParents) {
+        foreach ($parentsByLevel as $addressLevel => $levelRelations) {
             // находим актуальное значение
-            $actualParents = array_values(
+            $actualRelations = array_values(
                 array_filter(
-                    $levelParents,
+                    $levelRelations,
                     static function ($item) {
-                        return $item['relation']['relation_is_active'] && $item['relation']['relation_is_actual'];
+                        return $item['is_active'] && $item['is_actual'];
                     }
                 )
             );
@@ -90,7 +98,7 @@ class FiasAddressBuilder implements AddressBuilderInterface
              * далее перемещен на 7. В итоге на 8 уровне у него нет актуальных relation.
              * Такие уровни мы должны пропускать.
              */
-            if (count($actualParents) === 0) {
+            if (count($actualRelations) === 0) {
                 // throw AddressBuildFailedException::withIdentifier(
                 //     'object_id',
                 //     $objectId,
@@ -104,28 +112,29 @@ class FiasAddressBuilder implements AddressBuilderInterface
              * - такого быть не должно поэтому бросаем exception.
              * ~~Надо решить как их объединять либо взять из них какой то 1~~
              */
-            if (count($actualParents) > 1) {
+            if (count($actualRelations) > 1) {
                 throw AddressBuildFailedException::withIdentifier(
                     'object_id',
                     $objectId,
                     sprintf(
                         'There are "%d" actual relations for one address level "%d"',
-                        count($actualParents),
+                        count($actualRelations),
                         $addressLevel
                     ),
                 );
             }
 
             // пока в случае неоднозначностей бросаем Exception, поэтому можем просто брать единственный элемент
-            $mainParent = $actualParents[0];
+            $mainRelation = $actualRelations[0];
 
-            $mainRelation = $mainParent['relation'];
-            $mainRelationData = $mainRelation['relation_data'];
+            $mainRelationData = $mainRelation['data'];
+            //  лучше бы использовать object_id из уровня выше
+            $mainRelationObjectId = (int)$mainRelationData['objectid'];
 
             $fiasLevel = $this->resolveFiasLevel($mainRelation);
 
             $actualParams = $this->resolveActualParams(
-                $mainParent['params'] ?? [],
+                $paramsByObject[$mainRelationObjectId] ?? [],
                 [FiasParamType::KLADR, FiasParamType::OKATO, FiasParamType::OKTMO, FiasParamType::POSTAL_CODE]
             );
 
@@ -135,7 +144,6 @@ class FiasAddressBuilder implements AddressBuilderInterface
             $postalCode = $actualParams[FiasParamType::POSTAL_CODE]['value'] ?? null;
 
             $fiasId = null;
-
 
             switch ($addressLevel) {
                 case AddressLevel::REGION:
@@ -169,7 +177,7 @@ class FiasAddressBuilder implements AddressBuilderInterface
                     $address->setRegionWithFullType($this->resolveWithFullTypeName($name, $levelSpec));
 
                     // учитываем переименование регионов
-                    $actualNaming = $name;
+                    $actualName = $name;
                     break;
                 case AddressLevel::AREA:
                     $fiasId = $mainRelationData['objectguid'];
@@ -187,7 +195,7 @@ class FiasAddressBuilder implements AddressBuilderInterface
                     $address->setAreaWithFullType($this->resolveWithFullTypeName($name, $levelSpec));
 
                     // учитываем переименование районов
-                    $actualNaming = $name;
+                    $actualName = $name;
 
                     break;
                 case AddressLevel::CITY:
@@ -206,7 +214,7 @@ class FiasAddressBuilder implements AddressBuilderInterface
                     $address->setCityWithFullType($this->resolveWithFullTypeName($name, $levelSpec));
 
                     // учитываем переименование городов
-                    $actualNaming = $name;
+                    $actualName = $name;
                     break;
                 case AddressLevel::SETTLEMENT:
                     $fiasId = $mainRelationData['objectguid'];
@@ -224,7 +232,7 @@ class FiasAddressBuilder implements AddressBuilderInterface
                     $address->setSettlementWithFullType($this->resolveWithFullTypeName($name, $levelSpec));
 
                     // учитываем переименование поселений
-                    $actualNaming = $name;
+                    $actualName = $name;
                     break;
                 case AddressLevel::TERRITORY:
                     $fiasId = $mainRelationData['objectguid'];
@@ -242,7 +250,7 @@ class FiasAddressBuilder implements AddressBuilderInterface
                     $address->setTerritoryWithFullType($this->resolveWithFullTypeName($name, $levelSpec));
 
                     // учитываем переименование территорий
-                    $actualNaming = $name;
+                    $actualName = $name;
                     break;
                 case AddressLevel::STREET:
                     $fiasId = $mainRelationData['objectguid'];
@@ -260,7 +268,7 @@ class FiasAddressBuilder implements AddressBuilderInterface
                     $address->setStreetWithFullType($this->resolveWithFullTypeName($name, $levelSpec));
 
                     // учитываем переименование улиц
-                    $actualNaming = $name;
+                    $actualName = $name;
                     break;
                 case AddressLevel::HOUSE:
                     $fiasId = $mainRelationData['objectguid'];
@@ -314,7 +322,8 @@ class FiasAddressBuilder implements AddressBuilderInterface
             }
 
             // последний уровень данных
-            if ($addressLevel === \array_key_last($groupedParents)) {
+            // if ($addressLevel === \array_key_last($parentsByLevel)) {
+            if ($objectId === $mainRelationObjectId) {
                 if (null === $fiasId) {
                     throw AddressBuildFailedException::withIdentifier(
                         'object_id',
@@ -326,7 +335,7 @@ class FiasAddressBuilder implements AddressBuilderInterface
                 $address->setFiasId($fiasId);
                 $address->setAddressLevel($addressLevel);
                 $address->setFiasLevel($fiasLevel);
-                $address->setFiasHierarchyId($hierarchyId);
+                $address->setFiasObjectId($objectId);
                 $address->setOkato($okato ?? null);
                 $address->setOktmo($oktmo ?? null);
                 $address->setPostalCode($postalCode ?? null);
@@ -339,7 +348,7 @@ class FiasAddressBuilder implements AddressBuilderInterface
                     case AddressLevel::CITY:
                     case AddressLevel::SETTLEMENT:
                     case AddressLevel::STREET:
-                        $address->setRenaming($this->resolveLevelRenaming($levelParents, $actualNaming) ?: null);
+                        $address->setRenaming($this->resolveLevelRenaming($levelRelations, $actualName) ?: null);
                         $address->setSynonyms($this->addressSynonymizer->getSynonyms($fiasId) ?: null);
                         break;
                 }
@@ -349,13 +358,13 @@ class FiasAddressBuilder implements AddressBuilderInterface
         return $address;
     }
 
-    private function resolveLevelRenaming(array $levelItems, string $currentName, string $nameField = 'name'): array
+    private function resolveLevelRenaming(array $levelRelations, string $actualName, string $nameField = 'name'): array
     {
-        $notActualItems = array_values(
+        $notActualRelations = array_values(
             array_filter(
-                $levelItems,
+                $levelRelations,
                 static function ($item) {
-                    return !($item['relation']['relation_is_active'] && $item['relation']['relation_is_actual']);
+                    return !($item['is_active'] && $item['is_actual']);
                 }
             )
         );
@@ -368,13 +377,13 @@ class FiasAddressBuilder implements AddressBuilderInterface
                             // здесь хорошо использовать withTypeName, но тогда будут проблемы в случае если
                             // у населенного пункта было и переименования и смета вида.
                             // то есть если сейчас г. Янаул, а в истории д. Янаул, с. Янаул = бывш. д.Янаул, с.Янаул
-                            return $item['relation']['relation_data'][$nameField];
+                            return $item['data'][$nameField];
                         },
-                        $notActualItems
+                        $notActualRelations
                     )
                 ),
-                static function ($name) use ($currentName) {
-                    return $name !== $currentName;
+                static function ($name) use ($actualName) {
+                    return $name !== $actualName;
                 }
             )
         );
@@ -389,11 +398,11 @@ class FiasAddressBuilder implements AddressBuilderInterface
      */
     private function resolveAddressLevel(array $relation): int
     {
-        $relationType = $relation['relation_type'];
+        $relationType = $relation['type'];
 
         switch ($relationType) {
             case FiasRelationType::ADDR_OBJ:
-                $fiasLevel = (int)$relation['relation_data']['level'];
+                $fiasLevel = (int)$relation['data']['level'];
 
                 return FiasLevel::mapAdmHierarchyToAddressLevel($fiasLevel);
             case FiasRelationType::HOUSE:
@@ -421,11 +430,11 @@ class FiasAddressBuilder implements AddressBuilderInterface
      */
     private function resolveFiasLevel(array $relation): int
     {
-        $relationType = $relation['relation_type'];
+        $relationType = $relation['type'];
 
         switch ($relationType) {
             case FiasRelationType::ADDR_OBJ:
-                return (int)$relation['relation_data']['level'];
+                return (int)$relation['data']['level'];
             case FiasRelationType::HOUSE:
                 return FiasLevel::BUILDING;
             case FiasRelationType::APARTMENT:
@@ -441,34 +450,32 @@ class FiasAddressBuilder implements AddressBuilderInterface
         throw new RuntimeException(sprintf('Failed to resolve FiasLevel by relation_type "%s"', $relationType));
     }
 
-    private function resolveActualParams(array $groupedHierarchyParams, array $keys): array
+    private function resolveActualParams(array $objectParams, array $keys): array
     {
         $res = [];
         $currentDate = date('Y-m-d');
 
-        foreach ($groupedHierarchyParams as $hierarchyParam) {
-            foreach ($hierarchyParam['values'] as $valueItem) {
-                $typeId = $valueItem['type_id'];
+        foreach ($objectParams as $item) {
+            $typeId = $item['type_id'];
 
-                if (in_array($typeId, $keys, true)) {
-                    // сразу пропускаем неактуальные
-                    if ($valueItem['end_date'] < $currentDate) {
-                        continue;
-                    }
+            if (in_array($typeId, $keys, true)) {
+                // сразу пропускаем неактуальные
+                if ($item['end_date'] < $currentDate) {
+                    continue;
+                }
 
-                    $oldValueItem = $res[$typeId] ?? null;
+                $oldValueItem = $res[$typeId] ?? null;
 
-                    if (null === $oldValueItem
-                        || ($oldValueItem && $this->actualityPeriodComparator->compare(
-                                $oldValueItem['start_date'],
-                                $oldValueItem['end_date'],
-                                $valueItem['start_date'],
-                                $valueItem['end_date']
-                            ) === -1)
-                    ) {
-                        // обновляем только если новое значении более актуальное чем старое
-                        $res[$typeId] = $valueItem;
-                    }
+                if (null === $oldValueItem
+                    || ($oldValueItem && $this->actualityPeriodComparator->compare(
+                            $oldValueItem['start_date'],
+                            $oldValueItem['end_date'],
+                            $item['start_date'],
+                            $item['end_date']
+                        ) === -1)
+                ) {
+                    // обновляем только если новое значении более актуальное чем старое
+                    $res[$typeId] = $item;
                 }
             }
         }

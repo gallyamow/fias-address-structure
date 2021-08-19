@@ -32,7 +32,7 @@ class Address implements \JsonSerializable
      * Это поле не относится к адресу и нужно для возобновления индексации.
      * @var int
      */
-    private int $fiasHierarchyId;
+    private int $fiasObjectId;
 
     /**
      * @see FiasLevel
@@ -403,18 +403,18 @@ class Address implements \JsonSerializable
     /**
      * @return int
      */
-    public function getFiasHierarchyId(): int
+    public function getFiasObjectId(): int
     {
-        return $this->fiasHierarchyId;
+        return $this->fiasObjectId;
     }
 
     /**
-     * @param int $fiasHierarchyId
+     * @param int $fiasObjectId
      */
-    public function setFiasHierarchyId(int $fiasHierarchyId): void
+    public function setFiasObjectId(int $fiasObjectId): void
     {
-        Assert::positiveInteger($fiasHierarchyId);
-        $this->fiasHierarchyId = $fiasHierarchyId;
+        Assert::positiveInteger($fiasObjectId);
+        $this->fiasObjectId = $fiasObjectId;
     }
 
     /**
