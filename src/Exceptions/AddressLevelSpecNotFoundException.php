@@ -10,7 +10,7 @@ class AddressLevelSpecNotFoundException extends RuntimeException
     {
         return new static(
             \sprintf(
-                'Failed to resolve spec for level "%s" and identifier "%s" ("%s").',
+                'Failed to resolve spec for address level "%s" and identifier "%s" ("%s").',
                 $addressLevel,
                 $identifier,
                 $message
