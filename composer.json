@@ -1,6 +1,6 @@
 {
   "name": "addresser/address-repository",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Russian address from FIAS",
   "type": "library",
   "license": "MIT",

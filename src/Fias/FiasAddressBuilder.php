@@ -27,7 +27,7 @@ class FiasAddressBuilder implements AddressBuilderInterface
     private TypeAddressLevelSpecResolverInterface $roomSpecResolver;
     private ActualityComparator $actualityPeriodComparator;
     private AddressSynonymizer $addressSynonymizer;
-    private MainLevelRelationResolver $mainLevelRelationResolver;
+    private MainRelationResolver $mainLevelRelationResolver;
     private RelationLevelResolver $relationLevelResolver;
 
     public function __construct(
@@ -38,7 +38,7 @@ class FiasAddressBuilder implements AddressBuilderInterface
         TypeAddressLevelSpecResolverInterface $roomTypeNameResolver,
         ActualityComparator $actualityPeriodComparator,
         AddressSynonymizer $addressSynonymizer,
-        MainLevelRelationResolver $mainLevelRelationResolver,
+        MainRelationResolver $mainLevelRelationResolver,
         RelationLevelResolver $relationLevelResolver
     ) {
         $this->addrObjectSpecResolver = $addrObjectTypeNameResolver;

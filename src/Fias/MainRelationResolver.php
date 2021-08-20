@@ -7,10 +7,10 @@ namespace Addresser\AddressRepository\Fias;
 use Addresser\AddressRepository\AddressLevel;
 
 /**
- * Selects one main relation from several relation.
+ * Selects one main relation from several relations.
  * @see object_id = 11976
  */
-class MainLevelRelationResolver
+class MainRelationResolver
 {
     private RelationLevelResolver $relationLevelResolver;
 

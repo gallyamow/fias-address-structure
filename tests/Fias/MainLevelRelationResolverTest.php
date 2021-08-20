@@ -9,11 +9,11 @@ use PHPUnit\Framework\TestCase;
 
 class MainLevelRelationResolverTest extends TestCase
 {
-    private MainLevelRelationResolver $resolver;
+    private MainRelationResolver $resolver;
 
     protected function setUp(): void
     {
-        $this->resolver = new MainLevelRelationResolver(new RelationLevelResolver());
+        $this->resolver = new MainRelationResolver(new RelationLevelResolver());
     }
 
     /**
