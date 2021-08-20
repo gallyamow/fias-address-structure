@@ -153,7 +153,7 @@ class FiasAddressBuilder implements AddressBuilderInterface
                         );
                     }
 
-                    $name = $this->prepareString($mainRelationData['name']);
+                    $name = $this->emptyStrToNull($mainRelationData['name']);
                     if ('' === $name) {
                         throw AddressBuildFailedException::withIdentifier(
                             'object_id',
@@ -178,7 +178,7 @@ class FiasAddressBuilder implements AddressBuilderInterface
                     break;
                 case AddressLevel::AREA:
                     $fiasId = $mainRelationData['objectguid'];
-                    $name = $this->prepareString($mainRelationData['name']);
+                    $name = $this->emptyStrToNull($mainRelationData['name']);
 
                     $address->setAreaFiasId($fiasId);
                     $address->setAreaKladrId($kladrId);
@@ -197,7 +197,7 @@ class FiasAddressBuilder implements AddressBuilderInterface
                     break;
                 case AddressLevel::CITY:
                     $fiasId = $mainRelationData['objectguid'];
-                    $name = $this->prepareString($mainRelationData['name']);
+                    $name = $this->emptyStrToNull($mainRelationData['name']);
 
                     $address->setCityFiasId($fiasId);
                     $address->setCityKladrId($kladrId);
@@ -215,7 +215,7 @@ class FiasAddressBuilder implements AddressBuilderInterface
                     break;
                 case AddressLevel::SETTLEMENT:
                     $fiasId = $mainRelationData['objectguid'];
-                    $name = $this->prepareString($mainRelationData['name']);
+                    $name = $this->emptyStrToNull($mainRelationData['name']);
 
                     $address->setSettlementFiasId($fiasId);
                     $address->setSettlementKladrId($kladrId);
@@ -233,7 +233,7 @@ class FiasAddressBuilder implements AddressBuilderInterface
                     break;
                 case AddressLevel::TERRITORY:
                     $fiasId = $mainRelationData['objectguid'];
-                    $name = $this->prepareString($mainRelationData['name']);
+                    $name = $this->emptyStrToNull($mainRelationData['name']);
 
                     $address->setTerritoryFiasId($fiasId);
                     $address->setTerritoryKladrId($kladrId);
@@ -251,7 +251,7 @@ class FiasAddressBuilder implements AddressBuilderInterface
                     break;
                 case AddressLevel::STREET:
                     $fiasId = $mainRelationData['objectguid'];
-                    $name = $this->prepareString($mainRelationData['name']);
+                    $name = $this->emptyStrToNull($mainRelationData['name']);
 
                     $address->setStreetFiasId($fiasId);
                     $address->setStreetKladrId($kladrId);
@@ -272,21 +272,37 @@ class FiasAddressBuilder implements AddressBuilderInterface
                     $address->setHouseFiasId($fiasId);
                     $address->setHouseKladrId($kladrId);
 
-                    $levelSpec = $this->houseSpecResolver->resolve((int)$mainRelationData['housetype']);
-                    $address->setHouseType($levelSpec->getShortName());
-                    $address->setHouseTypeFull($levelSpec->getName());
+                    $tmp = $this->emptyStrToNull($mainRelationData['housenum']);
+                    $address->setHouse($tmp);
+                    if (null !== $tmp) {
+                        if (empty($mainRelationData['housetype'])) {
+                            throw new RuntimeException('Empty housetype');
+                        }
 
-                    $address->setHouse($this->prepareString($mainRelationData['housenum']));
+                        $levelSpec = $this->houseSpecResolver->resolve((int)$mainRelationData['housetype']);
+                        $address->setHouseType($levelSpec->getShortName());
+                        $address->setHouseTypeFull($levelSpec->getName());
+                    }
 
-                    $address->setBlock1($mainRelationData['addnum1'] ?? null);
-                    if ($mainRelationData['addtype1']) {
+                    $tmp = $this->emptyStrToNull($mainRelationData['addnum1']);
+                    $address->setBlock1($tmp);
+                    if (null !== $tmp) {
+                        if (empty($mainRelationData['addtype1'])) {
+                            throw new RuntimeException('Empty addtype1');
+                        }
+
                         $blockTypeName = $this->addHouseSpecResolver->resolve((int)$mainRelationData['addtype1']);
                         $address->setBlockType1($blockTypeName->getShortName());
                         $address->setBlockTypeFull1($blockTypeName->getName());
                     }
 
-                    $address->setBlock2($mainRelationData['addnum2'] ?? null);
-                    if ($mainRelationData['addtype2']) {
+                    $tmp = $this->emptyStrToNull($mainRelationData['addnum2']);
+                    $address->setBlock2($tmp);
+                    if (null !== $tmp) {
+                        if (empty($mainRelationData['addtype2'])) {
+                            throw new RuntimeException('Empty addtype2');
+                        }
+
                         $blockTypeName = $this->addHouseSpecResolver->resolve((int)$mainRelationData['addtype2']);
                         $address->setBlockType2($blockTypeName->getShortName());
                         $address->setBlockTypeFull2($blockTypeName->getName());
@@ -300,7 +316,7 @@ class FiasAddressBuilder implements AddressBuilderInterface
                     $address->setFlatType($levelSpec->getShortName());
                     $address->setFlatTypeFull($levelSpec->getName());
 
-                    $address->setFlat($this->prepareString($mainRelationData['number']));
+                    $address->setFlat($this->emptyStrToNull($mainRelationData['number']));
                     break;
                 case AddressLevel::ROOM:
                     $fiasId = $mainRelationData['objectguid'];
@@ -310,7 +326,7 @@ class FiasAddressBuilder implements AddressBuilderInterface
                     $address->setRoomType($levelSpec->getShortName());
                     $address->setRoomTypeFull($levelSpec->getName());
 
-                    $address->setRoom($this->prepareString($mainRelationData['number']));
+                    $address->setRoom($this->emptyStrToNull($mainRelationData['number']));
                     break;
                 case AddressLevel::STEAD:
                 case AddressLevel::CAR_PLACE:
@@ -439,7 +455,7 @@ class FiasAddressBuilder implements AddressBuilderInterface
         }
     }
 
-    private function prepareString(?string $s): ?string
+    private function emptyStrToNull(?string $s): ?string
     {
         if (null === $s) {
             return null;
