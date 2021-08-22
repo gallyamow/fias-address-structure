@@ -11,8 +11,10 @@ use Addresser\AddressRepository\AddressLevel;
 use Addresser\AddressRepository\AddressLevelSpec;
 use Addresser\AddressRepository\AddressSynonymizer;
 use Addresser\AddressRepository\Exceptions\AddressBuildFailedException;
+use Addresser\AddressRepository\Exceptions\EmptyLevelTypeException;
 use Addresser\AddressRepository\Exceptions\InvalidAddressLevelException;
 use Addresser\AddressRepository\Exceptions\RuntimeException;
+use Webmozart\Assert\Assert;
 
 /**
  * Формирует адрес на основе данных из ФИАС.
@@ -40,7 +42,8 @@ class FiasAddressBuilder implements AddressBuilderInterface
         AddressSynonymizer $addressSynonymizer,
         MainRelationResolver $mainLevelRelationResolver,
         RelationLevelResolver $relationLevelResolver
-    ) {
+    )
+    {
         $this->addrObjectSpecResolver = $addrObjectTypeNameResolver;
         $this->houseSpecResolver = $houseTypeNameResolver;
         $this->addHouseSpecResolver = $addHouseTypeNameResolver;
@@ -150,7 +153,7 @@ class FiasAddressBuilder implements AddressBuilderInterface
                             'object_id',
                             $objectId,
                             sprintf('Empty fiasId for region level.'),
-                        );
+                            );
                     }
 
                     $name = $this->emptyStrToNull($mainRelationData['name']);
@@ -159,7 +162,7 @@ class FiasAddressBuilder implements AddressBuilderInterface
                             'object_id',
                             $objectId,
                             sprintf('Empty name for region level.'),
-                        );
+                            );
                     }
 
                     $address->setRegionFiasId($fiasId);
@@ -276,7 +279,7 @@ class FiasAddressBuilder implements AddressBuilderInterface
                     $address->setHouse($tmp);
                     if (null !== $tmp) {
                         if (empty($mainRelationData['housetype'])) {
-                            throw new RuntimeException('Empty housetype');
+                            throw EmptyLevelTypeException::withFieldNameAndIdentifier('housetype', $objectId);
                         }
 
                         $levelSpec = $this->houseSpecResolver->resolve((int)$mainRelationData['housetype']);
@@ -288,7 +291,7 @@ class FiasAddressBuilder implements AddressBuilderInterface
                     $address->setBlock1($tmp);
                     if (null !== $tmp) {
                         if (empty($mainRelationData['addtype1'])) {
-                            throw new RuntimeException('Empty addtype1');
+                            throw EmptyLevelTypeException::withFieldNameAndIdentifier('addtype1', $objectId);
                         }
 
                         $blockTypeName = $this->addHouseSpecResolver->resolve((int)$mainRelationData['addtype1']);
@@ -300,7 +303,7 @@ class FiasAddressBuilder implements AddressBuilderInterface
                     $address->setBlock2($tmp);
                     if (null !== $tmp) {
                         if (empty($mainRelationData['addtype2'])) {
-                            throw new RuntimeException('Empty addtype2');
+                            throw EmptyLevelTypeException::withFieldNameAndIdentifier('addtype2', $objectId);
                         }
 
                         $blockTypeName = $this->addHouseSpecResolver->resolve((int)$mainRelationData['addtype2']);
@@ -312,6 +315,10 @@ class FiasAddressBuilder implements AddressBuilderInterface
                     $fiasId = $mainRelationData['objectguid'];
                     $address->setFlatFiasId($fiasId);
 
+                    if (empty($mainRelationData['aparttype'])) {
+                        throw EmptyLevelTypeException::withFieldNameAndIdentifier('aparttype', $objectId);
+                    }
+
                     $levelSpec = $this->apartmentSpecResolver->resolve((int)$mainRelationData['aparttype']);
                     $address->setFlatType($levelSpec->getShortName());
                     $address->setFlatTypeFull($levelSpec->getName());
@@ -321,6 +328,10 @@ class FiasAddressBuilder implements AddressBuilderInterface
                 case AddressLevel::ROOM:
                     $fiasId = $mainRelationData['objectguid'];
                     $address->setRoomFiasId($fiasId);
+
+                    if (empty($mainRelationData['roomtype'])) {
+                        throw EmptyLevelTypeException::withFieldNameAndIdentifier('roomtype', $objectId);
+                    }
 
                     $levelSpec = $this->roomSpecResolver->resolve((int)$mainRelationData['roomtype']);
                     $address->setRoomType($levelSpec->getShortName());
@@ -337,13 +348,7 @@ class FiasAddressBuilder implements AddressBuilderInterface
             // последний уровень данных
             // if ($addressLevel === \array_key_last($parentsByLevel)) {
             if ($objectId === $mainRelationObjectId) {
-                if (null === $fiasId) {
-                    throw AddressBuildFailedException::withIdentifier(
-                        'object_id',
-                        $objectId,
-                        sprintf('Empty fiasId for region level.'),
-                    );
-                }
+                Assert::notNull($fiasId, 'Empty fiasId');
 
                 $address->setFiasId($fiasId);
                 $address->setAddressLevel($addressLevel);
@@ -449,9 +454,9 @@ class FiasAddressBuilder implements AddressBuilderInterface
     {
         switch ($position) {
             case AddressLevelSpec::NAME_POSITION_BEFORE:
-                return $typeName.' '.$name;
+                return $typeName . ' ' . $name;
             case AddressLevelSpec::NAME_POSITION_AFTER:
-                return $name.' '.$typeName;
+                return $name . ' ' . $typeName;
         }
     }
 
