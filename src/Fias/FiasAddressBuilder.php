@@ -315,11 +315,17 @@ class FiasAddressBuilder implements AddressBuilderInterface
                     $fiasId = $mainRelationData['objectguid'];
                     $address->setFlatFiasId($fiasId);
 
-                    if (empty($mainRelationData['aparttype'])) {
-                        throw EmptyLevelTypeException::withFieldNameAndIdentifier('aparttype', $objectId);
+                    $apartmentType = (int)$mainRelationData['aparttype'];
+
+                    /**
+                     * Бывает значение 0. Считаем что это квартира.
+                     * @see 2320587
+                     */
+                    if (0 === $apartmentType) {
+                        $apartmentType = 2;
                     }
 
-                    $levelSpec = $this->apartmentSpecResolver->resolve((int)$mainRelationData['aparttype']);
+                    $levelSpec = $this->apartmentSpecResolver->resolve($apartmentType);
                     $address->setFlatType($levelSpec->getShortName());
                     $address->setFlatTypeFull($levelSpec->getName());
 
