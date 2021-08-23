@@ -1057,7 +1057,7 @@ class ObjectAddressLevelSpecResolver implements ObjectAddressLevelSpecResolverIn
         );
 
         if (empty($variants)) {
-            throw AddressLevelSpecNotFoundException::withIdentifier($fiasLevel, $shortName, 'addr_obj_types');
+            throw AddressLevelSpecNotFoundException::withValue($fiasLevel, $shortName, 'addr_obj_types');
         }
 
         $variant = $variants[0];

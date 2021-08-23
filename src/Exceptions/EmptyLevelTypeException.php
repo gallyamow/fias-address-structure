@@ -6,13 +6,13 @@ namespace Addresser\AddressRepository\Exceptions;
 
 class EmptyLevelTypeException extends RuntimeException
 {
-    public static function withFieldNameAndIdentifier(string $fieldName, $identifier): self
+    public static function withObjectId(string $fieldName, int $objectId): self
     {
         return new static(
             \sprintf(
-                'Empty level type "%s" for entity "%s".',
+                'Empty level type "%s" for address ("%s").',
                 $fieldName,
-                $identifier
+                $objectId
             )
         );
     }

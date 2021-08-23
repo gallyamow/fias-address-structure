@@ -37,7 +37,7 @@ class AddHouseAddressLevelSpecResolver implements TypeAddressLevelSpecResolverIn
                     $currAddressLevel, 'литера', 'лит.', AddressLevelSpec::NAME_POSITION_BEFORE
                 );
             default:
-                throw AddressLevelSpecNotFoundException::withIdentifier($currAddressLevel, $typeId, 'addhouse_types');
+                throw AddressLevelSpecNotFoundException::withValue($currAddressLevel, $typeId, 'addhouse_types');
         }
     }
 }

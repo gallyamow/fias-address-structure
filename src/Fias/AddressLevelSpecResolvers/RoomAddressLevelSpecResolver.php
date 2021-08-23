@@ -16,14 +16,6 @@ class RoomAddressLevelSpecResolver implements TypeAddressLevelSpecResolverInterf
         $currAddressLevel = AddressLevel::ROOM;
 
         switch ($typeId) {
-            case 0:
-                // TODO: не ясно что с этим делать
-                return new AddressLevelSpec(
-                    $currAddressLevel,
-                    'Не определено',
-                    'Не определено',
-                    AddressLevelSpec::NAME_POSITION_BEFORE
-                );
             case 1:
                 // было ком.
                 return new AddressLevelSpec(
@@ -32,6 +24,7 @@ class RoomAddressLevelSpecResolver implements TypeAddressLevelSpecResolverInterf
                     'комн.',
                     AddressLevelSpec::NAME_POSITION_BEFORE
                 );
+            case 0: // было "Не определено", используем вместо этого "Помещение"
             case 2:
                 // было помещ.
                 return new AddressLevelSpec(
@@ -41,7 +34,7 @@ class RoomAddressLevelSpecResolver implements TypeAddressLevelSpecResolverInterf
                     AddressLevelSpec::NAME_POSITION_BEFORE
                 );
             default:
-                throw AddressLevelSpecNotFoundException::withIdentifier($currAddressLevel, $typeId, 'room_types');
+                throw AddressLevelSpecNotFoundException::withValue($currAddressLevel, $typeId, 'room_types');
         }
     }
 }

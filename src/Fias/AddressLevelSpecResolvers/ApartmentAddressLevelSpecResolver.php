@@ -87,7 +87,7 @@ class ApartmentAddressLevelSpecResolver implements TypeAddressLevelSpecResolverI
                 // было г-ж
                 return new AddressLevelSpec($currAddressLevel, 'гараж', 'гар.', AddressLevelSpec::NAME_POSITION_BEFORE);
             default:
-                throw AddressLevelSpecNotFoundException::withIdentifier($currAddressLevel, $typeId, 'apartment_types');
+                throw AddressLevelSpecNotFoundException::withValue($currAddressLevel, $typeId, 'apartment_types');
         }
     }
 }

@@ -87,7 +87,7 @@ class HouseAddressLevelSpecResolver implements TypeAddressLevelSpecResolverInter
                     AddressLevelSpec::NAME_POSITION_BEFORE
                 );
             default:
-                throw AddressLevelSpecNotFoundException::withIdentifier($currAddressLevel, $typeId, 'house_types');
+                throw AddressLevelSpecNotFoundException::withValue($currAddressLevel, $typeId, 'house_types');
         }
     }
 }
