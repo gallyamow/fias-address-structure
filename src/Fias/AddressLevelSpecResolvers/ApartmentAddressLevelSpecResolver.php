@@ -11,6 +11,7 @@ use Addresser\AddressRepository\Fias\TypeAddressLevelSpecResolverInterface;
 
 /**
  * TODO: комната и помещение - пересекаются с ROOM
+ * TODO: гараж, погреб, подвал - пересекаются с HOUSE
  * @see gar.apartment_types
  */
 class ApartmentAddressLevelSpecResolver implements TypeAddressLevelSpecResolverInterface

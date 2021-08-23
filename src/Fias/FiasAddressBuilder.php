@@ -13,7 +13,6 @@ use Addresser\AddressRepository\AddressSynonymizer;
 use Addresser\AddressRepository\Exceptions\AddressBuildFailedException;
 use Addresser\AddressRepository\Exceptions\EmptyLevelTypeException;
 use Addresser\AddressRepository\Exceptions\InvalidAddressLevelException;
-use Addresser\AddressRepository\Exceptions\RuntimeException;
 use Webmozart\Assert\Assert;
 
 /**
@@ -65,6 +64,9 @@ class FiasAddressBuilder implements AddressBuilderInterface
         /**
          * Группируем по AddressLevel. Так как дополнительные локаций таких как СНТ, ГСК mapped на один и тот же
          * уровень AddressLevel::SETTLEMENT может быть несколько актуальных значений.
+         *
+         * Мы бы могли разбить path_ltree на составные части и итерировать по ним, но и в этому случае остается проблема
+         * определения соотношения relation с полями Address.
          */
         $parentsByLevel = [];
         foreach ($objects as $item) {
@@ -88,7 +90,7 @@ class FiasAddressBuilder implements AddressBuilderInterface
 
         foreach ($parentsByLevel as $addressLevel => $levelRelations) {
             // находим актуальное значение
-            $actualRelations = array_values(
+            $levelActualRelations = array_values(
                 array_filter(
                     $levelRelations,
                     static function ($item) {
@@ -99,7 +101,7 @@ class FiasAddressBuilder implements AddressBuilderInterface
 
             $mainRelation = null;
 
-            $cnt = count($actualRelations);
+            $cnt = count($levelActualRelations);
             switch ($cnt) {
                 case 0:
                     /**
@@ -113,15 +115,19 @@ class FiasAddressBuilder implements AddressBuilderInterface
                      */
                     continue 2; // 2 - because in switch
                 case 1:
-                    $mainRelation = $actualRelations[0];
+                    $mainRelation = $levelActualRelations[0];
                     break;
                 default:
                     /**
-                     * Есть несколько активных relations на одном уровне AddressLevel. Проблема кроется в том что
-                     * несколько уровней ФИАС могут соответствовать одному нашему уровню.
-                     * Для решения этой проблемы мы будем выбирать один главный relation.
+                     * Есть несколько активных relations на одном уровне AddressLevel.
+                     *
+                     * Причиной может быть несколько вещей:
+                     *  1) несколько уровней ФИАС могут соответствовать одному нашему уровню.
+                     *  Для решения этой проблемы мы будем выбирать один главный relation.
+                     *  2) некоторых случаях гараж (погреб, подвал) могут быть заданы как внутри дома, так и
+                     *  в виде отдельного дома - с этиим не понятно как быть
                      */
-                    $mainRelation = $this->mainLevelRelationResolver->resolve($addressLevel, $actualRelations);
+                    $mainRelation = $this->mainLevelRelationResolver->resolve($addressLevel, $levelActualRelations);
                     break;
             }
 
@@ -318,7 +324,7 @@ class FiasAddressBuilder implements AddressBuilderInterface
                     $apartmentType = (int)$mainRelationData['aparttype'];
 
                     /**
-                     * Бывает значение 0. Считаем что это квартира.
+                     * В БД присутствует значение 0. Считаем что это квартира.
                      * @see 2320587
                      */
                     if (0 === $apartmentType) {
