@@ -291,10 +291,17 @@ class FiasAddressBuilder implements AddressBuilderInterface
 
                     $houseSpec = null;
                     if (null !== $houseNum) {
-                        if (0 === (int)$actualRelationData['housetype']) {
-                            throw EmptyLevelTypeException::withObjectId('housetype', $pathObjectId);
+                        $houseType = (int)$actualRelationData['housetype'];
+
+                        /**
+                         * В БД присутствует значение 0. Считаем что это здание.
+                         * @see 46501392
+                         */
+                        if (0 === $houseType) {
+                            $houseType = 5;
                         }
-                        $houseSpec = $this->houseSpecResolver->resolve((int)$actualRelationData['housetype']);
+
+                        $houseSpec = $this->houseSpecResolver->resolve($houseType);
                     }
 
                     $addNum1 = $this->emptyStrToNull($actualRelationData['addnum1']);
