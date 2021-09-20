@@ -181,10 +181,10 @@ class Address implements \JsonSerializable
         return get_object_vars($this);
     }
 
-    public function getFullString(bool $includeRenaming = false): string
+    public function getFullString(bool $includeRenaming = false, int $endingAddressLevel = AddressLevel::ROOM): string
     {
         $delimiter = ', ';
-        $res = $this->buildCompleteAddress(AddressLevel::ROOM, $delimiter, 'full');
+        $res = $this->buildCompleteAddress($endingAddressLevel, $delimiter, 'full');
 
         if ($includeRenaming && !empty($this->getRenaming())) {
             // можем добавлять здесь, так как переименования хранятся только на уровне самих владельцев
@@ -195,10 +195,10 @@ class Address implements \JsonSerializable
         return $res;
     }
 
-    public function getShortString(bool $includeRenaming = false): string
+    public function getShortString(bool $includeRenaming = false, int $endingAddressLevel = AddressLevel::ROOM): string
     {
         $delimiter = ', ';
-        $res = $this->buildCompleteAddress(AddressLevel::ROOM, $delimiter, 'short');
+        $res = $this->buildCompleteAddress($endingAddressLevel, $delimiter, 'short');
 
         if ($includeRenaming && !empty($this->getRenaming())) {
             // можем добавлять здесь, так как переименования хранятся только на уровне самих владельцев
@@ -222,12 +222,12 @@ class Address implements \JsonSerializable
     }
 
     /**
-     * @param int $addressLevel
+     * @param int $endingAddressLevel
      * @param string $delimiter
      * @param string|null $includeType
      * @return string
      */
-    private function buildCompleteAddress(int $addressLevel, string $delimiter, ?string $includeType): string
+    private function buildCompleteAddress(int $endingAddressLevel, string $delimiter, ?string $includeType): string
     {
         if (!in_array($includeType, [null, 'short', 'full'], true)) {
             throw new \RuntimeException(sprintf('Illegal includeType "%s".', $includeType));
@@ -235,7 +235,7 @@ class Address implements \JsonSerializable
 
         $chunks = [];
 
-        $parentLevels = AddressLevel::getTree($addressLevel);
+        $parentLevels = AddressLevel::getTree($endingAddressLevel);
         foreach ($parentLevels as $level) {
             switch ($level) {
                 case AddressLevel::REGION:
