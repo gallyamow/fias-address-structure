@@ -20,7 +20,7 @@ use Webmozart\Assert\Assert;
  *
  * Для уровней ниже street полей withType - нет, потому что у них всегда тип стоит в NAME_POSITION_BEFORE.
  */
-class Address implements \JsonSerializable
+class Address implements \JsonSerializable, ArraySerializableInterface
 {
     /**
      * ФИАС-код адреса (уровня)
@@ -176,7 +176,145 @@ class Address implements \JsonSerializable
         return $this->toArray();
     }
 
-    public function toArray()
+    public static function fromArray(array $array): ArraySerializableInterface
+    {
+        Assert::stringNotEmpty($array['fiasId']);
+        Assert::integer($array['fiasObjectId']);
+        Assert::integer($array['fiasLevel']); // validate has
+        Assert::integer($array['addressLevel']); // validate has
+        Assert::nullOrStringNotEmpty($array['kladrId']);
+        Assert::nullOrStringNotEmpty($array['okato']);
+        Assert::nullOrStringNotEmpty($array['oktmo']);
+        Assert::nullOrStringNotEmpty($array['postalCode']);
+        Assert::stringNotEmpty($array['regionFiasId']);
+        Assert::nullOrStringNotEmpty($array['regionKladrId']);
+        Assert::stringNotEmpty($array['regionType']);
+        Assert::stringNotEmpty($array['regionTypeFull']);
+        Assert::stringNotEmpty($array['region']);
+        Assert::stringNotEmpty($array['regionWithType']);
+        Assert::stringNotEmpty($array['regionWithFullType']);
+        Assert::nullOrStringNotEmpty($array['areaFiasId']);
+        Assert::nullOrStringNotEmpty($array['areaKladrId']);
+        Assert::nullOrStringNotEmpty($array['areaType']);
+        Assert::nullOrStringNotEmpty($array['areaTypeFull']);
+        Assert::nullOrStringNotEmpty($array['area']);
+        Assert::nullOrStringNotEmpty($array['areaWithType']);
+        Assert::nullOrStringNotEmpty($array['areaWithFullType']);
+        Assert::nullOrStringNotEmpty($array['cityFiasId']);
+        Assert::nullOrStringNotEmpty($array['cityKladrId']);
+        Assert::nullOrStringNotEmpty($array['cityType']);
+        Assert::nullOrStringNotEmpty($array['cityTypeFull']);
+        Assert::nullOrStringNotEmpty($array['city']);
+        Assert::nullOrStringNotEmpty($array['cityWithType']);
+        Assert::nullOrStringNotEmpty($array['cityWithFullType']);
+        Assert::nullOrStringNotEmpty($array['streetFiasId']);
+        Assert::nullOrStringNotEmpty($array['streetKladrId']);
+        Assert::nullOrStringNotEmpty($array['streetType']);
+        Assert::nullOrStringNotEmpty($array['streetTypeFull']);
+        Assert::nullOrStringNotEmpty($array['street']);
+        Assert::nullOrStringNotEmpty($array['streetWithType']);
+        Assert::nullOrStringNotEmpty($array['streetWithFullType']);
+        Assert::nullOrStringNotEmpty($array['houseFiasId']);
+        Assert::nullOrStringNotEmpty($array['houseKladrId']);
+        Assert::nullOrStringNotEmpty($array['houseType']);
+        Assert::nullOrStringNotEmpty($array['houseTypeFull']);
+        Assert::nullOrStringNotEmpty($array['house']);
+        Assert::nullOrStringNotEmpty($array['blockType1']);
+        Assert::nullOrStringNotEmpty($array['blockTypeFull1']);
+        Assert::nullOrStringNotEmpty($array['block1']);
+        Assert::nullOrStringNotEmpty($array['blockType2']);
+        Assert::nullOrStringNotEmpty($array['blockTypeFull2']);
+        Assert::nullOrStringNotEmpty($array['block2']);
+        Assert::nullOrStringNotEmpty($array['flatFiasId']);
+        Assert::nullOrStringNotEmpty($array['flatType']);
+        Assert::nullOrStringNotEmpty($array['flatTypeFull']);
+        Assert::nullOrStringNotEmpty($array['flat']);
+        Assert::nullOrStringNotEmpty($array['roomFiasId']);
+        Assert::nullOrStringNotEmpty($array['roomType']);
+        Assert::nullOrStringNotEmpty($array['roomTypeFull']);
+        Assert::nullOrStringNotEmpty($array['room']);
+        Assert::nullOrIsArray($array['synonyms']);
+        Assert::nullOrIsArray($array['renaming']);
+        Assert::nullOrIsArray($array['location']);
+
+        $res = new self();
+        $res->setFiasId($array['fiasId']);
+        $res->setFiasObjectId($array['fiasObjectId']);
+        $res->setFiasLevel($array['fiasLevel']);
+        $res->setAddressLevel($array['addressLevel']);
+        $res->setKladrId($array['kladrId']);
+        $res->setOkato($array['okato']);
+        $res->setOktmo($array['oktmo']);
+        $res->setPostalCode($array['postalCode']);
+        $res->setRegionFiasId($array['regionFiasId']);
+        $res->setRegionKladrId($array['regionKladrId']);
+        $res->setRegionType($array['regionType']);
+        $res->setRegionTypeFull($array['regionTypeFull']);
+        $res->setRegion($array['region']);
+        $res->setRegionWithType($array['regionWithType']);
+        $res->setRegionWithFullType($array['regionWithFullType']);
+        $res->setAreaFiasId($array['areaFiasId']);
+        $res->setAreaKladrId($array['areaKladrId']);
+        $res->setAreaType($array['areaType']);
+        $res->setAreaTypeFull($array['areaTypeFull']);
+        $res->setArea($array['area']);
+        $res->setAreaWithType($array['areaWithType']);
+        $res->setAreaWithFullType($array['areaWithFullType']);
+        $res->setCityFiasId($array['cityFiasId']);
+        $res->setCityKladrId($array['cityKladrId']);
+        $res->setCityType($array['cityType']);
+        $res->setCityTypeFull($array['cityTypeFull']);
+        $res->setCity($array['city']);
+        $res->setCityWithType($array['cityWithType']);
+        $res->setCityWithFullType($array['cityWithFullType']);
+        $res->setSettlementFiasId($array['settlementFiasId']);
+        $res->setSettlementKladrId($array['settlementKladrId']);
+        $res->setSettlementType($array['settlementType']);
+        $res->setSettlementTypeFull($array['settlementTypeFull']);
+        $res->setSettlement($array['settlement']);
+        $res->setSettlementWithType($array['settlementWithType']);
+        $res->setSettlementWithFullType($array['settlementWithFullType']);
+        $res->setTerritoryFiasId($array['territoryFiasId']);
+        $res->setTerritoryKladrId($array['territoryKladrId']);
+        $res->setTerritoryType($array['territoryType']);
+        $res->setTerritoryTypeFull($array['territoryTypeFull']);
+        $res->setTerritory($array['territory']);
+        $res->setTerritoryWithType($array['territoryWithType']);
+        $res->setTerritoryWithFullType($array['territoryWithFullType']);
+        $res->setStreetFiasId($array['streetFiasId']);
+        $res->setStreetKladrId($array['streetKladrId']);
+        $res->setStreetType($array['streetType']);
+        $res->setStreetTypeFull($array['streetTypeFull']);
+        $res->setStreet($array['street']);
+        $res->setStreetWithType($array['streetWithType']);
+        $res->setStreetWithFullType($array['streetWithFullType']);
+        $res->setHouseFiasId($array['houseFiasId']);
+        $res->setHouseKladrId($array['houseKladrId']);
+        $res->setHouseType($array['houseType']);
+        $res->setHouseTypeFull($array['houseTypeFull']);
+        $res->setHouse($array['house']);
+        $res->setBlockType1($array['blockType1']);
+        $res->setBlockTypeFull1($array['blockTypeFull1']);
+        $res->setBlock1($array['block1']);
+        $res->setBlockType2($array['blockType2']);
+        $res->setBlockTypeFull2($array['blockTypeFull2']);
+        $res->setBlock2($array['block2']);
+        $res->setFlatFiasId($array['flatFiasId']);
+        $res->setFlatType($array['flatType']);
+        $res->setFlatTypeFull($array['flatTypeFull']);
+        $res->setFlat($array['flat']);
+        $res->setRoomFiasId($array['roomFiasId']);
+        $res->setRoomType($array['roomType']);
+        $res->setRoomTypeFull($array['roomTypeFull']);
+        $res->setRoom($array['room']);
+        $res->setSynonyms($array['synonyms']);
+        $res->setRenaming($array['renaming']);
+        $res->setLocation($array['location']);
+
+        return $res;
+    }
+
+    public function toArray(): array
     {
         return get_object_vars($this);
     }
