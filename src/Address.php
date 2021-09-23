@@ -178,65 +178,6 @@ class Address implements \JsonSerializable, ArraySerializableInterface
 
     public static function fromArray(array $array): ArraySerializableInterface
     {
-        Assert::stringNotEmpty($array['fiasId']);
-        Assert::integer($array['fiasObjectId']);
-        Assert::integer($array['fiasLevel']); // validate has
-        Assert::integer($array['addressLevel']); // validate has
-        Assert::nullOrStringNotEmpty($array['kladrId']);
-        Assert::nullOrStringNotEmpty($array['okato']);
-        Assert::nullOrStringNotEmpty($array['oktmo']);
-        Assert::nullOrStringNotEmpty($array['postalCode']);
-        Assert::stringNotEmpty($array['regionFiasId']);
-        Assert::nullOrStringNotEmpty($array['regionKladrId']);
-        Assert::stringNotEmpty($array['regionType']);
-        Assert::stringNotEmpty($array['regionTypeFull']);
-        Assert::stringNotEmpty($array['region']);
-        Assert::stringNotEmpty($array['regionWithType']);
-        Assert::stringNotEmpty($array['regionWithFullType']);
-        Assert::nullOrStringNotEmpty($array['areaFiasId']);
-        Assert::nullOrStringNotEmpty($array['areaKladrId']);
-        Assert::nullOrStringNotEmpty($array['areaType']);
-        Assert::nullOrStringNotEmpty($array['areaTypeFull']);
-        Assert::nullOrStringNotEmpty($array['area']);
-        Assert::nullOrStringNotEmpty($array['areaWithType']);
-        Assert::nullOrStringNotEmpty($array['areaWithFullType']);
-        Assert::nullOrStringNotEmpty($array['cityFiasId']);
-        Assert::nullOrStringNotEmpty($array['cityKladrId']);
-        Assert::nullOrStringNotEmpty($array['cityType']);
-        Assert::nullOrStringNotEmpty($array['cityTypeFull']);
-        Assert::nullOrStringNotEmpty($array['city']);
-        Assert::nullOrStringNotEmpty($array['cityWithType']);
-        Assert::nullOrStringNotEmpty($array['cityWithFullType']);
-        Assert::nullOrStringNotEmpty($array['streetFiasId']);
-        Assert::nullOrStringNotEmpty($array['streetKladrId']);
-        Assert::nullOrStringNotEmpty($array['streetType']);
-        Assert::nullOrStringNotEmpty($array['streetTypeFull']);
-        Assert::nullOrStringNotEmpty($array['street']);
-        Assert::nullOrStringNotEmpty($array['streetWithType']);
-        Assert::nullOrStringNotEmpty($array['streetWithFullType']);
-        Assert::nullOrStringNotEmpty($array['houseFiasId']);
-        Assert::nullOrStringNotEmpty($array['houseKladrId']);
-        Assert::nullOrStringNotEmpty($array['houseType']);
-        Assert::nullOrStringNotEmpty($array['houseTypeFull']);
-        Assert::nullOrStringNotEmpty($array['house']);
-        Assert::nullOrStringNotEmpty($array['blockType1']);
-        Assert::nullOrStringNotEmpty($array['blockTypeFull1']);
-        Assert::nullOrStringNotEmpty($array['block1']);
-        Assert::nullOrStringNotEmpty($array['blockType2']);
-        Assert::nullOrStringNotEmpty($array['blockTypeFull2']);
-        Assert::nullOrStringNotEmpty($array['block2']);
-        Assert::nullOrStringNotEmpty($array['flatFiasId']);
-        Assert::nullOrStringNotEmpty($array['flatType']);
-        Assert::nullOrStringNotEmpty($array['flatTypeFull']);
-        Assert::nullOrStringNotEmpty($array['flat']);
-        Assert::nullOrStringNotEmpty($array['roomFiasId']);
-        Assert::nullOrStringNotEmpty($array['roomType']);
-        Assert::nullOrStringNotEmpty($array['roomTypeFull']);
-        Assert::nullOrStringNotEmpty($array['room']);
-        Assert::nullOrIsArray($array['synonyms']);
-        Assert::nullOrIsArray($array['renaming']);
-        Assert::nullOrIsArray($array['location']);
-
         $res = new self();
         $res->setFiasId($array['fiasId']);
         $res->setFiasObjectId($array['fiasObjectId']);
@@ -568,7 +509,7 @@ class Address implements \JsonSerializable, ArraySerializableInterface
      */
     public function setFiasLevel(int $fiasLevel): void
     {
-        Assert::positiveInteger($fiasLevel);
+        Assert::positiveInteger($fiasLevel); // validate has
         $this->fiasLevel = $fiasLevel;
     }
 
@@ -585,7 +526,7 @@ class Address implements \JsonSerializable, ArraySerializableInterface
      */
     public function setAddressLevel(int $addressLevel): void
     {
-        Assert::positiveInteger($addressLevel);
+        Assert::positiveInteger($addressLevel); // validate has
         $this->addressLevel = $addressLevel;
     }
 
