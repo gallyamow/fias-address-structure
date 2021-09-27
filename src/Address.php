@@ -445,6 +445,26 @@ class Address implements \JsonSerializable, ArraySerializableInterface
                 : $this->getHouse();
         }
 
+        if (null !== ($tmp = $this->getEntireHouseBlocks($withType))) {
+            $chunks[] = $tmp;
+        }
+
+        $res = implode(', ', $chunks);
+
+        return '' === $res ? null : $res;
+    }
+
+    /**
+     * Полное название строений.
+     * Требуется там где корпус вводится отдельно.
+     *
+     * @param bool $withType
+     * @return string|null
+     */
+    public function getEntireHouseBlocks(bool $withType): ?string
+    {
+        $chunks = [];
+
         if (null !== $this->getBlock1()) {
             $chunks[] = $withType
                 ? implode(' ', [$this->getBlockType1(), $this->getBlock1()])
