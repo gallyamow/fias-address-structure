@@ -17,6 +17,7 @@ use Addresser\AddressRepository\Fias\AddressLevelSpecResolvers\RoomAddressLevelS
 use Addresser\AddressRepository\Fias\FiasAddressBuilder;
 use Addresser\AddressRepository\Fias\FiasLevel;
 use Addresser\AddressRepository\Fias\RelationLevelResolver;
+use Addresser\AddressRepository\Fias\BaseNameNormalizer;
 use PHPUnit\Framework\TestCase;
 
 class FiasAddressBuilderTest extends TestCase
@@ -35,7 +36,8 @@ class FiasAddressBuilderTest extends TestCase
             new RoomAddressLevelSpecResolver(),
             new ActualityComparator(),
             new AddressSynonymizer(),
-            $relationLevelResolved
+            $relationLevelResolved,
+            new BaseNameNormalizer()
         );
     }
 

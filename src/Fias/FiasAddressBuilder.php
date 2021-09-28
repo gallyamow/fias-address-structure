@@ -29,6 +29,7 @@ class FiasAddressBuilder implements AddressBuilderInterface
     private ActualityComparator $actualityPeriodComparator;
     private AddressSynonymizer $addressSynonymizer;
     private RelationLevelResolver $relationLevelResolver;
+    private NameNormalizerInterface $nameNormalizer;
 
     public function __construct(
         ObjectAddressLevelSpecResolverInterface $addrObjectTypeNameResolver,
@@ -38,7 +39,8 @@ class FiasAddressBuilder implements AddressBuilderInterface
         TypeAddressLevelSpecResolverInterface $roomTypeNameResolver,
         ActualityComparator $actualityPeriodComparator,
         AddressSynonymizer $addressSynonymizer,
-        RelationLevelResolver $relationLevelResolver
+        RelationLevelResolver $relationLevelResolver,
+        NameNormalizerInterface $nameNormalizer
     ) {
         $this->addrObjectSpecResolver = $addrObjectTypeNameResolver;
         $this->houseSpecResolver = $houseTypeNameResolver;
@@ -48,9 +50,17 @@ class FiasAddressBuilder implements AddressBuilderInterface
         $this->actualityPeriodComparator = $actualityPeriodComparator;
         $this->addressSynonymizer = $addressSynonymizer;
         $this->relationLevelResolver = $relationLevelResolver;
+        $this->nameNormalizer = $nameNormalizer;
     }
 
     // todo: too huge loop
+
+    /**
+     * @param array $data
+     * @param Address|null $existsAddress
+     * @return Address
+     * @throws \JsonException
+     */
     public function build(array $data, ?Address $existsAddress = null): Address
     {
         $objectId = (int)$data['object_id'];
@@ -269,7 +279,9 @@ class FiasAddressBuilder implements AddressBuilderInterface
                     break;
                 case AddressLevel::STREET:
                     $fiasId = $actualRelationData['objectguid'];
-                    $name = $this->emptyStrToNull($actualRelationData['name']);
+
+                    $name = $this->nameNormalizer->normalize($actualRelationData['name']);
+                    $name = $this->emptyStrToNull($name);
 
                     $address->setStreetFiasId($fiasId);
                     $address->setStreetKladrId($kladrId);
