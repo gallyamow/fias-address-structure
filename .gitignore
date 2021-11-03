@@ -81,3 +81,6 @@ composer.phar
 
 ### My
 .phpunit.result.cache
+
+## Don't commit the lock file (as this is a library).
+composer.lock
