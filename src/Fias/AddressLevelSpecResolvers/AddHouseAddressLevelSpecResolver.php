@@ -18,7 +18,10 @@ class AddHouseAddressLevelSpecResolver implements TypeAddressLevelSpecResolverIn
         switch ($typeId) {
             case 1:
                 return new AddressLevelSpec(
-                    $currAddressLevel, 'корпус', 'корп.', AddressLevelSpec::NAME_POSITION_BEFORE
+                    $currAddressLevel,
+                    'корпус',
+                    'корп.',
+                    AddressLevelSpec::NAME_POSITION_BEFORE
                 );
             case 2:
                 return new AddressLevelSpec(
@@ -29,12 +32,18 @@ class AddHouseAddressLevelSpecResolver implements TypeAddressLevelSpecResolverIn
                 );
             case 3:
                 return new AddressLevelSpec(
-                    $currAddressLevel, 'сооружение', 'соор.', AddressLevelSpec::NAME_POSITION_BEFORE
+                    $currAddressLevel,
+                    'сооружение',
+                    'соор.',
+                    AddressLevelSpec::NAME_POSITION_BEFORE
                 );
             case 4:
                 // было литера
                 return new AddressLevelSpec(
-                    $currAddressLevel, 'литера', 'лит.', AddressLevelSpec::NAME_POSITION_BEFORE
+                    $currAddressLevel,
+                    'литера',
+                    'лит.',
+                    AddressLevelSpec::NAME_POSITION_BEFORE
                 );
             default:
                 throw AddressLevelSpecNotFoundException::withValue($currAddressLevel, $typeId, 'addhouse_types');

@@ -32,7 +32,10 @@ class ApartmentAddressLevelSpecResolver implements TypeAddressLevelSpecResolverI
                 );
             case 2:
                 return new AddressLevelSpec(
-                    $currAddressLevel, 'квартира', 'кв.', AddressLevelSpec::NAME_POSITION_BEFORE
+                    $currAddressLevel,
+                    'квартира',
+                    'кв.',
+                    AddressLevelSpec::NAME_POSITION_BEFORE
                 );
             case 3:
                 return new AddressLevelSpec($currAddressLevel, 'офис', 'офис', AddressLevelSpec::NAME_POSITION_BEFORE);
@@ -71,7 +74,10 @@ class ApartmentAddressLevelSpecResolver implements TypeAddressLevelSpecResolverI
                 );
             case 10:
                 return new AddressLevelSpec(
-                    $currAddressLevel, 'подвал', 'подв.', AddressLevelSpec::NAME_POSITION_BEFORE
+                    $currAddressLevel,
+                    'подвал',
+                    'подв.',
+                    AddressLevelSpec::NAME_POSITION_BEFORE
                 );
             case 11:
                 return new AddressLevelSpec(
@@ -83,7 +89,10 @@ class ApartmentAddressLevelSpecResolver implements TypeAddressLevelSpecResolverI
             case 12:
                 // было п-б
                 return new AddressLevelSpec(
-                    $currAddressLevel, 'погреб', 'погр.', AddressLevelSpec::NAME_POSITION_BEFORE
+                    $currAddressLevel,
+                    'погреб',
+                    'погр.',
+                    AddressLevelSpec::NAME_POSITION_BEFORE
                 );
             case 13:
                 // было г-ж

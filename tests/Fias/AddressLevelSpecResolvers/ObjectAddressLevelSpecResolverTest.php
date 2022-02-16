@@ -118,7 +118,10 @@ class ObjectAddressLevelSpecResolverTest extends TestCase
     {
         $this->assertEquals(
             new AddressLevelSpec(
-                AddressLevel::TERRITORY, 'просека', 'просека', AddressLevelSpec::NAME_POSITION_BEFORE
+                AddressLevel::TERRITORY,
+                'просека',
+                'просека',
+                AddressLevelSpec::NAME_POSITION_BEFORE
             ),
             $this->resolver->resolve(FiasLevel::ELEMENT_OF_THE_PLANNING_STRUCTURE, 'пр-к')
         );

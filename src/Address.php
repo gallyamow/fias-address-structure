@@ -269,7 +269,7 @@ class Address implements \JsonSerializable, ArraySerializableInterface
         if ($includeRenaming && !empty($this->getRenaming())) {
             // можем добавлять здесь, так как переименования хранятся только на уровне самих владельцев
             $tmp = implode($delimiter, $this->getRenaming());
-            $res .= ' (бывш. '.$tmp.')';
+            $res .= ' (бывш. ' . $tmp . ')';
         }
 
         return $res;
@@ -283,7 +283,7 @@ class Address implements \JsonSerializable, ArraySerializableInterface
         if ($includeRenaming && !empty($this->getRenaming())) {
             // можем добавлять здесь, так как переименования хранятся только на уровне самих владельцев
             $tmp = implode($delimiter, $this->getRenaming());
-            $res .= ' (бывш. '.$tmp.')';
+            $res .= ' (бывш. ' . $tmp . ')';
         }
 
         return $res;
@@ -295,7 +295,7 @@ class Address implements \JsonSerializable, ArraySerializableInterface
 
         if ($includeRenaming && !empty($this->getRenaming())) {
             // можем добавлять здесь, так как переименования хранятся только на уровне самих владельцев
-            $res .= $delimiter.implode($delimiter, $this->getRenaming());
+            $res .= $delimiter . implode($delimiter, $this->getRenaming());
         }
 
         return $res;

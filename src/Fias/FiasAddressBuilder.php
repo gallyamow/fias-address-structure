@@ -508,11 +508,11 @@ class FiasAddressBuilder implements AddressBuilderInterface
 
                 if (null === $oldValueItem
                     || ($oldValueItem && -1 === $this->actualityPeriodComparator->compare(
-                            $oldValueItem['start_date'],
-                            $oldValueItem['end_date'],
-                            $item['start_date'],
-                            $item['end_date']
-                        ))
+                        $oldValueItem['start_date'],
+                        $oldValueItem['end_date'],
+                        $item['start_date'],
+                        $item['end_date']
+                    ))
                 ) {
                     // обновляем только если новое значении более актуальное чем старое
                     $res[$typeId] = $item;

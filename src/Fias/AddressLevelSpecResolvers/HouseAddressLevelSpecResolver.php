@@ -38,7 +38,10 @@ class HouseAddressLevelSpecResolver implements TypeAddressLevelSpecResolverInter
                 return new AddressLevelSpec($currAddressLevel, 'здание', 'зд.', AddressLevelSpec::NAME_POSITION_BEFORE);
             case 6:
                 return new AddressLevelSpec(
-                    $currAddressLevel, 'шахта', 'шахта', AddressLevelSpec::NAME_POSITION_BEFORE
+                    $currAddressLevel,
+                    'шахта',
+                    'шахта',
+                    AddressLevelSpec::NAME_POSITION_BEFORE
                 );
             case 7:
                 return new AddressLevelSpec(
@@ -57,16 +60,25 @@ class HouseAddressLevelSpecResolver implements TypeAddressLevelSpecResolverInter
             case 9:
                 // было литера
                 return new AddressLevelSpec(
-                    $currAddressLevel, 'литера', 'лит.', AddressLevelSpec::NAME_POSITION_BEFORE
+                    $currAddressLevel,
+                    'литера',
+                    'лит.',
+                    AddressLevelSpec::NAME_POSITION_BEFORE
                 );
             case 10:
                 // было к.
                 return new AddressLevelSpec(
-                    $currAddressLevel, 'корпус', 'корп.', AddressLevelSpec::NAME_POSITION_BEFORE
+                    $currAddressLevel,
+                    'корпус',
+                    'корп.',
+                    AddressLevelSpec::NAME_POSITION_BEFORE
                 );
             case 11:
                 return new AddressLevelSpec(
-                    $currAddressLevel, 'подвал', 'подв.', AddressLevelSpec::NAME_POSITION_BEFORE
+                    $currAddressLevel,
+                    'подвал',
+                    'подв.',
+                    AddressLevelSpec::NAME_POSITION_BEFORE
                 );
             case 12:
                 return new AddressLevelSpec(
@@ -77,7 +89,10 @@ class HouseAddressLevelSpecResolver implements TypeAddressLevelSpecResolverInter
                 );
             case 13:
                 return new AddressLevelSpec(
-                    $currAddressLevel, 'погреб', 'погр.', AddressLevelSpec::NAME_POSITION_BEFORE
+                    $currAddressLevel,
+                    'погреб',
+                    'погр.',
+                    AddressLevelSpec::NAME_POSITION_BEFORE
                 );
             case 14:
                 return new AddressLevelSpec(
