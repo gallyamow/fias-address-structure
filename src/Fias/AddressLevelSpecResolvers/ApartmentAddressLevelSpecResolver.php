@@ -12,6 +12,7 @@ use Addresser\AddressRepository\Fias\TypeAddressLevelSpecResolverInterface;
 /**
  * Комната и помещение - пересекаются с ROOM (потому что в ФИАС они могут быть как в квартире, так и вне ее).
  * Гараж, погреб, подвал - пересекаются с HOUSE (потому что в ФИАС они могут быть как в доме, так и вне его).
+ *
  * @see gar.apartment_types
  */
 class ApartmentAddressLevelSpecResolver implements TypeAddressLevelSpecResolverInterface

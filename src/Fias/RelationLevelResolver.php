@@ -12,9 +12,6 @@ class RelationLevelResolver
     /**
      * Поле 'level' есть только в таблице addr_obj.
      * Соответственно для остальных таблиц мы определяем его по relation_type.
-     *
-     * @param array $relation
-     * @return int
      */
     public function resolveAddressLevel(array $relation): int
     {
@@ -43,9 +40,6 @@ class RelationLevelResolver
     /**
      * Поле 'level' есть только в таблице addr_obj.
      * Соответственно для остальных таблиц мы определяем его по relation_type.
-     *
-     * @param array $relation
-     * @return int
      */
     public function resolveFiasLevel(array $relation): int
     {

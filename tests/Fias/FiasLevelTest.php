@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Addresser\AddressRepository\Tests\Fias;
@@ -29,7 +30,7 @@ class FiasLevelTest extends TestCase
     /**
      * @test
      */
-    public function itShouldThrowExceptionWhenFiasLevelIsRURAL_URBAN_SETTLEMENT(): void
+    public function itShouldThrowExceptionWhenFiasLevelIsRURALURBANSETTLEMENT(): void
     {
         $this->expectException(InvalidAddressLevelException::class);
         $this->expectExceptionMessage(

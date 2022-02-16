@@ -6,5 +6,4 @@ namespace Addresser\AddressRepository\Exceptions;
 
 class RuntimeException extends \RuntimeException implements Exception
 {
-
 }

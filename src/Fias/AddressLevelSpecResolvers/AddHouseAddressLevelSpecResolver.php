@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Addresser\AddressRepository\Fias\AddressLevelSpecResolvers;
 
 use Addresser\AddressRepository\AddressLevel;
+use Addresser\AddressRepository\AddressLevelSpec;
 use Addresser\AddressRepository\Exceptions\AddressLevelSpecNotFoundException;
 use Addresser\AddressRepository\Fias\TypeAddressLevelSpecResolverInterface;
-use Addresser\AddressRepository\AddressLevelSpec;
 
 class AddHouseAddressLevelSpecResolver implements TypeAddressLevelSpecResolverInterface
 {

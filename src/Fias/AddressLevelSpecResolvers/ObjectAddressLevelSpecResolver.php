@@ -116,7 +116,7 @@ class ObjectAddressLevelSpecResolver implements ObjectAddressLevelSpecResolverIn
             'name' => 'внутригородская территория',
             'shortName' => 'вн.тер.г',
             'namePosition' => AddressLevelSpec::NAME_POSITION_BEFORE,
-            'variants' => [['names' => ['вн.тер. г.', 'вн.тер.г.'], 'levels' => [2, 3,]]],
+            'variants' => [['names' => ['вн.тер. г.', 'вн.тер.г.'], 'levels' => [2, 3]]],
         ],
         [
             'name' => 'внутригородской район',
@@ -996,7 +996,6 @@ class ObjectAddressLevelSpecResolver implements ObjectAddressLevelSpecResolverIn
             'namePosition' => AddressLevelSpec::NAME_POSITION_BEFORE,
             'variants' => [['names' => ['ю.'], 'levels' => [7]]],
         ],
-
     ];
 
     public function resolve(int $fiasLevel, $shortName): AddressLevelSpec

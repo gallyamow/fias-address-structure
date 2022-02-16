@@ -12,17 +12,17 @@ use Addresser\AddressRepository\Exceptions\InvalidAddressLevelException;
 final class AddressLevel
 {
     /**
-     * регион
+     * регион.
      */
     public const REGION = 10;
 
     /**
-     * район в регионе
+     * район в регионе.
      */
     public const AREA = 20;
 
     /**
-     * город
+     * город.
      */
     public const CITY = 31;
 
@@ -42,37 +42,36 @@ final class AddressLevel
     public const TERRITORY = 33;
 
     /**
-     * улица
+     * улица.
      */
     public const STREET = 40;
 
     /**
-     * дом (владение, гараж, здание, шахта, строение, сооружение, литера, корпус, подвал, котельная, погреб, ОНС)
+     * дом (владение, гараж, здание, шахта, строение, сооружение, литера, корпус, подвал, котельная, погреб, ОНС).
      */
     public const HOUSE = 51;
 
     /**
-     * участок
+     * участок.
      */
     public const STEAD = 52;
 
     /**
-     * квартира (помещение, комната, раб. участок, торг. зал, павильон, подвал, котельная, погреб, гараж)
+     * квартира (помещение, комната, раб. участок, торг. зал, павильон, подвал, котельная, погреб, гараж).
      */
     public const FLAT = 61;
 
     /**
-     * машиноместо
+     * машиноместо.
      */
     public const CAR_PLACE = 62;
 
     /**
-     * комната, помещение
+     * комната, помещение.
      */
     public const ROOM = 70;
 
     /**
-     * @param int $addressLevel
      * @return int[]
      */
     public static function getTree(int $addressLevel): array

@@ -29,6 +29,6 @@ class ActualityComparatorTest extends TestCase
 
         $this->assertEquals(1, $this->comparator->compare('1900-01-01', '2079-06-06', '1900-01-01', '1900-01-01'));
         $this->assertEquals(1, $this->comparator->compare('1900-01-01', '2079-06-06', '1900-01-01', '1970-01-01'));
-        $this->assertEquals(1, $this->comparator->compare('1900-01-02', '2079-06-06', '1900-01-01', '2079-06-06',));
+        $this->assertEquals(1, $this->comparator->compare('1900-01-02', '2079-06-06', '1900-01-01', '2079-06-06', ));
     }
 }

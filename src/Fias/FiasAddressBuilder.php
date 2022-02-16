@@ -56,9 +56,6 @@ class FiasAddressBuilder implements AddressBuilderInterface
     // todo: too huge loop
 
     /**
-     * @param array $data
-     * @param Address|null $existsAddress
-     * @return Address
      * @throws \JsonException
      */
     public function build(array $data, ?Address $existsAddress = null): Address
@@ -116,7 +113,7 @@ class FiasAddressBuilder implements AddressBuilderInterface
             );
 
             $cnt = count($actualObjectRelation);
-            if ($cnt !== 1) {
+            if (1 !== $cnt) {
                 throw AddressBuildFailedException::withObjectId(
                     sprintf('There are %d actual relations', $cnt),
                     $pathObjectId,
@@ -307,6 +304,7 @@ class FiasAddressBuilder implements AddressBuilderInterface
 
                         /**
                          * В БД присутствует значение 0. Считаем что это здание.
+                         *
                          * @see 46501392
                          */
                         if (0 === $houseType) {
@@ -382,6 +380,7 @@ class FiasAddressBuilder implements AddressBuilderInterface
 
                     /**
                      * В БД присутствует значение 0. Считаем что это квартира.
+                     *
                      * @see 2320587
                      */
                     if (0 === $apartmentType) {
@@ -414,7 +413,7 @@ class FiasAddressBuilder implements AddressBuilderInterface
             }
 
             $levelApplied[$addressLevel] = $levelApplied[$addressLevel] ?? 0;
-            $levelApplied[$addressLevel]++;
+            ++$levelApplied[$addressLevel];
 
             // последний уровень данных
             if ($pathObjectId === $objectId) {
@@ -508,12 +507,12 @@ class FiasAddressBuilder implements AddressBuilderInterface
                 $oldValueItem = $res[$typeId] ?? null;
 
                 if (null === $oldValueItem
-                    || ($oldValueItem && $this->actualityPeriodComparator->compare(
+                    || ($oldValueItem && -1 === $this->actualityPeriodComparator->compare(
                             $oldValueItem['start_date'],
                             $oldValueItem['end_date'],
                             $item['start_date'],
                             $item['end_date']
-                        ) === -1)
+                        ))
                 ) {
                     // обновляем только если новое значении более актуальное чем старое
                     $res[$typeId] = $item;

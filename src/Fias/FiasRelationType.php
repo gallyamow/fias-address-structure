@@ -13,5 +13,3 @@ class FiasRelationType
     public const CAR_PLACE = 'carplace';
     public const STEAD = 'stead';
 }
-
-

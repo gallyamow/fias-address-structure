@@ -14,10 +14,10 @@ use Addresser\AddressRepository\Fias\AddressLevelSpecResolvers\ApartmentAddressL
 use Addresser\AddressRepository\Fias\AddressLevelSpecResolvers\HouseAddressLevelSpecResolver;
 use Addresser\AddressRepository\Fias\AddressLevelSpecResolvers\ObjectAddressLevelSpecResolver;
 use Addresser\AddressRepository\Fias\AddressLevelSpecResolvers\RoomAddressLevelSpecResolver;
+use Addresser\AddressRepository\Fias\BaseNameNormalizer;
 use Addresser\AddressRepository\Fias\FiasAddressBuilder;
 use Addresser\AddressRepository\Fias\FiasLevel;
 use Addresser\AddressRepository\Fias\RelationLevelResolver;
-use Addresser\AddressRepository\Fias\BaseNameNormalizer;
 use PHPUnit\Framework\TestCase;
 
 class FiasAddressBuilderTest extends TestCase
@@ -43,6 +43,7 @@ class FiasAddressBuilderTest extends TestCase
 
     /**
      * CAR_PLACE - пока не обрабатываем
+     *
      * @test
      */
     public function itShouldThrowExceptionWhenBuildsCarPlace(): void
@@ -62,6 +63,7 @@ class FiasAddressBuilderTest extends TestCase
 
     /**
      * STEAD - пока не обрабатываем
+     *
      * @test
      */
     public function itShouldThrowExceptionWhenBuildsStead(): void
@@ -1320,7 +1322,6 @@ class FiasAddressBuilderTest extends TestCase
         $this->assertEquals('80727000131', $address->getOktmo());
         $this->assertEquals(null, $address->getPostalCode());
         $this->assertEmpty($address->getSynonyms());
-
     }
 
     /**
@@ -1433,6 +1434,7 @@ class FiasAddressBuilderTest extends TestCase
 
     /**
      * Корректность обработки перемещенных по уровням ФИАС адресов.
+     *
      * @see (object_id = 182652) г Казань, тер ГСК Монтажник - был перемещен по уровню ФИАС. был ранее на уровне 8, перемещен на 7.
      * @test
      */
@@ -1455,6 +1457,7 @@ class FiasAddressBuilderTest extends TestCase
 
     /**
      * Корректность обработки адресов с более чем одним actual relation на уровне.
+     *
      * @test
      */
     public function itCorrectlyBuildsEntityWithSeveralRelationsOnLevel(): void
@@ -1475,7 +1478,8 @@ class FiasAddressBuilderTest extends TestCase
     }
 
     /**
-     * Корректность обработки домов с пустым housenum, но не пустым addhousenum
+     * Корректность обработки домов с пустым housenum, но не пустым addhousenum.
+     *
      * @test
      */
     public function itCorrectlyBuildsEntityWithEmptyHouseNumAndNotEmptyAddHouseNum(): void
@@ -1496,7 +1500,8 @@ class FiasAddressBuilderTest extends TestCase
     }
 
     /**
-     * Квартиры с типом 0
+     * Квартиры с типом 0.
+     *
      * @test
      */
     public function itCorrectlyBuildsApartmentWithType0(): void
@@ -1517,7 +1522,8 @@ class FiasAddressBuilderTest extends TestCase
     }
 
     /**
-     * Комнаты с типом 0
+     * Комнаты с типом 0.
+     *
      * @test
      */
     public function itCorrectlyBuildsRoomWithType0(): void
@@ -1539,6 +1545,7 @@ class FiasAddressBuilderTest extends TestCase
 
     /**
      * Здесь есть 2 item уровня house "здание" и "гараж", относящиеся к различным уровням address level.
+     *
      * @test
      */
     public function itCorrectlyBuildsWith2House(): void
@@ -1559,7 +1566,8 @@ class FiasAddressBuilderTest extends TestCase
     }
 
     /**
-     * Empty level type "housetype" for address
+     * Empty level type "housetype" for address.
+     *
      * @test
      */
     public function itCorrectlyBuildsHouseWithType0(): void
