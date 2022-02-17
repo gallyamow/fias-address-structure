@@ -30,5 +30,6 @@ return $config
             'phpdoc_order' => false, // conflicts with IDEA
             'phpdoc_align' => false, // conflicts with IDEA
             'concat_space' => ['spacing' => 'one'],
+            'phpdoc_to_comment' => ['ignored_tags' => ['noinspection']] // conflicts with IDEA
         ]
     )->setFinder($finder);
