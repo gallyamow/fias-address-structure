@@ -7,6 +7,10 @@ namespace Addresser\AddressRepository\Tests;
 use Addresser\AddressRepository\Address;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @internal
+ * @coversNothing
+ */
 class AddressTest extends TestCase
 {
     /**

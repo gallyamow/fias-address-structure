@@ -6,6 +6,10 @@ namespace Addresser\AddressRepository\Fias;
 
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @internal
+ * @coversNothing
+ */
 class BaseNameNormalizerTest extends TestCase
 {
     private BaseNameNormalizer $formatter;

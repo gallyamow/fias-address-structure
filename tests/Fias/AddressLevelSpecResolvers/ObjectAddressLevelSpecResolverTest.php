@@ -12,6 +12,10 @@ use Addresser\AddressRepository\Fias\AddressLevelSpecResolvers\ObjectAddressLeve
 use Addresser\AddressRepository\Fias\FiasLevel;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @internal
+ * @coversNothing
+ */
 class ObjectAddressLevelSpecResolverTest extends TestCase
 {
     private ObjectAddressLevelSpecResolver $resolver;

@@ -9,6 +9,10 @@ use Addresser\AddressRepository\Exceptions\InvalidAddressLevelException;
 use Addresser\AddressRepository\Fias\FiasLevel;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @internal
+ * @coversNothing
+ */
 class FiasLevelTest extends TestCase
 {
     /**

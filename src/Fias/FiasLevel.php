@@ -118,7 +118,7 @@ class FiasLevel
     {
         // обратный mapping нельзя сделать, так как теряется некоторая информация
         switch ($fiasLevel) {
-            /** этот level не должен присутствовать при обработке административного деления **/
+            // этот level не должен присутствовать при обработке административного деления
             case self::MUNICIPAL_DISTRICT: // м.р-н Янаульский, г.о. Казань
             case self::RURAL_URBAN_SETTLEMENT: // с.п. Старотимошкинское, вн.р-н Красноглинский
                 throw new InvalidAddressLevelException(
@@ -133,12 +133,10 @@ class FiasLevel
                 return AddressLevel::CITY;
             case self::SETTLEMENT: // п Краный Яр, тер Мечта, ж/д_ст Ардаши, высел Ахмасиха, автодорога Трасса Саранск-Самара
                 return AddressLevel::SETTLEMENT;
-
             case self::ELEMENT_OF_THE_PLANNING_STRUCTURE: // снт Импульс/Станкозавод, тер гк т-14, зона Осиновый кол
             case self::INTRACITY_LEVEL: // р-н ЖБИ, р-н Советский, Чайковка микрорайон, районы Уфы, Районы Белебея?
             case self::ADDITIONAL_TERRITORIES_LEVEL: // гск Колесо, гск Восход
                 return AddressLevel::TERRITORY;
-
             case self::ROAD_NETWORK_ELEMENT: // ул Привокзальная, пер Центральный
             case self::OBJECT_LEVEL_IN_ADDITIONAL_TERRITORIES: // ул 11 Линия, а/я Рябиновая
             case self::COUNTY_LEVEL: // нет

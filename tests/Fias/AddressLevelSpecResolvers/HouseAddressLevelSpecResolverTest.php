@@ -10,6 +10,10 @@ use Addresser\AddressRepository\Exceptions\AddressLevelSpecNotFoundException;
 use Addresser\AddressRepository\Fias\AddressLevelSpecResolvers\HouseAddressLevelSpecResolver;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @internal
+ * @coversNothing
+ */
 class HouseAddressLevelSpecResolverTest extends TestCase
 {
     private HouseAddressLevelSpecResolver $resolver;

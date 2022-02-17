@@ -20,6 +20,10 @@ use Addresser\AddressRepository\Fias\FiasLevel;
 use Addresser\AddressRepository\Fias\RelationLevelResolver;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @internal
+ * @coversNothing
+ */
 class FiasAddressBuilderTest extends TestCase
 {
     private AddressBuilderInterface $builder;

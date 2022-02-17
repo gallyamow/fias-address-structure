@@ -7,6 +7,10 @@ namespace Addresser\AddressRepository\Tests;
 use Addresser\AddressRepository\ActualityComparator;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @internal
+ * @coversNothing
+ */
 class ActualityComparatorTest extends TestCase
 {
     private ActualityComparator $comparator;

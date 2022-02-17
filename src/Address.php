@@ -301,130 +301,6 @@ class Address implements \JsonSerializable, ArraySerializableInterface
         return $res;
     }
 
-    private function buildCompleteAddress(int $endingAddressLevel, string $delimiter, ?string $includeType): string
-    {
-        if (!in_array($includeType, [null, 'short', 'full'], true)) {
-            throw new \RuntimeException(sprintf('Illegal includeType "%s".', $includeType));
-        }
-
-        $chunks = [];
-
-        $parentLevels = AddressLevel::getTree($endingAddressLevel);
-        foreach ($parentLevels as $level) {
-            switch ($level) {
-                case AddressLevel::REGION:
-                    if ('' !== $this->getRegion()) {
-                        switch ($includeType) {
-                            case 'short':
-                                $chunks[] = $this->getRegionWithType();
-                                break;
-                            case 'full':
-                                $chunks[] = $this->getRegionWithFullType();
-                                break;
-                            case null:
-                                $chunks[] = $this->getRegion();
-                        }
-                    }
-                    break;
-                case AddressLevel::AREA:
-                    if (null !== $this->getArea()) {
-                        switch ($includeType) {
-                            case 'short':
-                                $chunks[] = $this->getAreaWithType();
-                                break;
-                            case 'full':
-                                $chunks[] = $this->getAreaWithFullType();
-                                break;
-                            case null:
-                                $chunks[] = $this->getArea();
-                        }
-                    }
-                    break;
-                case AddressLevel::CITY:
-                    if (null !== $this->getCity()) {
-                        switch ($includeType) {
-                            case 'short':
-                                $chunks[] = $this->getCityWithType();
-                                break;
-                            case 'full':
-                                $chunks[] = $this->getCityWithFullType();
-                                break;
-                            case null:
-                                $chunks[] = $this->getCity();
-                        }
-                    }
-                    break;
-                case AddressLevel::SETTLEMENT:
-                    if (null !== $this->getSettlement()) {
-                        switch ($includeType) {
-                            case 'short':
-                                $chunks[] = $this->getSettlementWithType();
-                                break;
-                            case 'full':
-                                $chunks[] = $this->getSettlementWithFullType();
-                                break;
-                            case null:
-                                $chunks[] = $this->getSettlement();
-                        }
-                    }
-                    break;
-                case AddressLevel::TERRITORY:
-                    if (null !== $this->getTerritory()) {
-                        switch ($includeType) {
-                            case 'short':
-                                $chunks[] = $this->getTerritoryWithType();
-                                break;
-                            case 'full':
-                                $chunks[] = $this->getTerritoryWithFullType();
-                                break;
-                            case null:
-                                $chunks[] = $this->getTerritory();
-                        }
-                    }
-                    break;
-                case AddressLevel::STREET:
-                    if (null !== $this->getStreet()) {
-                        switch ($includeType) {
-                            case 'short':
-                                $chunks[] = $this->getStreetWithType();
-                                break;
-                            case 'full':
-                                $chunks[] = $this->getStreetWithFullType();
-                                break;
-                            case null:
-                                $chunks[] = $this->getStreet();
-                        }
-                    }
-                    break;
-                case AddressLevel::HOUSE:
-                    if (null !== ($entireHouse = $this->getEntireHouse(null !== $includeType))) {
-                        $chunks[] = $entireHouse;
-                    }
-                    break;
-                case AddressLevel::FLAT:
-                    if (null !== $this->getFlat()) {
-                        $chunks[] = $includeType
-                            ? implode(' ', [$this->getFlatType(), $this->getFlat()])
-                            : $this->getFlat();
-                    }
-                    break;
-                case AddressLevel::ROOM:
-                    if (null !== $this->getRoom()) {
-                        $chunks[] = $includeType
-                            ? implode(' ', [$this->getRoomType(), $this->getRoom()])
-                            : $this->getRoom();
-                    }
-                    break;
-                case AddressLevel::STEAD:
-                case AddressLevel::CAR_PLACE:
-                    // эти уровни не индексируем, таким образом сюда они попадать не должны
-                    throw new InvalidAddressLevelException(sprintf('Unsupported address level "%d".', $level));
-            }
-        }
-
-        return implode($delimiter, $chunks);
-    }
-
     /**
      * Полное название дома.
      */
@@ -1268,5 +1144,129 @@ class Address implements \JsonSerializable, ArraySerializableInterface
     {
         Assert::nullOrStringNotEmpty($streetWithFullType);
         $this->streetWithFullType = $streetWithFullType;
+    }
+
+    private function buildCompleteAddress(int $endingAddressLevel, string $delimiter, ?string $includeType): string
+    {
+        if (!in_array($includeType, [null, 'short', 'full'], true)) {
+            throw new \RuntimeException(sprintf('Illegal includeType "%s".', $includeType));
+        }
+
+        $chunks = [];
+
+        $parentLevels = AddressLevel::getTree($endingAddressLevel);
+        foreach ($parentLevels as $level) {
+            switch ($level) {
+                case AddressLevel::REGION:
+                    if ('' !== $this->getRegion()) {
+                        switch ($includeType) {
+                            case 'short':
+                                $chunks[] = $this->getRegionWithType();
+                                break;
+                            case 'full':
+                                $chunks[] = $this->getRegionWithFullType();
+                                break;
+                            case null:
+                                $chunks[] = $this->getRegion();
+                        }
+                    }
+                    break;
+                case AddressLevel::AREA:
+                    if (null !== $this->getArea()) {
+                        switch ($includeType) {
+                            case 'short':
+                                $chunks[] = $this->getAreaWithType();
+                                break;
+                            case 'full':
+                                $chunks[] = $this->getAreaWithFullType();
+                                break;
+                            case null:
+                                $chunks[] = $this->getArea();
+                        }
+                    }
+                    break;
+                case AddressLevel::CITY:
+                    if (null !== $this->getCity()) {
+                        switch ($includeType) {
+                            case 'short':
+                                $chunks[] = $this->getCityWithType();
+                                break;
+                            case 'full':
+                                $chunks[] = $this->getCityWithFullType();
+                                break;
+                            case null:
+                                $chunks[] = $this->getCity();
+                        }
+                    }
+                    break;
+                case AddressLevel::SETTLEMENT:
+                    if (null !== $this->getSettlement()) {
+                        switch ($includeType) {
+                            case 'short':
+                                $chunks[] = $this->getSettlementWithType();
+                                break;
+                            case 'full':
+                                $chunks[] = $this->getSettlementWithFullType();
+                                break;
+                            case null:
+                                $chunks[] = $this->getSettlement();
+                        }
+                    }
+                    break;
+                case AddressLevel::TERRITORY:
+                    if (null !== $this->getTerritory()) {
+                        switch ($includeType) {
+                            case 'short':
+                                $chunks[] = $this->getTerritoryWithType();
+                                break;
+                            case 'full':
+                                $chunks[] = $this->getTerritoryWithFullType();
+                                break;
+                            case null:
+                                $chunks[] = $this->getTerritory();
+                        }
+                    }
+                    break;
+                case AddressLevel::STREET:
+                    if (null !== $this->getStreet()) {
+                        switch ($includeType) {
+                            case 'short':
+                                $chunks[] = $this->getStreetWithType();
+                                break;
+                            case 'full':
+                                $chunks[] = $this->getStreetWithFullType();
+                                break;
+                            case null:
+                                $chunks[] = $this->getStreet();
+                        }
+                    }
+                    break;
+                case AddressLevel::HOUSE:
+                    if (null !== ($entireHouse = $this->getEntireHouse(null !== $includeType))) {
+                        $chunks[] = $entireHouse;
+                    }
+                    break;
+                case AddressLevel::FLAT:
+                    if (null !== $this->getFlat()) {
+                        $chunks[] = $includeType
+                            ? implode(' ', [$this->getFlatType(), $this->getFlat()])
+                            : $this->getFlat();
+                    }
+                    break;
+                case AddressLevel::ROOM:
+                    if (null !== $this->getRoom()) {
+                        $chunks[] = $includeType
+                            ? implode(' ', [$this->getRoomType(), $this->getRoom()])
+                            : $this->getRoom();
+                    }
+                    break;
+                case AddressLevel::STEAD:
+                case AddressLevel::CAR_PLACE:
+                    // эти уровни не индексируем, таким образом сюда они попадать не должны
+                    throw new InvalidAddressLevelException(sprintf('Unsupported address level "%d".', $level));
+            }
+        }
+
+        return implode($delimiter, $chunks);
     }
 }

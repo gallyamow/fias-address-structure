@@ -21,8 +21,6 @@ class BaseNameNormalizer implements NameNormalizerInterface
         $res = preg_replace('|([.,!:?])([\S])|', '$1 $2', $res);
 
         // двойные пробелы
-        $res = preg_replace('|\s+|', ' ', $res);
-
-        return $res;
+        return preg_replace('|\s+|', ' ', $res);
     }
 }

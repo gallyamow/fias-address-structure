@@ -302,7 +302,7 @@ class FiasAddressBuilder implements AddressBuilderInterface
                     if (null !== $houseNum) {
                         $houseType = (int)$actualRelationData['housetype'];
 
-                        /**
+                        /*
                          * В БД присутствует значение 0. Считаем что это здание.
                          *
                          * @see 46501392
@@ -378,7 +378,7 @@ class FiasAddressBuilder implements AddressBuilderInterface
 
                     $apartmentType = (int)$actualRelationData['aparttype'];
 
-                    /**
+                    /*
                      * В БД присутствует значение 0. Считаем что это квартира.
                      *
                      * @see 2320587
@@ -412,7 +412,7 @@ class FiasAddressBuilder implements AddressBuilderInterface
                     throw new InvalidAddressLevelException(sprintf('Unsupported address level "%d".', $addressLevel));
             }
 
-            $levelApplied[$addressLevel] = $levelApplied[$addressLevel] ?? 0;
+            $levelApplied[$addressLevel] ??= 0;
             ++$levelApplied[$addressLevel];
 
             // последний уровень данных
@@ -507,12 +507,15 @@ class FiasAddressBuilder implements AddressBuilderInterface
                 $oldValueItem = $res[$typeId] ?? null;
 
                 if (null === $oldValueItem
-                    || ($oldValueItem && -1 === $this->actualityPeriodComparator->compare(
-                        $oldValueItem['start_date'],
-                        $oldValueItem['end_date'],
-                        $item['start_date'],
-                        $item['end_date']
-                    ))
+                    || (
+                        $oldValueItem
+                        && -1 === $this->actualityPeriodComparator->compare(
+                            $oldValueItem['start_date'],
+                            $oldValueItem['end_date'],
+                            $item['start_date'],
+                            $item['end_date']
+                        )
+                    )
                 ) {
                     // обновляем только если новое значении более актуальное чем старое
                     $res[$typeId] = $item;
@@ -537,9 +540,9 @@ class FiasAddressBuilder implements AddressBuilderInterface
     {
         switch ($position) {
             case AddressLevelSpec::NAME_POSITION_BEFORE:
-                return $typeName.' '.$name;
+                return $typeName . ' ' . $name;
             case AddressLevelSpec::NAME_POSITION_AFTER:
-                return $name.' '.$typeName;
+                return $name . ' ' . $typeName;
         }
     }
 
