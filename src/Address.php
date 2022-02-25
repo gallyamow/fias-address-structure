@@ -152,23 +152,17 @@ class Address implements \JsonSerializable, ArraySerializableInterface
 
     /**
      * Синонимы - различные сокращенные названия вида Башкирия, Татария, ХМАО.
-     *
-     * @var array
      */
     private ?array $synonyms = null;
 
     /**
      * Старые названия - переименования регионов, городов, улиц.
      * Заполняться будет только на необходимом уровне. Для дочерних - не будет.
-     *
-     * @var array
      */
     private ?array $renaming = null;
 
     /**
      * Геопозиция.
-     *
-     * @var array [lon, lat]
      */
     private ?array $location = null;
 
@@ -1068,7 +1062,7 @@ class Address implements \JsonSerializable, ArraySerializableInterface
         return $this->location;
     }
 
-    public function setLocation(array $location): void
+    public function setLocation(?array $location): void
     {
         Assert::nullOrNotEmpty($location);
 
