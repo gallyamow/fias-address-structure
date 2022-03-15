@@ -166,6 +166,12 @@ class Address implements \JsonSerializable, ArraySerializableInterface
      */
     private ?array $location = null;
 
+    /**
+     * Версия дельты (служебное поле).
+     * @var int
+     */
+    private int $deltaVersion = 0;
+
     public function jsonSerialize()
     {
         return $this->toArray();
@@ -1138,6 +1144,17 @@ class Address implements \JsonSerializable, ArraySerializableInterface
     {
         Assert::nullOrStringNotEmpty($streetWithFullType);
         $this->streetWithFullType = $streetWithFullType;
+    }
+
+    public function getDeltaVersion(): int
+    {
+        return $this->deltaVersion;
+    }
+
+    public function setDeltaVersion(int $deltaVersion): void
+    {
+        Assert::greaterThan($deltaVersion, 0);
+        $this->deltaVersion = $deltaVersion;
     }
 
     private function buildCompleteAddress(int $endingAddressLevel, string $delimiter, ?string $includeType): string
