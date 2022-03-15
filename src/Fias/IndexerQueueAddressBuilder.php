@@ -17,9 +17,9 @@ use Webmozart\Assert\Assert;
 
 /**
  * Формирует адрес на основе данных из ФИАС.
- * Работает только со структурой которую возвращает Finder.
+ * Работает только со структурой которая возвращается из v_indexer_queue.
  */
-class FiasAddressBuilder implements AddressBuilderInterface
+class IndexerQueueAddressBuilder implements AddressBuilderInterface
 {
     private ObjectAddressLevelSpecResolverInterface $addrObjectSpecResolver;
     private TypeAddressLevelSpecResolverInterface $houseSpecResolver;
@@ -87,10 +87,17 @@ class FiasAddressBuilder implements AddressBuilderInterface
         $relationsByObject = array_column($objects, 'relations', 'object_id');
         $paramsByObject = array_column($params, 'values', 'object_id');
 
+        $deltaVersion = max(
+            (int)$data['max_delta_version'],
+            (int)$data['objects_max_delta_version'],
+            (int)$data['params_max_delta_version']
+        );
+
         // мы должны сохранить изменения внесенные другими builder
         $address = $existsAddress ?? new Address();
-        $actualName = null;
+        $address->setDeltaVersion($deltaVersion);
 
+        $actualName = null;
         $levelApplied = [];
 
         foreach ($path as $pathObjectId) {
