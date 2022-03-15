@@ -252,6 +252,7 @@ class Address implements \JsonSerializable, ArraySerializableInterface
         $res->setSynonyms($array['synonyms']);
         $res->setRenaming($array['renaming']);
         $res->setLocation($array['location']);
+        $res->setDeltaVersion($array['deltaVersion']);
 
         return $res;
     }

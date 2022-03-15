@@ -91,6 +91,7 @@ class AddressTest extends TestCase
         $address->setSynonyms(['synonyms']);
         $address->setRenaming(['renaming']);
         $address->setLocation([45.45565, 35.45655]);
+        $address->setDeltaVersion(20200505);
 
         $this->assertEquals($address, Address::fromArray($address->toArray()));
     }
