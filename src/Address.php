@@ -1154,7 +1154,7 @@ class Address implements \JsonSerializable, ArraySerializableInterface
 
     public function setDeltaVersion(int $deltaVersion): void
     {
-        Assert::greaterThan($deltaVersion, 0);
+        // Assert::greaterThan($deltaVersion, 0);
         $this->deltaVersion = $deltaVersion;
     }
 
