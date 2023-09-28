@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Addresser\AddressRepository\Tests\Fias\AddressLevelSpecResolvers;
+namespace Addresser\FiasAddressStructure\Tests\Fias\AddressLevelSpecResolvers;
 
-use Addresser\AddressRepository\AddressLevel;
-use Addresser\AddressRepository\AddressLevelSpec;
-use Addresser\AddressRepository\Exceptions\AddressLevelSpecNotFoundException;
-use Addresser\AddressRepository\Exceptions\InvalidAddressLevelException;
-use Addresser\AddressRepository\Fias\AddressLevelSpecResolvers\ObjectAddressLevelSpecResolver;
-use Addresser\AddressRepository\Fias\FiasLevel;
+use Addresser\FiasAddressStructure\AddressLevel;
+use Addresser\FiasAddressStructure\AddressLevelSpec;
+use Addresser\FiasAddressStructure\Exceptions\AddressLevelSpecNotFoundException;
+use Addresser\FiasAddressStructure\Exceptions\InvalidAddressLevelException;
+use Addresser\FiasAddressStructure\Fias\AddressLevelSpecResolvers\ObjectAddressLevelSpecResolver;
+use Addresser\FiasAddressStructure\Fias\FiasLevel;
 use PHPUnit\Framework\TestCase;
 
 /**

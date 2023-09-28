@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Addresser\AddressRepository;
+namespace Addresser\FiasAddressStructure;
 
-use Addresser\AddressRepository\Exceptions\InvalidAddressLevelException;
+use Addresser\FiasAddressStructure\Exceptions\InvalidAddressLevelException;
 
 /**
  * Более привычные в быту упрощенные уровни.
@@ -37,7 +37,7 @@ final class AddressLevel
      * На этот уровень происходит отображение сразу 3 уровней ФИАС: ELEMENT_OF_THE_PLANNING_STRUCTURE,
      * INTRACITY_LEVEL, ADDITIONAL_TERRITORIES_LEVEL.
      *
-     * @see \Addresser\AddressRepository\Fias\FiasLevel::mapAdmHierarchyToAddressLevel
+     * @see \Addresser\FiasAddressStructure\Fias\FiasLevel::mapAdmHierarchyToAddressLevel
      */
     public const TERRITORY = 33;
 

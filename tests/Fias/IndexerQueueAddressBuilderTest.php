@@ -2,22 +2,22 @@
 
 declare(strict_types=1);
 
-namespace Addresser\AddressRepository\Tests\Fias;
+namespace Addresser\FiasAddressStructure\Tests\Fias;
 
-use Addresser\AddressRepository\ActualityComparator;
-use Addresser\AddressRepository\AddressBuilderInterface;
-use Addresser\AddressRepository\AddressLevel;
-use Addresser\AddressRepository\AddressSynonymizer;
-use Addresser\AddressRepository\Exceptions\InvalidAddressLevelException;
-use Addresser\AddressRepository\Fias\AddressLevelSpecResolvers\AddHouseAddressLevelSpecResolver;
-use Addresser\AddressRepository\Fias\AddressLevelSpecResolvers\ApartmentAddressLevelSpecResolver;
-use Addresser\AddressRepository\Fias\AddressLevelSpecResolvers\HouseAddressLevelSpecResolver;
-use Addresser\AddressRepository\Fias\AddressLevelSpecResolvers\ObjectAddressLevelSpecResolver;
-use Addresser\AddressRepository\Fias\AddressLevelSpecResolvers\RoomAddressLevelSpecResolver;
-use Addresser\AddressRepository\Fias\BaseNameNormalizer;
-use Addresser\AddressRepository\Fias\IndexerQueueAddressBuilder;
-use Addresser\AddressRepository\Fias\FiasLevel;
-use Addresser\AddressRepository\Fias\RelationLevelResolver;
+use Addresser\FiasAddressStructure\ActualityComparator;
+use Addresser\FiasAddressStructure\AddressBuilderInterface;
+use Addresser\FiasAddressStructure\AddressLevel;
+use Addresser\FiasAddressStructure\AddressSynonymizer;
+use Addresser\FiasAddressStructure\Exceptions\InvalidAddressLevelException;
+use Addresser\FiasAddressStructure\Fias\AddressLevelSpecResolvers\AddHouseAddressLevelSpecResolver;
+use Addresser\FiasAddressStructure\Fias\AddressLevelSpecResolvers\ApartmentAddressLevelSpecResolver;
+use Addresser\FiasAddressStructure\Fias\AddressLevelSpecResolvers\HouseAddressLevelSpecResolver;
+use Addresser\FiasAddressStructure\Fias\AddressLevelSpecResolvers\ObjectAddressLevelSpecResolver;
+use Addresser\FiasAddressStructure\Fias\AddressLevelSpecResolvers\RoomAddressLevelSpecResolver;
+use Addresser\FiasAddressStructure\Fias\BaseNameNormalizer;
+use Addresser\FiasAddressStructure\Fias\IndexerQueueAddressBuilder;
+use Addresser\FiasAddressStructure\Fias\FiasLevel;
+use Addresser\FiasAddressStructure\Fias\RelationLevelResolver;
 use PHPUnit\Framework\TestCase;
 
 /**

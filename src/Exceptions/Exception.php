@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Addresser\AddressRepository\Exceptions;
+namespace Addresser\FiasAddressStructure\Exceptions;
 
 interface Exception
 {

@@ -1,7 +1,7 @@
 {
-  "name": "addresser/address-repository",
-  "version": "1.0.18",
-  "description": "Russian address from FIAS",
+  "name": "addresser/fias-address-structure",
+  "version": "1.0.19",
+  "description": "FIAS-address representation",
   "type": "library",
   "license": "MIT",
   "require": {
@@ -12,12 +12,12 @@
   },
   "autoload": {
     "psr-4": {
-      "Addresser\\AddressRepository\\": "src/"
+      "Addresser\\FiasAddressStructure\\": "src/"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "Addresser\\AddressRepository\\Tests\\": "tests/"
+      "Addresser\\FiasAddressStructure\\Tests\\": "tests/"
     }
   },
   "require-dev": {

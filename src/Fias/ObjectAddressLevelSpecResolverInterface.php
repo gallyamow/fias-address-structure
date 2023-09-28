@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Addresser\AddressRepository\Fias;
+namespace Addresser\FiasAddressStructure\Fias;
 
-use Addresser\AddressRepository\AddressLevelSpec;
+use Addresser\FiasAddressStructure\AddressLevelSpec;
 
 /**
  * Resolves AddressLevelSpec for levels by short name and fias level.

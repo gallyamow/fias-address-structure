@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Addresser\AddressRepository;
+namespace Addresser\FiasAddressStructure;
 
-use Addresser\AddressRepository\Exceptions\InvalidAddressLevelException;
+use Addresser\FiasAddressStructure\Exceptions\InvalidAddressLevelException;
 use Webmozart\Assert\Assert;
 
 /**

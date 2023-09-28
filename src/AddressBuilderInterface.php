@@ -1,6 +1,6 @@
 <?php
 
-namespace Addresser\AddressRepository;
+namespace Addresser\FiasAddressStructure;
 
 interface AddressBuilderInterface
 {

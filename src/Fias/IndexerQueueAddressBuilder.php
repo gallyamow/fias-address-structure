@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Addresser\AddressRepository\Fias;
+namespace Addresser\FiasAddressStructure\Fias;
 
-use Addresser\AddressRepository\ActualityComparator;
-use Addresser\AddressRepository\Address;
-use Addresser\AddressRepository\AddressBuilderInterface;
-use Addresser\AddressRepository\AddressLevel;
-use Addresser\AddressRepository\AddressLevelSpec;
-use Addresser\AddressRepository\AddressSynonymizer;
-use Addresser\AddressRepository\Exceptions\AddressBuildFailedException;
-use Addresser\AddressRepository\Exceptions\EmptyLevelTypeException;
-use Addresser\AddressRepository\Exceptions\InvalidAddressLevelException;
+use Addresser\FiasAddressStructure\ActualityComparator;
+use Addresser\FiasAddressStructure\Address;
+use Addresser\FiasAddressStructure\AddressBuilderInterface;
+use Addresser\FiasAddressStructure\AddressLevel;
+use Addresser\FiasAddressStructure\AddressLevelSpec;
+use Addresser\FiasAddressStructure\AddressSynonymizer;
+use Addresser\FiasAddressStructure\Exceptions\AddressBuildFailedException;
+use Addresser\FiasAddressStructure\Exceptions\EmptyLevelTypeException;
+use Addresser\FiasAddressStructure\Exceptions\InvalidAddressLevelException;
 use Webmozart\Assert\Assert;
 
 /**

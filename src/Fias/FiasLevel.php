@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Addresser\AddressRepository\Fias;
+namespace Addresser\FiasAddressStructure\Fias;
 
-use Addresser\AddressRepository\AddressLevel;
-use Addresser\AddressRepository\Exceptions\InvalidAddressLevelException;
+use Addresser\FiasAddressStructure\AddressLevel;
+use Addresser\FiasAddressStructure\Exceptions\InvalidAddressLevelException;
 
 class FiasLevel
 {

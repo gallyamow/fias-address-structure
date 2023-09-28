@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Addresser\AddressRepository\Tests;
+namespace Addresser\FiasAddressStructure\Tests;
 
-use Addresser\AddressRepository\Address;
+use Addresser\FiasAddressStructure\Address;
 use PHPUnit\Framework\TestCase;
 
 /**

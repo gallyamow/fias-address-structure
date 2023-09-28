@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Addresser\AddressRepository\Tests\Fias;
+namespace Addresser\FiasAddressStructure\Tests\Fias;
 
-use Addresser\AddressRepository\AddressLevel;
-use Addresser\AddressRepository\Exceptions\InvalidAddressLevelException;
-use Addresser\AddressRepository\Fias\FiasLevel;
+use Addresser\FiasAddressStructure\AddressLevel;
+use Addresser\FiasAddressStructure\Exceptions\InvalidAddressLevelException;
+use Addresser\FiasAddressStructure\Fias\FiasLevel;
 use PHPUnit\Framework\TestCase;
 
 /**

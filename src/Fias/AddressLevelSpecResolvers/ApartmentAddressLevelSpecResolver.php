@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Addresser\AddressRepository\Fias\AddressLevelSpecResolvers;
+namespace Addresser\FiasAddressStructure\Fias\AddressLevelSpecResolvers;
 
-use Addresser\AddressRepository\AddressLevel;
-use Addresser\AddressRepository\AddressLevelSpec;
-use Addresser\AddressRepository\Exceptions\AddressLevelSpecNotFoundException;
-use Addresser\AddressRepository\Fias\TypeAddressLevelSpecResolverInterface;
+use Addresser\FiasAddressStructure\AddressLevel;
+use Addresser\FiasAddressStructure\AddressLevelSpec;
+use Addresser\FiasAddressStructure\Exceptions\AddressLevelSpecNotFoundException;
+use Addresser\FiasAddressStructure\Fias\TypeAddressLevelSpecResolverInterface;
 
 /**
  * Комната и помещение - пересекаются с ROOM (потому что в ФИАС они могут быть как в квартире, так и вне ее).

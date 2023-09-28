@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Addresser\AddressRepository\Fias\AddressLevelSpecResolvers;
+namespace Addresser\FiasAddressStructure\Fias\AddressLevelSpecResolvers;
 
-use Addresser\AddressRepository\AddressLevelSpec;
-use Addresser\AddressRepository\Exceptions\AddressLevelSpecNotFoundException;
-use Addresser\AddressRepository\Exceptions\InvalidAddressLevelException;
-use Addresser\AddressRepository\Fias\FiasLevel;
-use Addresser\AddressRepository\Fias\ObjectAddressLevelSpecResolverInterface;
+use Addresser\FiasAddressStructure\AddressLevelSpec;
+use Addresser\FiasAddressStructure\Exceptions\AddressLevelSpecNotFoundException;
+use Addresser\FiasAddressStructure\Exceptions\InvalidAddressLevelException;
+use Addresser\FiasAddressStructure\Fias\FiasLevel;
+use Addresser\FiasAddressStructure\Fias\ObjectAddressLevelSpecResolverInterface;
 
 /**
  * Так как нужна нормализация - решил все сделать hardcoded чтобы обойтись без все равно огромного normalizer.
