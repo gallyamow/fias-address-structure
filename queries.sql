@@ -1,4 +1,5 @@
 -- select
+-- TODO: v_adm_hierarchy_path - уже не требуется, есть в таблице
 SELECT
     o.object_id,
     p.path_ltree,
@@ -20,6 +21,7 @@ LIMIT 10;
 
 
 -- tree [
+-- TODO: v_adm_hierarchy_path - уже не требуется, есть в таблице
 DROP MATERIALIZED VIEW IF EXISTS gar.v_adm_hierarchy_path;
 CREATE MATERIALIZED VIEW gar.v_adm_hierarchy_path AS
 WITH RECURSIVE nodes(hierarchy_id, object_id, path, is_active) AS (
@@ -44,6 +46,7 @@ FROM nodes;
 -- Неуникальные так как может быть ситуация когда было несколько путей, через один и тот же объект.
 -- Часть путей может быть уже не активна. Объекты могут перемещаться по иерархии.
 -- См. object_id=6092
+-- TODO: v_adm_hierarchy_path - уже не требуется, есть в таблице
 CREATE INDEX ON gar.v_adm_hierarchy_path(object_id);
 CREATE INDEX ON gar.v_adm_hierarchy_path USING GIST(path_ltree);
 -- не потребовался?
