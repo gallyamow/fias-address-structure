@@ -1064,7 +1064,7 @@ class Address implements \JsonSerializable, ArraySerializableInterface
         $this->streetWithType = $streetWithType;
     }
 
-    public function getLocation(): array
+    public function getLocation(): ?array
     {
         return $this->location;
     }
