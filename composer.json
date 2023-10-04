@@ -1,6 +1,6 @@
 {
   "name": "addresser/fias-address-structure",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "FIAS-address representation",
   "type": "library",
   "license": "MIT",
