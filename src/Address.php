@@ -251,7 +251,7 @@ class Address implements \JsonSerializable, ArraySerializableInterface
         $res->setRoom($array['room']);
         $res->setSynonyms($array['synonyms']);
         $res->setRenaming($array['renaming']);
-        $res->setLocation($array['location']);
+        $res->setLocationFromArray($array['location']);
         $res->setDeltaVersion($array['deltaVersion']);
 
         return $res;
@@ -1069,7 +1069,12 @@ class Address implements \JsonSerializable, ArraySerializableInterface
         return $this->location;
     }
 
-    public function setLocation(?array $location): void
+    public function setLocationFromLonLat(float $lon, float $lat): void
+    {
+        $this->setLocationFromArray([$lon, $lat]);
+    }
+
+    public function setLocationFromArray(?array $location): void
     {
         Assert::nullOrNotEmpty($location);
 

@@ -16,8 +16,7 @@ use Addresser\FiasAddressStructure\Exceptions\InvalidAddressLevelException;
 use Webmozart\Assert\Assert;
 
 /**
- * Формирует адрес на основе данных из ФИАС.
- * Работает только со структурой которая возвращается из v_indexer_queue.
+ * Формирует адрес на основе данных полученных из таблицы app.indexer_queue.
  */
 class IndexerQueueAddressBuilder implements AddressBuilderInterface
 {
@@ -53,18 +52,17 @@ class IndexerQueueAddressBuilder implements AddressBuilderInterface
         $this->nameNormalizer = $nameNormalizer;
     }
 
-    // todo: too huge loop
-
     /**
+     * @param array $indexerQueueRow запись из таблицы app.indexer_queue
      * @throws \JsonException
      */
-    public function build(array $data, ?Address $existsAddress = null): Address
+    public function build(array $indexerQueueRow, ?Address $existsAddress = null): Address
     {
-        $objectId = (int)$data['object_id'];
-        $path = array_map('intval', explode('.', $data['path_ltree']));
+        $objectId = (int)$indexerQueueRow['object_id'];
+        $path = array_map('intval', explode('.', $indexerQueueRow['path_ltree']));
 
-        $objects = json_decode($data['objects'], true, 512, JSON_THROW_ON_ERROR);
-        $params = json_decode($data['params'], true, 512, JSON_THROW_ON_ERROR);
+        $objects = json_decode($indexerQueueRow['objects'], true, 512, JSON_THROW_ON_ERROR);
+        $params = json_decode($indexerQueueRow['params'], true, 512, JSON_THROW_ON_ERROR);
 
 //        /**
 //         * Группируем по AddressLevel. Так как дополнительные локаций таких как СНТ, ГСК mapped на один и тот же
@@ -88,9 +86,9 @@ class IndexerQueueAddressBuilder implements AddressBuilderInterface
         $paramsByObject = array_column($params, 'values', 'object_id');
 
         $deltaVersion = max(
-            (int)$data['max_delta_version'],
-            (int)$data['objects_max_delta_version'],
-            (int)$data['params_max_delta_version']
+            (int)$indexerQueueRow['max_delta_version'],
+            (int)$indexerQueueRow['objects_max_delta_version'],
+            (int)$indexerQueueRow['params_max_delta_version']
         );
 
         // мы должны сохранить изменения внесенные другими builder
@@ -434,6 +432,10 @@ class IndexerQueueAddressBuilder implements AddressBuilderInterface
                 $address->setOktmo($oktmo ?? null);
                 $address->setPostalCode($postalCode ?? null);
                 $address->setKladrId($kladrId ?? null);
+
+                if (null !== $indexerQueueRow['lon'] && null !== $indexerQueueRow['lat']) {
+                    $address->setLocationFromLonLat((float)$indexerQueueRow['lon'], (float)$indexerQueueRow['lat']);
+                }
 
                 // переименования и синонимы пишем только для определенных level на конечном уровне данных
                 switch ($addressLevel) {

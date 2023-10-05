@@ -64,6 +64,8 @@ class IndexerQueueAddressBuilderTest extends TestCase
                 'max_delta_version' => '20200303',
                 'objects_max_delta_version' => '20200303',
                 'params_max_delta_version' => '20200303',
+                'lon' => 10,
+                'lat' => -10,
             ]
         );
     }
@@ -87,6 +89,8 @@ class IndexerQueueAddressBuilderTest extends TestCase
                 'max_delta_version' => '20200303',
                 'objects_max_delta_version' => '20200303',
                 'params_max_delta_version' => '20200303',
+                'lon' => 10,
+                'lat' => -10,
             ]
         );
     }
@@ -105,6 +109,8 @@ class IndexerQueueAddressBuilderTest extends TestCase
                 'max_delta_version' => '20200303',
                 'objects_max_delta_version' => '20200303',
                 'params_max_delta_version' => '20200303',
+                'lon' => 10,
+                'lat' => -10,
             ]
         );
 
@@ -146,6 +152,8 @@ class IndexerQueueAddressBuilderTest extends TestCase
                 'max_delta_version' => '20200303',
                 'objects_max_delta_version' => '20200303',
                 'params_max_delta_version' => '20200303',
+                'lon' => 10,
+                'lat' => -10,
             ]
         );
 
@@ -160,6 +168,8 @@ class IndexerQueueAddressBuilderTest extends TestCase
                 'max_delta_version' => '20200303',
                 'objects_max_delta_version' => '20200303',
                 'params_max_delta_version' => '20200303',
+                'lon' => 10,
+                'lat' => -10,
             ]
         );
 
@@ -175,7 +185,8 @@ class IndexerQueueAddressBuilderTest extends TestCase
                 'max_delta_version' => '20200303',
                 'objects_max_delta_version' => '20200303',
                 'params_max_delta_version' => '20200303',
-
+                'lon' => 10,
+                'lat' => -10,
             ]
         );
 
@@ -205,6 +216,8 @@ class IndexerQueueAddressBuilderTest extends TestCase
                 'max_delta_version' => '20200303',
                 'objects_max_delta_version' => '20200303',
                 'params_max_delta_version' => '20200303',
+                'lon' => 10,
+                'lat' => -10,
             ]
         );
         $this->assertEquals(['Башкирия'], $address->getSynonyms());
@@ -218,6 +231,8 @@ class IndexerQueueAddressBuilderTest extends TestCase
                 'max_delta_version' => '20200303',
                 'objects_max_delta_version' => '20200303',
                 'params_max_delta_version' => '20200303',
+                'lon' => 10,
+                'lat' => -10,
             ]
         );
         $this->assertEquals(['Удмуртия'], $address->getSynonyms());
@@ -231,6 +246,8 @@ class IndexerQueueAddressBuilderTest extends TestCase
                 'max_delta_version' => '20200303',
                 'objects_max_delta_version' => '20200303',
                 'params_max_delta_version' => '20200303',
+                'lon' => 10,
+                'lat' => -10,
             ]
         );
         $this->assertEquals(['Чувашия'], $address->getSynonyms());
@@ -250,6 +267,8 @@ class IndexerQueueAddressBuilderTest extends TestCase
                 'max_delta_version' => '20200303',
                 'objects_max_delta_version' => '20200303',
                 'params_max_delta_version' => '20200303',
+                'lon' => 10,
+                'lat' => -10,
             ]
         );
 
@@ -350,6 +369,8 @@ class IndexerQueueAddressBuilderTest extends TestCase
                 'max_delta_version' => '20200303',
                 'objects_max_delta_version' => '20200303',
                 'params_max_delta_version' => '20200303',
+                'lon' => 10,
+                'lat' => -10,
             ]
         );
 
@@ -452,6 +473,8 @@ class IndexerQueueAddressBuilderTest extends TestCase
                 'max_delta_version' => '20200303',
                 'objects_max_delta_version' => '20200303',
                 'params_max_delta_version' => '20200303',
+                'lon' => 10,
+                'lat' => -10,
             ]
         );
 
@@ -551,6 +574,8 @@ class IndexerQueueAddressBuilderTest extends TestCase
                 'max_delta_version' => '20200303',
                 'objects_max_delta_version' => '20200303',
                 'params_max_delta_version' => '20200303',
+                'lon' => 10,
+                'lat' => -10,
             ]
         );
 
@@ -659,6 +684,8 @@ class IndexerQueueAddressBuilderTest extends TestCase
                 'max_delta_version' => '20200303',
                 'objects_max_delta_version' => '20200303',
                 'params_max_delta_version' => '20200303',
+                'lon' => 10,
+                'lat' => -10,
             ]
         );
 
@@ -761,6 +788,8 @@ class IndexerQueueAddressBuilderTest extends TestCase
                 'max_delta_version' => '20200303',
                 'objects_max_delta_version' => '20200303',
                 'params_max_delta_version' => '20200303',
+                'lon' => 10,
+                'lat' => -10,
             ]
         );
 
@@ -869,6 +898,8 @@ class IndexerQueueAddressBuilderTest extends TestCase
                 'max_delta_version' => '20200303',
                 'objects_max_delta_version' => '20200303',
                 'params_max_delta_version' => '20200303',
+                'lon' => 10,
+                'lat' => -10,
             ]
         );
 
@@ -978,6 +1009,8 @@ class IndexerQueueAddressBuilderTest extends TestCase
                 'max_delta_version' => '20200303',
                 'objects_max_delta_version' => '20200303',
                 'params_max_delta_version' => '20200303',
+                'lon' => 10,
+                'lat' => -10,
             ]
         );
 
@@ -1086,6 +1119,8 @@ class IndexerQueueAddressBuilderTest extends TestCase
                 'max_delta_version' => '20200303',
                 'objects_max_delta_version' => '20200303',
                 'params_max_delta_version' => '20200303',
+                'lon' => 10,
+                'lat' => -10,
             ]
         );
 
@@ -1194,6 +1229,8 @@ class IndexerQueueAddressBuilderTest extends TestCase
                 'max_delta_version' => '20200303',
                 'objects_max_delta_version' => '20200303',
                 'params_max_delta_version' => '20200303',
+                'lon' => 10,
+                'lat' => -10,
             ]
         );
 
@@ -1227,6 +1264,8 @@ class IndexerQueueAddressBuilderTest extends TestCase
                 'max_delta_version' => '20200303',
                 'objects_max_delta_version' => '20200303',
                 'params_max_delta_version' => '20200303',
+                'lon' => 10,
+                'lat' => -10,
             ]
         );
 
@@ -1260,6 +1299,8 @@ class IndexerQueueAddressBuilderTest extends TestCase
                 'max_delta_version' => '20200303',
                 'objects_max_delta_version' => '20200303',
                 'params_max_delta_version' => '20200303',
+                'lon' => 10,
+                'lat' => -10,
             ]
         );
 
@@ -1299,6 +1340,8 @@ class IndexerQueueAddressBuilderTest extends TestCase
                 'max_delta_version' => '20200303',
                 'objects_max_delta_version' => '20200303',
                 'params_max_delta_version' => '20200303',
+                'lon' => 10,
+                'lat' => -10,
             ]
         );
 
@@ -1409,6 +1452,8 @@ class IndexerQueueAddressBuilderTest extends TestCase
                 'max_delta_version' => '20200303',
                 'objects_max_delta_version' => '20200303',
                 'params_max_delta_version' => '20200303',
+                'lon' => 10,
+                'lat' => -10,
             ]
         );
 
@@ -1432,6 +1477,8 @@ class IndexerQueueAddressBuilderTest extends TestCase
                 'max_delta_version' => '20200303',
                 'objects_max_delta_version' => '20200303',
                 'params_max_delta_version' => '20200303',
+                'lon' => 10,
+                'lat' => -10,
             ]
         );
 
@@ -1455,6 +1502,8 @@ class IndexerQueueAddressBuilderTest extends TestCase
                 'max_delta_version' => '20200303',
                 'objects_max_delta_version' => '20200303',
                 'params_max_delta_version' => '20200303',
+                'lon' => 10,
+                'lat' => -10,
             ]
         );
 
@@ -1472,6 +1521,8 @@ class IndexerQueueAddressBuilderTest extends TestCase
                 'max_delta_version' => '20200303',
                 'objects_max_delta_version' => '20200303',
                 'params_max_delta_version' => '20200303',
+                'lon' => 10,
+                'lat' => -10,
             ]
         );
 
@@ -1495,6 +1546,8 @@ class IndexerQueueAddressBuilderTest extends TestCase
                 'max_delta_version' => '20200303',
                 'objects_max_delta_version' => '20200303',
                 'params_max_delta_version' => '20200303',
+                'lon' => 10,
+                'lat' => -10,
             ]
         );
 
@@ -1512,6 +1565,8 @@ class IndexerQueueAddressBuilderTest extends TestCase
                 'max_delta_version' => '20200303',
                 'objects_max_delta_version' => '20200303',
                 'params_max_delta_version' => '20200303',
+                'lon' => 10,
+                'lat' => -10,
             ]
         );
 
@@ -1538,6 +1593,8 @@ class IndexerQueueAddressBuilderTest extends TestCase
                 'max_delta_version' => '20200303',
                 'objects_max_delta_version' => '20200303',
                 'params_max_delta_version' => '20200303',
+                'lon' => 10,
+                'lat' => -10,
             ]
         );
 
@@ -1563,6 +1620,8 @@ class IndexerQueueAddressBuilderTest extends TestCase
                 'max_delta_version' => '20200303',
                 'objects_max_delta_version' => '20200303',
                 'params_max_delta_version' => '20200303',
+                'lon' => 10,
+                'lat' => -10,
             ]
         );
 
@@ -1588,6 +1647,8 @@ class IndexerQueueAddressBuilderTest extends TestCase
                 'max_delta_version' => '20200303',
                 'objects_max_delta_version' => '20200303',
                 'params_max_delta_version' => '20200303',
+                'lon' => 10,
+                'lat' => -10,
             ]
         );
 
@@ -1613,6 +1674,8 @@ class IndexerQueueAddressBuilderTest extends TestCase
                 'max_delta_version' => '20200303',
                 'objects_max_delta_version' => '20200303',
                 'params_max_delta_version' => '20200303',
+                'lon' => 10,
+                'lat' => -10,
             ]
         );
 
@@ -1638,6 +1701,8 @@ class IndexerQueueAddressBuilderTest extends TestCase
                 'max_delta_version' => '20200303',
                 'objects_max_delta_version' => '20200303',
                 'params_max_delta_version' => '20200303',
+                'lon' => 10,
+                'lat' => -10,
             ]
         );
 
@@ -1663,6 +1728,8 @@ class IndexerQueueAddressBuilderTest extends TestCase
                 'max_delta_version' => '20200303',
                 'objects_max_delta_version' => '20200303',
                 'params_max_delta_version' => '20200303',
+                'lon' => 10,
+                'lat' => -10,
             ]
         );
 
@@ -1688,6 +1755,8 @@ class IndexerQueueAddressBuilderTest extends TestCase
                 'max_delta_version' => '20200303',
                 'objects_max_delta_version' => '20200303',
                 'params_max_delta_version' => '20200303',
+                'lon' => 10,
+                'lat' => -10,
             ]
         );
 
@@ -1711,6 +1780,8 @@ class IndexerQueueAddressBuilderTest extends TestCase
                 'max_delta_version' => 3,
                 'objects_max_delta_version' => 200,
                 'params_max_delta_version' => 1,
+                'lon' => 10,
+                'lat' => -10,
             ]
         );
 
@@ -1718,5 +1789,28 @@ class IndexerQueueAddressBuilderTest extends TestCase
             200,
             $address->getDeltaVersion()
         );
+    }
+
+    /**
+     * @test
+     */
+    public function itCorrectlyBuildsLocation(): void
+    {
+        // переименование улицы
+        $address = $this->builder->build(
+            [
+                'object_id' => 8654,
+                'path_ltree' => '5705.6326.8654',
+                'objects' => '[{"object_id":5705,"types":["addr_obj"],"relations":[{"id": 6356, "data": {"id": 6356, "name": "Башкортостан", "level": "1", "nextid": 0, "previd": 0, "enddate": "2079-06-06", "changeid": 17925, "isactive": 1, "isactual": 1, "objectid": 5705, "typename": "Респ", "startdate": "1900-01-01", "objectguid": "6f2cbfd8-692a-4ee4-9b16-067210bde3fc", "opertypeid": 1, "updatedate": "2016-02-27"}, "type": "addr_obj", "is_active": 1, "is_actual": 1}]},{"object_id":6326,"types":["addr_obj"],"relations":[{"id": 7148, "data": {"id": 7148, "name": "Уфа", "level": "5", "nextid": 0, "previd": 0, "enddate": "2079-06-06", "changeid": 19976, "isactive": 1, "isactual": 1, "objectid": 6326, "typename": "г", "startdate": "1900-01-01", "objectguid": "7339e834-2cb4-4734-a4c7-1fca2c66e562", "opertypeid": 1, "updatedate": "2017-11-16"}, "type": "addr_obj", "is_active": 1, "is_actual": 1}]},{"object_id":8654,"types":["addr_obj"],"relations":[{"id": 10275, "data": {"id": 10275, "name": "Мустая Карима", "level": "8", "nextid": 0, "previd": 10268, "enddate": "2079-06-06", "changeid": 27353, "isactive": 1, "isactual": 1, "objectid": 8654, "typename": "ул", "startdate": "1900-01-01", "objectguid": "76293e30-b0d7-4260-8d26-02c14a504ab7", "opertypeid": 1, "updatedate": "2017-11-16"}, "type": "addr_obj", "is_active": 1, "is_actual": 1},{"id": 10268, "data": {"id": 10268, "name": "Социалистическая", "level": "8", "nextid": 10275, "previd": 0, "enddate": "1900-01-01", "changeid": 27336, "isactive": 0, "isactual": 0, "objectid": 8654, "typename": "ул", "startdate": "1900-01-01", "objectguid": "76293e30-b0d7-4260-8d26-02c14a504ab7", "opertypeid": 1, "updatedate": "2017-11-16"}, "type": "addr_obj", "is_active": 0, "is_actual": 0}]}]',
+                'params' => '[{"object_id":5705,"values":[{"value": "Республика Башкортостан", "type_id": 16, "end_date": "2079-06-06", "is_actual": true, "start_date": "1900-01-01"},{"value": "0200", "type_id": 1, "end_date": "2079-06-06", "is_actual": true, "start_date": "1900-01-01"},{"value": "0200", "type_id": 2, "end_date": "2079-06-06", "is_actual": true, "start_date": "1900-01-01"},{"value": "02000000000", "type_id": 11, "end_date": "2079-06-06", "is_actual": true, "start_date": "1900-01-01"},{"value": "0", "type_id": 14, "end_date": "2079-06-06", "is_actual": true, "start_date": "1900-01-01"},{"value": "80000000000", "type_id": 6, "end_date": "2015-11-18", "is_actual": false, "start_date": "1900-01-01"},{"value": "450000", "type_id": 5, "end_date": "2015-11-18", "is_actual": false, "start_date": "1900-01-01"},{"value": "0200000000001", "type_id": 10, "end_date": "2015-11-18", "is_actual": false, "start_date": "1900-01-01"},{"value": "800000000000000000000", "type_id": 13, "end_date": "2015-11-18", "is_actual": false, "start_date": "1900-01-01"},{"value": "80202858001", "type_id": 6, "end_date": "2015-12-01", "is_actual": false, "start_date": "2015-11-18"},{"value": "80000000000", "type_id": 6, "end_date": "2079-06-06", "is_actual": true, "start_date": "2015-12-01"},{"value": "452112", "type_id": 5, "end_date": "2015-12-01", "is_actual": false, "start_date": "2015-11-18"},{"value": "452000", "type_id": 5, "end_date": "2079-06-06", "is_actual": true, "start_date": "2015-12-01"},{"value": "0200000000002", "type_id": 10, "end_date": "2015-12-01", "is_actual": false, "start_date": "2015-11-18"},{"value": "0200000000000", "type_id": 10, "end_date": "2079-06-06", "is_actual": true, "start_date": "2015-12-01"},{"value": "806024580000000000000", "type_id": 13, "end_date": "2015-12-01", "is_actual": false, "start_date": "2015-11-18"},{"value": "800000000000000000001", "type_id": 13, "end_date": "2079-06-06", "is_actual": true, "start_date": "2015-12-01"},{"value": "80000000", "type_id": 7, "end_date": "2079-06-06", "is_actual": true, "start_date": "1900-01-01"}]},{"object_id":6326,"values":[{"value": "80401000000", "type_id": 6, "end_date": "2079-06-06", "is_actual": true, "start_date": "1900-01-01"},{"value": "0", "type_id": 14, "end_date": "2079-06-06", "is_actual": true, "start_date": "1900-01-01"},{"value": "450000", "type_id": 5, "end_date": "1900-01-01", "is_actual": false, "start_date": "1900-01-01"},{"value": "0200100100051", "type_id": 10, "end_date": "1900-01-01", "is_actual": false, "start_date": "1900-01-01"},{"value": "0200000100000", "type_id": 10, "end_date": "2079-06-06", "is_actual": true, "start_date": "1900-01-01"},{"value": "02001001000", "type_id": 11, "end_date": "1900-01-01", "is_actual": false, "start_date": "1900-01-01"},{"value": "02000001000", "type_id": 11, "end_date": "2079-06-06", "is_actual": true, "start_date": "1900-01-01"},{"value": "807010000000000000000", "type_id": 13, "end_date": "1900-01-01", "is_actual": false, "start_date": "1900-01-01"},{"value": "80701000", "type_id": 7, "end_date": "2020-02-11", "is_actual": true, "start_date": "1900-01-01"},{"value": "807010000000000000002", "type_id": 13, "end_date": "2020-02-11", "is_actual": true, "start_date": "1900-01-01"},{"value": "0200", "type_id": 1, "end_date": "2079-06-06", "is_actual": true, "start_date": "2020-02-11"},{"value": "0200", "type_id": 2, "end_date": "2079-06-06", "is_actual": true, "start_date": "2020-02-11"},{"value": "80701000001", "type_id": 7, "end_date": "2079-06-06", "is_actual": true, "start_date": "2020-02-11"},{"value": "807010000010000000011", "type_id": 13, "end_date": "2079-06-06", "is_actual": true, "start_date": "2020-02-11"}]},{"object_id":8654,"values":[{"value": "0", "type_id": 14, "end_date": "2079-06-06", "is_actual": true, "start_date": "1900-01-01"},{"value": "02001001000085201", "type_id": 10, "end_date": "1900-01-01", "is_actual": false, "start_date": "1900-01-01"},{"value": "02001001000085202", "type_id": 10, "end_date": "1900-01-01", "is_actual": false, "start_date": "1900-01-01"},{"value": "80701000", "type_id": 7, "end_date": "1900-01-01", "is_actual": false, "start_date": "1900-01-01"},{"value": "02001001000085251", "type_id": 10, "end_date": "1900-01-01", "is_actual": false, "start_date": "1900-01-01"},{"value": "02000001000054400", "type_id": 10, "end_date": "2079-06-06", "is_actual": true, "start_date": "1900-01-01"},{"value": "020010010000852", "type_id": 11, "end_date": "1900-01-01", "is_actual": false, "start_date": "1900-01-01"},{"value": "020000010000544", "type_id": 11, "end_date": "2079-06-06", "is_actual": true, "start_date": "1900-01-01"},{"value": "807010000000000085200", "type_id": 13, "end_date": "1900-01-01", "is_actual": false, "start_date": "1900-01-01"},{"value": "807010000000000054401", "type_id": 13, "end_date": "2079-06-06", "is_actual": true, "start_date": "1900-01-01"},{"value": "0852", "type_id": 15, "end_date": "1900-01-01", "is_actual": false, "start_date": "1900-01-01"},{"value": "0544", "type_id": 15, "end_date": "2079-06-06", "is_actual": true, "start_date": "1900-01-01"},{"value": "80701000001", "type_id": 7, "end_date": "2079-06-06", "is_actual": true, "start_date": "2020-07-10"}]}]',
+                'max_delta_version' => '20200303',
+                'objects_max_delta_version' => '20200303',
+                'params_max_delta_version' => '20200303',
+                'lon' => 10,
+                'lat' => -10,
+            ]
+        );
+
+        $this->assertEquals([10, -10], $address->getLocation());
     }
 }
