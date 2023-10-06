@@ -83,7 +83,7 @@ class IndexerQueueAddressBuilder implements AddressBuilderInterface
 //        }
 
         $relationsByObject = array_column($objects, 'relations', 'object_id');
-        $paramsByObject = array_column($params, 'values', 'object_id');
+        $paramsByObject = array_column($params, 'agg_values', 'object_id');
 
         $deltaVersion = max(
             (int)$indexerQueueRow['max_delta_version'],
