@@ -330,7 +330,7 @@ class ObjectAddressLevelSpecResolver implements ObjectAddressLevelSpecResolverIn
         ],
         [
             'name' => 'зона',
-            'shortName' => 'зона',
+            'shortName' => 'з.',
             'namePosition' => AddressLevelSpec::NAME_POSITION_BEFORE,
             'variants' => [['names' => ['зона'], 'levels' => [7, 8, 16]]],
         ],
@@ -408,7 +408,7 @@ class ObjectAddressLevelSpecResolver implements ObjectAddressLevelSpecResolverIn
         ],
         [
             'name' => 'массив',
-            'shortName' => 'массив',
+            'shortName' => 'м-в',
             'namePosition' => AddressLevelSpec::NAME_POSITION_BEFORE,
             'variants' => [['names' => ['массив'], 'levels' => [5, 6]]],
         ],
