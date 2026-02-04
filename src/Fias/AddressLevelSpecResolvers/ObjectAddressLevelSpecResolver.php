@@ -662,7 +662,7 @@ class ObjectAddressLevelSpecResolver implements ObjectAddressLevelSpecResolverIn
             'name' => 'рабочий поселок',
             'shortName' => 'рп',
             'namePosition' => AddressLevelSpec::NAME_POSITION_BEFORE,
-            'variants' => [['names' => ['рп'], 'levels' => [5, 6]]],
+            'variants' => [['names' => ['рп', 'рп.'], 'levels' => [5, 6]]],
         ],
         [
             'name' => 'разъезд',
@@ -995,6 +995,19 @@ class ObjectAddressLevelSpecResolver implements ObjectAddressLevelSpecResolverIn
             'shortName' => 'ю.',
             'namePosition' => AddressLevelSpec::NAME_POSITION_BEFORE,
             'variants' => [['names' => ['ю.'], 'levels' => [7]]],
+        ],
+        // @since 20260127
+        [
+            'name' => 'выселки',
+            'shortName' => 'в-ки',
+            'namePosition' => AddressLevelSpec::NAME_POSITION_BEFORE,
+            'variants' => [['names' => ['в-ки'], 'levels' => [6]]],
+        ],
+        [
+            'name' => 'железнодорожная станция',
+            'shortName' => 'ж/д ст',
+            'namePosition' => AddressLevelSpec::NAME_POSITION_BEFORE,
+            'variants' => [['names' => ['ж/д ст'], 'levels' => [6]]],
         ],
     ];
 

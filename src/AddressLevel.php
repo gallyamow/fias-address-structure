@@ -83,11 +83,9 @@ final class AddressLevel
                 return [self::REGION, $addressLevel];
             case self::CITY:
                 return [self::REGION, self::AREA, $addressLevel];
-            // поселение так же может быть и внутри района и внутри города
-            case self::SETTLEMENT:
+            case self::SETTLEMENT: // поселение так же может быть и внутри района и внутри города
                 return [self::REGION, self::AREA, self::CITY, $addressLevel];
-            // поселение так же может быть и внутри района и внутри города
-            case self::TERRITORY:
+            case self::TERRITORY:  // поселение так же может быть и внутри района и внутри города
                 return [self::REGION, self::AREA, self::CITY, self::SETTLEMENT, $addressLevel];
             case self::STREET:
                 return [self::REGION, self::AREA, self::CITY, self::SETTLEMENT, self::TERRITORY, $addressLevel];

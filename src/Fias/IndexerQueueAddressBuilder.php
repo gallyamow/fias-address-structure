@@ -59,7 +59,8 @@ class IndexerQueueAddressBuilder implements AddressBuilderInterface
     public function build(array $indexerQueueRow, ?Address $existsAddress = null): Address
     {
         $objectId = (int)$indexerQueueRow['object_id'];
-        $path = array_map('intval', explode('.', $indexerQueueRow['path_ltree']));
+        $pathLtree = $indexerQueueRow['path_ltree'];
+        $path = array_map('intval', explode('.', $pathLtree));
 
         $objects = json_decode($indexerQueueRow['objects'], true, 512, JSON_THROW_ON_ERROR);
         $params = json_decode($indexerQueueRow['params'], true, 512, JSON_THROW_ON_ERROR);
@@ -101,7 +102,7 @@ class IndexerQueueAddressBuilder implements AddressBuilderInterface
         foreach ($path as $pathObjectId) {
             if (!isset($relationsByObject[$pathObjectId])) {
                 throw AddressBuildFailedException::withObjectId(
-                    'There are no relations for path.',
+                    sprintf('There are no relations for some item of path "%s".', $pathLtree),
                     $pathObjectId,
                 );
             }
