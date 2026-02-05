@@ -163,10 +163,10 @@ class IndexerQueueAddressBuilder implements AddressBuilderInterface
 
             $actualParams = $this->resolveActualParams(
                 $paramsByObject[$pathObjectId] ?? [],
-                [FiasParamType::KLADR, FiasParamType::OKATO, FiasParamType::OKTMO, FiasParamType::POSTAL_CODE]
+                [FiasParamType::KLADR, FiasParamType::KLADR_NO_ACTUALITY, FiasParamType::OKATO, FiasParamType::OKTMO, FiasParamType::POSTAL_CODE]
             );
 
-            $kladrId = $actualParams[FiasParamType::KLADR]['value'] ?? null;
+            $kladrId = $actualParams[FiasParamType::KLADR]['value'] ?? $actualParams[FiasParamType::KLADR_NO_ACTUALITY]['value'] ?? null;
             $okato = $actualParams[FiasParamType::OKATO]['value'] ?? null;
             $oktmo = $actualParams[FiasParamType::OKTMO]['value'] ?? null;
             $postalCode = $actualParams[FiasParamType::POSTAL_CODE]['value'] ?? null;
@@ -180,7 +180,7 @@ class IndexerQueueAddressBuilder implements AddressBuilderInterface
                     $fiasId = $actualRelationData['objectguid'];
                     if ('' === $fiasId) {
                         throw AddressBuildFailedException::withObjectId(
-                            sprintf('Empty fiasId for region level.'),
+                            'Empty fiasId for region level.',
                             $pathObjectId
                         );
                     }
@@ -188,7 +188,7 @@ class IndexerQueueAddressBuilder implements AddressBuilderInterface
                     $name = $this->emptyStrToNull($actualRelationData['name']);
                     if ('' === $name) {
                         throw AddressBuildFailedException::withObjectId(
-                            sprintf('Empty name for region level.'),
+                            'Empty name for region level.',
                             $pathObjectId
                         );
                     }
