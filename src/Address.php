@@ -168,7 +168,6 @@ class Address implements \JsonSerializable, ArraySerializableInterface
 
     /**
      * Версия дельты (служебное поле).
-     * @var int
      */
     private int $deltaVersion = 0;
 

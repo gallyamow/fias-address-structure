@@ -18,7 +18,7 @@ class ObjectAddressLevelSpecResolver implements ObjectAddressLevelSpecResolverIn
 {
     // sql-запрос для построения php-code этих вариантов:
     // select '[''name'' => '''||name||''', ''shortName'' => ['||shortnames||'],''namePosition'' => AddressLevelSpec::NAME_POSITION_BEFORE,''variants'' => [[''names'' => ['||shortnames||'], ''levels'' => ['||levels||']]]],'
-    //from (
+    // from (
     //         select name, '''' || array_to_string(shortnames, ''',''') || '''' as shortnames, array_to_string(levels, ',') as levels
     //         from (
     //                  select name, array_agg(DISTINCT shortname) shortnames, array_agg(DISTINCT level) levels

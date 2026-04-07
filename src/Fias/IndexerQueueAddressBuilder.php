@@ -13,6 +13,7 @@ use Addresser\FiasAddressStructure\AddressSynonymizer;
 use Addresser\FiasAddressStructure\Exceptions\AddressBuildFailedException;
 use Addresser\FiasAddressStructure\Exceptions\EmptyLevelTypeException;
 use Addresser\FiasAddressStructure\Exceptions\InvalidAddressLevelException;
+use Addresser\FiasAddressStructure\Exceptions\RuntimeException;
 use Webmozart\Assert\Assert;
 
 /**
@@ -28,7 +29,12 @@ class IndexerQueueAddressBuilder implements AddressBuilderInterface
     private ActualityComparator $actualityPeriodComparator;
     private AddressSynonymizer $addressSynonymizer;
     private RelationLevelResolver $relationLevelResolver;
-    private NameNormalizerInterface $nameNormalizer;
+    /**
+     * @var NameNormalizerInterface[]
+     *
+     * @phpstan-var array<AddressLevel, NameNormalizerInterface> $nameNormalizers
+     */
+    private array $nameNormalizers;
 
     public function __construct(
         ObjectAddressLevelSpecResolverInterface $addrObjectTypeNameResolver,
@@ -39,7 +45,7 @@ class IndexerQueueAddressBuilder implements AddressBuilderInterface
         ActualityComparator $actualityPeriodComparator,
         AddressSynonymizer $addressSynonymizer,
         RelationLevelResolver $relationLevelResolver,
-        NameNormalizerInterface $nameNormalizer
+        array $nameNormalizers
     ) {
         $this->addrObjectSpecResolver = $addrObjectTypeNameResolver;
         $this->houseSpecResolver = $houseTypeNameResolver;
@@ -49,11 +55,12 @@ class IndexerQueueAddressBuilder implements AddressBuilderInterface
         $this->actualityPeriodComparator = $actualityPeriodComparator;
         $this->addressSynonymizer = $addressSynonymizer;
         $this->relationLevelResolver = $relationLevelResolver;
-        $this->nameNormalizer = $nameNormalizer;
+        $this->nameNormalizers = $nameNormalizers;
     }
 
     /**
      * @param array $indexerQueueRow запись из таблицы app.indexer_queue
+     *
      * @throws \JsonException
      */
     public function build(array $indexerQueueRow, ?Address $existsAddress = null): Address
@@ -65,23 +72,23 @@ class IndexerQueueAddressBuilder implements AddressBuilderInterface
         $objects = json_decode($indexerQueueRow['objects'], true, 512, JSON_THROW_ON_ERROR);
         $params = json_decode($indexerQueueRow['params'], true, 512, JSON_THROW_ON_ERROR);
 
-//        /**
-//         * Группируем по AddressLevel. Так как дополнительные локаций таких как СНТ, ГСК mapped на один и тот же
-//         * уровень AddressLevel::SETTLEMENT может быть несколько актуальных значений.
-//         *
-//         * Мы бы могли разбить path_ltree на составные части и итерировать по ним, но и в этому случае остается проблема
-//         * определения соотношения relation с полями Address.
-//         */
-//        $parentsByLevel = [];
-//        foreach ($objects as $item) {
-//            $relations = $item['relations'];
-//            foreach ($relations as $relation) {
-//                $addressLevel = $this->relationLevelResolver->resolveAddressLevel($relation);
-//
-//                $parentsByLevel[$addressLevel] = $parentsByLevel[$addressLevel] ?? [];
-//                $parentsByLevel[$addressLevel][] = $relation;
-//            }
-//        }
+        //        /**
+        //         * Группируем по AddressLevel. Так как дополнительные локаций таких как СНТ, ГСК mapped на один и тот же
+        //         * уровень AddressLevel::SETTLEMENT может быть несколько актуальных значений.
+        //         *
+        //         * Мы бы могли разбить path_ltree на составные части и итерировать по ним, но и в этому случае остается проблема
+        //         * определения соотношения relation с полями Address.
+        //         */
+        //        $parentsByLevel = [];
+        //        foreach ($objects as $item) {
+        //            $relations = $item['relations'];
+        //            foreach ($relations as $relation) {
+        //                $addressLevel = $this->relationLevelResolver->resolveAddressLevel($relation);
+        //
+        //                $parentsByLevel[$addressLevel] = $parentsByLevel[$addressLevel] ?? [];
+        //                $parentsByLevel[$addressLevel][] = $relation;
+        //            }
+        //        }
 
         $relationsByObject = array_column($objects, 'relations', 'object_id');
         $paramsByObject = array_column($params, 'agg_values', 'object_id');
@@ -128,36 +135,36 @@ class IndexerQueueAddressBuilder implements AddressBuilderInterface
 
             $actualObjectRelation = $actualObjectRelation[0];
 
-//            $mainRelation = null;
-//
-//            switch ($cnt) {
-//                case 0:
-//                    /**
-//                     * Все relation на одном уровне AddressLevel неактивные.
-//                     * Такое было ранее при группировке по FiasLevel (для устаревших уровней, например ADDITIONAL_TERRITORIES_LEVEL),
-//                     * при группировке по AddressLevel - такого быть не должно поэтому бросаем exception.
-//                     *
-//                     * пример: г Казань, тер ГСК Монтажник - был перемещен по уровню ФИАС. Был ранее на уровне 8 (до 2019-05-05),
-//                     * далее перемещен на 7. В итоге на 8 уровне у него нет актуальных relation.
-//                     * Такие уровни мы должны пропускать.
-//                     */
-//                    continue 2; // 2 - because in switch
-//                case 1:
-//                    $mainRelation = $levelActualRelations[0];
-//                    break;
-//                default:
-//                    /**
-//                     * Есть несколько активных relations на одном уровне AddressLevel.
-//                     *
-//                     * Причиной может быть несколько вещей:
-//                     *  1) несколько уровней ФИАС могут соответствовать одному нашему уровню.
-//                     *  Для решения этой проблемы мы будем выбирать один главный relation.
-//                     *  2) некоторых случаях гараж (погреб, подвал) могут быть заданы как внутри дома, так и
-//                     *  в виде отдельного дома - с этиим не понятно как быть
-//                     */
-//                    $mainRelation = $this->mainLevelRelationResolver->resolve($addressLevel, $levelActualRelations);
-//                    break;
-//            }
+            //            $mainRelation = null;
+            //
+            //            switch ($cnt) {
+            //                case 0:
+            //                    /**
+            //                     * Все relation на одном уровне AddressLevel неактивные.
+            //                     * Такое было ранее при группировке по FiasLevel (для устаревших уровней, например ADDITIONAL_TERRITORIES_LEVEL),
+            //                     * при группировке по AddressLevel - такого быть не должно поэтому бросаем exception.
+            //                     *
+            //                     * пример: г Казань, тер ГСК Монтажник - был перемещен по уровню ФИАС. Был ранее на уровне 8 (до 2019-05-05),
+            //                     * далее перемещен на 7. В итоге на 8 уровне у него нет актуальных relation.
+            //                     * Такие уровни мы должны пропускать.
+            //                     */
+            //                    continue 2; // 2 - because in switch
+            //                case 1:
+            //                    $mainRelation = $levelActualRelations[0];
+            //                    break;
+            //                default:
+            //                    /**
+            //                     * Есть несколько активных relations на одном уровне AddressLevel.
+            //                     *
+            //                     * Причиной может быть несколько вещей:
+            //                     *  1) несколько уровней ФИАС могут соответствовать одному нашему уровню.
+            //                     *  Для решения этой проблемы мы будем выбирать один главный relation.
+            //                     *  2) некоторых случаях гараж (погреб, подвал) могут быть заданы как внутри дома, так и
+            //                     *  в виде отдельного дома - с этиим не понятно как быть
+            //                     */
+            //                    $mainRelation = $this->mainLevelRelationResolver->resolve($addressLevel, $levelActualRelations);
+            //                    break;
+            //            }
 
             $actualRelationData = $actualObjectRelation['data'];
 
@@ -175,6 +182,17 @@ class IndexerQueueAddressBuilder implements AddressBuilderInterface
             $fiasLevel = $this->relationLevelResolver->resolveFiasLevel($actualObjectRelation);
             $addressLevel = $this->relationLevelResolver->resolveAddressLevel($actualObjectRelation);
 
+            $nameNormalizer = $this->nameNormalizers[$addressLevel] ?? null;
+
+            $prepareName = function (array $actualRelationData) use ($nameNormalizer) {
+                $name = $actualRelationData['name'];
+                if (null !== $nameNormalizer) {
+                    $name = $nameNormalizer->normalize($name);
+                }
+
+                return $this->emptyStrToNull($name);
+            };
+
             switch ($addressLevel) {
                 case AddressLevel::REGION:
                     $fiasId = $actualRelationData['objectguid'];
@@ -185,7 +203,7 @@ class IndexerQueueAddressBuilder implements AddressBuilderInterface
                         );
                     }
 
-                    $name = $this->emptyStrToNull($actualRelationData['name']);
+                    $name = $prepareName($actualRelationData);
                     if ('' === $name) {
                         throw AddressBuildFailedException::withObjectId(
                             'Empty name for region level.',
@@ -209,7 +227,7 @@ class IndexerQueueAddressBuilder implements AddressBuilderInterface
                     break;
                 case AddressLevel::AREA:
                     $fiasId = $actualRelationData['objectguid'];
-                    $name = $this->emptyStrToNull($actualRelationData['name']);
+                    $name = $prepareName($actualRelationData);
 
                     $address->setAreaFiasId($fiasId);
                     $address->setAreaKladrId($kladrId);
@@ -228,7 +246,7 @@ class IndexerQueueAddressBuilder implements AddressBuilderInterface
                     break;
                 case AddressLevel::CITY:
                     $fiasId = $actualRelationData['objectguid'];
-                    $name = $this->emptyStrToNull($actualRelationData['name']);
+                    $name = $prepareName($actualRelationData);
 
                     $address->setCityFiasId($fiasId);
                     $address->setCityKladrId($kladrId);
@@ -246,7 +264,7 @@ class IndexerQueueAddressBuilder implements AddressBuilderInterface
                     break;
                 case AddressLevel::SETTLEMENT:
                     $fiasId = $actualRelationData['objectguid'];
-                    $name = $this->emptyStrToNull($actualRelationData['name']);
+                    $name = $prepareName($actualRelationData);
 
                     $address->setSettlementFiasId($fiasId);
                     $address->setSettlementKladrId($kladrId);
@@ -264,7 +282,7 @@ class IndexerQueueAddressBuilder implements AddressBuilderInterface
                     break;
                 case AddressLevel::TERRITORY:
                     $fiasId = $actualRelationData['objectguid'];
-                    $name = $this->emptyStrToNull($actualRelationData['name']);
+                    $name = $prepareName($actualRelationData);
 
                     $address->setTerritoryFiasId($fiasId);
                     $address->setTerritoryKladrId($kladrId);
@@ -282,9 +300,7 @@ class IndexerQueueAddressBuilder implements AddressBuilderInterface
                     break;
                 case AddressLevel::STREET:
                     $fiasId = $actualRelationData['objectguid'];
-
-                    $name = $this->nameNormalizer->normalize($actualRelationData['name']);
-                    $name = $this->emptyStrToNull($name);
+                    $name = $prepareName($actualRelationData);
 
                     $address->setStreetFiasId($fiasId);
                     $address->setStreetKladrId($kladrId);
@@ -553,6 +569,8 @@ class IndexerQueueAddressBuilder implements AddressBuilderInterface
                 return $typeName . ' ' . $name;
             case AddressLevelSpec::NAME_POSITION_AFTER:
                 return $name . ' ' . $typeName;
+            default:
+                throw new RuntimeException(sprintf('Invalid position %d', $position));
         }
     }
 

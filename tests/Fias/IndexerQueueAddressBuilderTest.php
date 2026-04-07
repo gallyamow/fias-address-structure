@@ -14,14 +14,16 @@ use Addresser\FiasAddressStructure\Fias\AddressLevelSpecResolvers\ApartmentAddre
 use Addresser\FiasAddressStructure\Fias\AddressLevelSpecResolvers\HouseAddressLevelSpecResolver;
 use Addresser\FiasAddressStructure\Fias\AddressLevelSpecResolvers\ObjectAddressLevelSpecResolver;
 use Addresser\FiasAddressStructure\Fias\AddressLevelSpecResolvers\RoomAddressLevelSpecResolver;
-use Addresser\FiasAddressStructure\Fias\BaseNameNormalizer;
-use Addresser\FiasAddressStructure\Fias\IndexerQueueAddressBuilder;
 use Addresser\FiasAddressStructure\Fias\FiasLevel;
+use Addresser\FiasAddressStructure\Fias\IndexerQueueAddressBuilder;
+use Addresser\FiasAddressStructure\Fias\RegionNameNormalizer;
 use Addresser\FiasAddressStructure\Fias\RelationLevelResolver;
+use Addresser\FiasAddressStructure\Fias\StreetNameNormalizer;
 use PHPUnit\Framework\TestCase;
 
 /**
  * @internal
+ *
  * @coversNothing
  */
 class IndexerQueueAddressBuilderTest extends TestCase
@@ -41,7 +43,10 @@ class IndexerQueueAddressBuilderTest extends TestCase
             new ActualityComparator(),
             new AddressSynonymizer(),
             $relationLevelResolved,
-            new BaseNameNormalizer()
+            [
+                AddressLevel::REGION => new RegionNameNormalizer(),
+                AddressLevel::STREET => new StreetNameNormalizer(),
+            ]
         );
     }
 
@@ -1580,6 +1585,7 @@ class IndexerQueueAddressBuilderTest extends TestCase
      * Корректность обработки перемещенных по уровням ФИАС адресов.
      *
      * @see (object_id = 182652) г Казань, тер ГСК Монтажник - был перемещен по уровню ФИАС. был ранее на уровне 8, перемещен на 7.
+     *
      * @test
      */
     public function itCorrectlyBuildsMovedEntity(): void

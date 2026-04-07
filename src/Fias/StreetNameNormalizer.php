@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Addresser\FiasAddressStructure\Fias;
 
-class BaseNameNormalizer implements NameNormalizerInterface
+class StreetNameNormalizer implements NameNormalizerInterface
 {
     public function normalize(?string $value): ?string
     {

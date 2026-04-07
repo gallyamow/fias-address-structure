@@ -111,8 +111,6 @@ class FiasLevel
      * Это связано что ГАР для таких уровней существуют отдельные таблиц.
      *
      * Переводит уровни административного разделения на наши уровни.
-     *
-     * @return int
      */
     public static function mapAdmHierarchyToAddressLevel(int $fiasLevel): ?int
     {

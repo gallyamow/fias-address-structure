@@ -12,6 +12,7 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @internal
+ *
  * @coversNothing
  */
 class ApartmentAddressLevelSpecResolverTest extends TestCase
