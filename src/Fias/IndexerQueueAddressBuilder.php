@@ -500,11 +500,18 @@ class IndexerQueueAddressBuilder implements AddressBuilderInterface
             array_filter(
                 array_unique(
                     array_map(
-                        static function ($item) use ($nameField) {
+                        function ($item) use ($nameField) {
+                            $addressLevel = $this->relationLevelResolver->resolveAddressLevel($item);
+                            $nameNormalizer = $this->nameNormalizers[$addressLevel] ?? null;
+
                             // здесь хорошо использовать withTypeName, но тогда будут проблемы в случае если
                             // у населенного пункта было и переименования и смета вида.
                             // то есть если сейчас г. Янаул, а в истории д. Янаул, с. Янаул = бывш. д.Янаул, с.Янаул
-                            return $item['data'][$nameField];
+                            $name = $item['data'][$nameField];
+                            if (null !== $nameNormalizer) {
+                                $name = $nameNormalizer->normalize($name);
+                            }
+                            return $name;
                         },
                         $notActualRelations
                     )
